@@ -1,0 +1,11 @@
+ext {
+    morphia = '1.2.1'
+}
+
+dependencies {
+    compile "com.google.inject:guice:$guice"
+    compile "org.mongodb.morphia:morphia:$morphia"
+
+    compile files("libs/jbcrypt.jar")
+    compile project(':core')
+}

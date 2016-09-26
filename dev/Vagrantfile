@@ -1,0 +1,15 @@
+# -*- mode: ruyb -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "precise64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.provision "docker" do |d|
+    d.run "redis", args: "--name redis-dev -p 0.0.0.0:6379:6379 -d"
+    d.run "mongo", args: "--name mongo-dev -p 0.0.0.0:27017:27017 -d"
+  end
+  config.vm.network "forwarded_port", guest: 6379, host: 46379
+  config.vm.network "forwarded_port", guest: 27017, host: 47017
+end

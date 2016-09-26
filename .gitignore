@@ -1,0 +1,15 @@
+.gradle
+target
+build/
+*.iml
+*.ipr
+*.iws
+out
+reports
+.DS_Store
+.idea
+generated
+.vagrant/
+dump.rdb
+generated-sources
+*.jar
