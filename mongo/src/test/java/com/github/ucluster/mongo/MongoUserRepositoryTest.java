@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -38,5 +39,12 @@ public class MongoUserRepositoryTest {
         assertThat(userFound.createdAt(), is(notNullValue()));
         assertThat(userFound.property("username").get().value(), is("kiwi"));
         assertThat(userFound.property("password").get().value(), is(not("password")));
+    }
+
+    @Test
+    public void should_find_user_by_property() {
+        final Optional<User> userFound = users.find(new MongoUserProperty("username", "kiwi"));
+
+        assertThat(userFound.isPresent(), is(true));
     }
 }

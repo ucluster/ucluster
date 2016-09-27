@@ -9,6 +9,7 @@ import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Optional;
 
 public class MongoUserRepository implements UserRepository {
     @Inject
@@ -41,5 +42,16 @@ public class MongoUserRepository implements UserRepository {
     @Override
     public User uuid(String uuid) {
         return datastore.get(MongoUser.class, new ObjectId(uuid));
+    }
+
+    @Override
+    public Optional<User> find(User.Property property) {
+        //disable validation since the mismatch for java object and mongo storage
+        final User user = datastore.createQuery(MongoUser.class)
+                .disableValidation()
+                .field("properties." + property.key() + ".value").equal(property.value())
+                .get();
+
+        return Optional.ofNullable(user);
     }
 }

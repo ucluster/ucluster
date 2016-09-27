@@ -11,8 +11,8 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Entity("users")
@@ -25,8 +25,11 @@ public class MongoUser implements User {
     @org.mongodb.morphia.annotations.Property
     protected DateTime createdAt;
 
+//    @Embedded
+//    protected List<Property> properties = new ArrayList<>();
+
     @Embedded
-    protected List<Property> properties = new ArrayList<>();
+    protected Map<String, Property> properties = new HashMap<>();
 
     @Override
     public String uuid() {
@@ -58,11 +61,12 @@ public class MongoUser implements User {
 
     @Override
     public void update(Property property) {
-        properties.add(property);
+//        properties.add(property);
+        properties.put(property.key(), property);
     }
 
     @Override
     public Optional<Property> property(String key) {
-        return properties.stream().filter(property -> property.key().equals(key)).findFirst();
+        return Optional.ofNullable(properties.get(key));
     }
 }

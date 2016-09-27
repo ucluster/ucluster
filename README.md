@@ -39,7 +39,7 @@ Example:
     
     required: true
     
-NOTE*: by convention, default `required` is `false`    
+default `required` is `false`    
 
 #### format
 
@@ -48,6 +48,14 @@ Example:
     format: {
         pattern: "\\w{6,16}"
     }
+    
+#### uniqueness
+    
+Example:    
+
+    uniqueness: true
+    
+default `uniqueness` is `false`    
     
 #### customize validator    
 
