@@ -48,6 +48,41 @@ Example:
     format: {
         pattern: "\\w{6,16}"
     }
+    
+#### customize validator    
+
+Step 1: Inherit interface `PropertyValidator`
+
+        public interface PropertyValidator {
+        
+            String type();
+            
+            ValidationResult validate(Map<String, Object> request, String propertyPath);
+            
+            Object configuration();
+        }
+
+Step 2: `String type()`: provide unique identifier of the validator
+
+Step 3: `ValidationResult validate(Map<String, Object> request, String propertyPath)`: validate against the request
+
+Step 4: `Object configuration();`: provide configuration of this validator
+
+Example: 
+
+    format: {
+        pattern: "\\w{6,16}"
+    }
+
+a) method `type` is fixed to return string `format`
+b) method `validate` is using java regex pattern to verify does property in propertyPath of request has satisfied
+c) method `configuration` return map representation of 
+
+    format: {
+        pattern: "\\w{6,16}"
+    }
+            
+convention is JSON being used      
 
 ## Dev-Env
 
