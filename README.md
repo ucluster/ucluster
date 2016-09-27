@@ -72,7 +72,7 @@ Step 1: Inherit interface `PropertyValidator`
 
 Step 2: `String type()`: provide unique identifier of the validator
 
-Step 3: `ValidationResult validate(Map<String, Object> request, String propertyPath)`: validate against the request
+Step 3: `ValidationResult validate(Map<String, Object> request, String propertyPath)`: validate against the request. You can use @Inject here to access UserRepository to validate against with existing user data
 
 Step 4: `Object configuration();`: provide configuration of this validator
 
@@ -82,9 +82,9 @@ Example:
         pattern: "\\w{6,16}"
     }
 
-a) method `type` is fixed to return string `format`
-b) method `validate` is using java regex pattern to verify does property in propertyPath of request has satisfied
-c) method `configuration` return map representation of 
+    a) method `type` is fixed to return string `format`
+    b) method `validate` is using java regex pattern to verify does property in propertyPath of request has satisfied
+    c) method `configuration` return map representation of 
 
     format: {
         pattern: "\\w{6,16}"

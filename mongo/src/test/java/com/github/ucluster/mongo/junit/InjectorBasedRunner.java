@@ -16,13 +16,13 @@ import java.util.List;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 
-public class InjectorBasedRunner extends BlockJUnit4ClassRunner {
+class InjectorBasedRunner extends BlockJUnit4ClassRunner {
     protected static MongoClient mongoClient;
     protected static Injector injector;
     protected static Morphia morphia;
     protected static Datastore datastore;
 
-    public InjectorBasedRunner(Class<?> klass) throws InitializationError {
+    InjectorBasedRunner(Class<?> klass) throws InitializationError {
         super(klass);
         try {
             injector = createInjector(getAbstractModules());
@@ -52,7 +52,7 @@ public class InjectorBasedRunner extends BlockJUnit4ClassRunner {
     }
 
     private List<AbstractModule> getAbstractModules() {
-        List<AbstractModule> modules = new ArrayList<>(asList(new AbstractModule[]{
+        return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {
                     @Override
                     protected void configure() {
@@ -61,12 +61,6 @@ public class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(UserRepository.class).to(MongoUserRepository.class);
                     }
                 }}));
-        modules.addAll(getModules());
-        return modules;
-    }
-
-    protected List<AbstractModule> getModules() {
-        return asList();
     }
 
     @Override

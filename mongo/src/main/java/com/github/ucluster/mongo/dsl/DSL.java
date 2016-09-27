@@ -7,8 +7,10 @@ import com.github.ucluster.mongo.validator.DefaultPropertyDefinition;
 import com.github.ucluster.mongo.validator.DefaultUserDefinition;
 import com.github.ucluster.mongo.validator.FormatPropertyValidator;
 import com.github.ucluster.mongo.validator.RequiredPropertyValidator;
+import com.google.inject.Injector;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
+import javax.inject.Inject;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.util.ArrayList;
@@ -16,13 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 public class DSL {
-    public static String DSL_COMPILER = "var user_definition = {};\n" +
-            "\n" +
-            "var user = function (user) {\n" +
-            "    user_definition = user;\n" +
-            "};";
+    @Inject
+    Injector injector;
 
-    public static UserDefinition load(String script) {
+    public static String DSL_COMPILER = "var user_definition = {};" +
+            "var user = function (user) { user_definition = user; };";
+
+    public UserDefinition load(String script) {
         final List<UserDefinition.PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
         final Map<String, Object> userDefinitionJson = loadUserJsonDefinition(script);
@@ -33,13 +35,14 @@ public class DSL {
         return new DefaultUserDefinition(propertyDefinitions);
     }
 
-    private static UserDefinition.PropertyDefinition loadPropertyDefinition(Map<String, Object> userDefinitionJson, String propertyPath) {
+    private UserDefinition.PropertyDefinition loadPropertyDefinition(Map<String, Object> userDefinitionJson, String propertyPath) {
         final List<PropertyValidator> propertyValidators = new ArrayList<>();
 
         final Map<String, Object> propertyDefinitionJson = (Map<String, Object>) userDefinitionJson.get(propertyPath);
         for (String validatorType : propertyDefinitionJson.keySet()) {
             final PropertyValidator propertyValidator = loadPropertyValidator(validatorType, propertyDefinitionJson.get(validatorType));
             if (propertyValidator != null) {
+                injector.injectMembers(propertyValidator);
                 propertyValidators.add(propertyValidator);
             }
         }
@@ -47,7 +50,7 @@ public class DSL {
         return new DefaultPropertyDefinition(propertyPath, propertyValidators);
     }
 
-    private static PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
+    private PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
         switch (validatorType) {
             case "format":
                 return new FormatPropertyValidator(propertyValidatorConfiguration);
@@ -58,7 +61,7 @@ public class DSL {
         }
     }
 
-    private static Map<String, Object> loadUserJsonDefinition(String definition) {
+    private Map<String, Object> loadUserJsonDefinition(String definition) {
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
         try {
             engine.eval(DSL_COMPILER);
