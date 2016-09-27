@@ -3,18 +3,16 @@ package com.github.ucluster.mongo.dsl;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
-import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.ucluster.mongo.junit.ResourceReader.read;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,10 +32,10 @@ public class DSLTest {
     public void setUp() throws Exception {
         injector = getInjector();
 
-        dsl = new DSL();
+        dsl = new DSL(read("dsl.js"));
         injector.injectMembers(dsl);
 
-        definition = dsl.load(read("dsl.js"));
+        definition = dsl.userDefinition();
     }
 
     @Test
@@ -67,10 +65,6 @@ public class DSLTest {
         final ValidationResult.ValidateFailure failure = errors.get(0);
         assertThat(failure.getPropertyPath(), is("username"));
         assertThat(failure.getType(), is("format"));
-    }
-
-    private static String read(String name) throws IOException {
-        return Resources.toString(Resources.getResource(name), Charsets.UTF_8);
     }
 
 

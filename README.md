@@ -15,8 +15,8 @@ Example:
             }
         },
         password: {
+            password: true,
             required: true,
-            encrypted: true,
             format: {
                 pattern: "\\w{6,16}"
             }
@@ -28,6 +28,14 @@ Example:
 In above example, `username` and `password` are two user properties definition, currently property definition are composed by property validators, more metadata related definition will come later
 
 *NOTE: currently nested property are not supported yet.
+
+### Property Metadata
+
+#### password
+
+if property is declared as `password`, then it will encrypted(BCrypt) before save to database, and this property cannot be searched
+
+default value is `false`
 
 ### Property Validator
 
@@ -99,5 +107,7 @@ convention is JSON being used
 
 ## TODO-LIST
 
-    1. plugin-in supported
-    2. provide common plugin
+    1. support multi user definition at the same time(how to distinguish group?)
+    2. user definition migration support 
+    3. plugin-in supported
+    4. provide common plugin

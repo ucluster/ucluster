@@ -2,7 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.exception.UserValidationException;
+import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -22,18 +22,18 @@ public class MongoUserTest {
     public void setUp() throws Exception {
         user = users.create(ImmutableMap.<String, Object>builder()
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwi")
+                        .put("username", "kiwiwin")
                         .put("password", "password").build())
                 .build());
     }
 
     @Test
     public void should_user_authenticate_success() {
-        user.authenticate(new MongoUserProperty("username", "kiwi"), "password");
+        user.authenticate(new MongoUserProperty("username", "kiwiwin"), "password");
     }
 
-    @Test(expected = UserValidationException.class)
+    @Test(expected = UserAuthenticationException.class)
     public void should_user_failed_authenticate() {
-        user.authenticate(new MongoUserProperty("username", "kiwi"), "invalid_password");
+        user.authenticate(new MongoUserProperty("username", "kiwiwin"), "invalid_password");
     }
 }

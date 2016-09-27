@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.UserValidationException;
+import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.security.Encryption;
 import org.bson.types.ObjectId;
@@ -25,9 +25,6 @@ public class MongoUser implements User {
     @org.mongodb.morphia.annotations.Property
     protected DateTime createdAt;
 
-//    @Embedded
-//    protected List<Property> properties = new ArrayList<>();
-
     @Embedded
     protected Map<String, Property> properties = new HashMap<>();
 
@@ -47,21 +44,20 @@ public class MongoUser implements User {
         final Optional<Property> property = property(identityProperty.key());
 
         if (!property.isPresent()) {
-            throw new UserValidationException();
+            throw new UserAuthenticationException();
         }
 
         if (!property.get().value().equals(identityProperty.value())) {
-            throw new UserValidationException();
+            throw new UserAuthenticationException();
         }
 
         if (!Encryption.BCRYPT.check(password, property("password").get().value())) {
-            throw new UserValidationException();
+            throw new UserAuthenticationException();
         }
     }
 
     @Override
     public void update(Property property) {
-//        properties.add(property);
         properties.put(property.key(), property);
     }
 

@@ -2,13 +2,17 @@ package com.github.ucluster.mongo.dsl;
 
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
+import com.github.ucluster.mongo.definition.DefaultPropertyDefinition;
+import com.github.ucluster.mongo.definition.DefaultUserDefinition;
+import com.github.ucluster.mongo.definition.FormatPropertyValidator;
+import com.github.ucluster.mongo.definition.RequiredPropertyValidator;
 import com.github.ucluster.mongo.util.Json;
-import com.github.ucluster.mongo.validator.DefaultPropertyDefinition;
-import com.github.ucluster.mongo.validator.DefaultUserDefinition;
-import com.github.ucluster.mongo.validator.FormatPropertyValidator;
-import com.github.ucluster.mongo.validator.RequiredPropertyValidator;
 import com.google.inject.Injector;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
 
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
@@ -17,14 +21,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Entity("dsl")
 public class DSL {
+    private static String DSL_COMPILER = "var user_definition = {};" +
+            "var user = function (user) { user_definition = user; };";
+
     @Inject
     Injector injector;
 
-    public static String DSL_COMPILER = "var user_definition = {};" +
-            "var user = function (user) { user_definition = user; };";
+    @Id
+    protected ObjectId uuid;
 
-    public UserDefinition load(String script) {
+    @Property
+    protected String script;
+
+    protected UserDefinition userDefinition;
+
+    DSL() {
+    }
+
+    public DSL(String script) {
+        this.script = script;
+    }
+
+    public UserDefinition userDefinition() {
+        if (userDefinition == null) {
+            userDefinition = load(script);
+        }
+
+        return userDefinition;
+    }
+
+    private UserDefinition load(String script) {
         final List<UserDefinition.PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
         final Map<String, Object> userDefinitionJson = loadUserJsonDefinition(script);

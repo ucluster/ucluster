@@ -1,7 +1,9 @@
 package com.github.ucluster.mongo.junit;
 
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.definition.MongoUserDefinitionRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.mongodb.MongoClient;
@@ -59,6 +61,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(MongoClient.class).toInstance(mongoClient());
                         bind(Datastore.class).toInstance(datastore());
                         bind(UserRepository.class).to(MongoUserRepository.class);
+
+                        bind(UserDefinitionRepository.class).to(MongoUserDefinitionRepository.class);
                     }
                 }}));
     }

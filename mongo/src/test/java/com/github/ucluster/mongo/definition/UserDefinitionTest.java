@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo.validator;
+package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;

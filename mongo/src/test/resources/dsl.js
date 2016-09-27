@@ -7,8 +7,8 @@ user({
         }
     },
     password: {
+        password: true,
         required: true,
-        encrypted: true,
         format: {
             pattern: "\\w{6,16}"
         }
