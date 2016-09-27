@@ -44,6 +44,8 @@ In above example, `required`, `uniqueness`, `format` are property validators, wh
 #### register validator
 
     registerValidator("property.format.validator", FormatValidator.class);
+    
+NOTE: in the example above `property.format.validator` is internally used as `@Named("property.format.validator")`, the convention is `property.<validator_type>.validator`, which should be as same as `FormatValidator.class` type (Q: a better way not fill information twice?)
 
 #### required
 
