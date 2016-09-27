@@ -20,15 +20,15 @@ public class UserDefinitionTest {
     public void setUp() throws Exception {
         definition = new DefaultUserDefinition(
                 ImmutableMap.<String, UserDefinition.PropertyDefinition>builder()
-                        .put("username", new DefaultPropertyDefinition(
+                        .put("username", new DefaultPropertyDefinition("username",
                                 ImmutableMap.<String, PropertyValidator>builder()
-                                        .put("format", new FormatPropertyValidator("username", ImmutableMap.<String, Object>builder()
+                                        .put("format", new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
                                                 .put("pattern", "\\w{6,12}")
                                                 .build()))
                                         .build()))
-                        .put("nickname", new DefaultPropertyDefinition(
+                        .put("nickname", new DefaultPropertyDefinition("nickname",
                                 ImmutableMap.<String, PropertyValidator>builder()
-                                        .put("format", new FormatPropertyValidator("nickname", ImmutableMap.<String, Object>builder()
+                                        .put("format", new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
                                                 .put("pattern", "\\w{6,12}")
                                                 .build()))
                                         .build()))
@@ -71,7 +71,7 @@ public class UserDefinitionTest {
 
         assertThat(result.errors().size(), is(1));
         final ValidationResult.ValidateFailure failure = result.errors().get(0);
-        assertThat(failure.getPath(), is("username"));
+        assertThat(failure.getPropertyPath(), is("username"));
         assertThat(failure.getType(), is("format"));
     }
 
@@ -87,11 +87,11 @@ public class UserDefinitionTest {
 
         assertThat(result.errors().size(), is(2));
         final ValidationResult.ValidateFailure usernameFailure = result.errors().get(0);
-        assertThat(usernameFailure.getPath(), is("username"));
+        assertThat(usernameFailure.getPropertyPath(), is("username"));
         assertThat(usernameFailure.getType(), is("format"));
 
         final ValidationResult.ValidateFailure nicknameFailure = result.errors().get(1);
-        assertThat(nicknameFailure.getPath(), is("nickname"));
+        assertThat(nicknameFailure.getPropertyPath(), is("nickname"));
         assertThat(nicknameFailure.getType(), is("format"));
     }
 }

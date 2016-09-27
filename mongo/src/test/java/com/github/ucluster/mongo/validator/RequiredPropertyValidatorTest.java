@@ -18,34 +18,34 @@ public class RequiredPropertyValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        required = new RequiredPropertyValidator("username", true);
-        optional = new RequiredPropertyValidator("username", false);
+        required = new RequiredPropertyValidator(true);
+        optional = new RequiredPropertyValidator(false);
     }
 
     @Test
     public void should_success_required_when_value_presence() {
-        final ValidationResult result = required.validate(ImmutableMap.<String, Object>builder().put("username", "kiwiwin").build());
+        final ValidationResult result = required.validate(ImmutableMap.<String, Object>builder().put("username", "kiwiwin").build(), "username");
 
         assertThat(result.valid(), is(true));
     }
 
     @Test
     public void should_failed_required_but_value_absence() {
-        final ValidationResult result = required.validate(new HashMap<>());
+        final ValidationResult result = required.validate(new HashMap<>(), "username");
 
         assertThat(result.valid(), is(false));
     }
 
     @Test
     public void should_success_optional_when_value_presence() {
-        final ValidationResult result = optional.validate(ImmutableMap.<String, Object>builder().put("username", "kiwiwin").build());
+        final ValidationResult result = optional.validate(ImmutableMap.<String, Object>builder().put("username", "kiwiwin").build(), "username");
 
         assertThat(result.valid(), is(true));
     }
 
     @Test
     public void should_success_optional_but_value_absence() {
-        final ValidationResult result = optional.validate(new HashMap<>());
+        final ValidationResult result = optional.validate(new HashMap<>(), "username");
 
         assertThat(result.valid(), is(true));
     }

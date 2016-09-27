@@ -18,13 +18,13 @@ public class PropertyDefinitionTest {
 
     @Before
     public void setUp() throws Exception {
-        definition = new DefaultPropertyDefinition(
+        definition = new DefaultPropertyDefinition("username",
                 ImmutableMap.<String, PropertyValidator>builder()
                         .put("format",
-                                new FormatPropertyValidator("username", ImmutableMap.<String, Object>builder()
+                                new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
                                         .put("pattern", "\\w{6,12}")
                                         .build()))
-                        .put("required", new RequiredPropertyValidator("username", true))
+                        .put("required", new RequiredPropertyValidator(true))
                         .build()
         );
     }
@@ -53,7 +53,7 @@ public class PropertyDefinitionTest {
 
         assertThat(result.errors().size(), is(1));
         final ValidationResult.ValidateFailure failure = result.errors().get(0);
-        assertThat(failure.getPath(), is("username"));
+        assertThat(failure.getPropertyPath(), is("username"));
         assertThat(failure.getType(), is("required"));
     }
 
@@ -66,7 +66,7 @@ public class PropertyDefinitionTest {
 
         assertThat(result.errors().size(), is(1));
         final ValidationResult.ValidateFailure failure = result.errors().get(0);
-        assertThat(failure.getPath(), is("username"));
+        assertThat(failure.getPropertyPath(), is("username"));
         assertThat(failure.getType(), is("format"));
     }
 }

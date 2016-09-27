@@ -9,19 +9,17 @@ import java.util.regex.Pattern;
 
 public class FormatPropertyValidator implements PropertyValidator {
 
-    private final String propertyPath;
     private final Object configuration;
 
     private final Pattern pattern;
 
-    public FormatPropertyValidator(String propertyPath, Object configuration) {
-        this.propertyPath = propertyPath;
+    public FormatPropertyValidator(Object configuration) {
         this.configuration = configuration;
         this.pattern = Pattern.compile((String) ((Map<String, Object>) configuration).get("pattern"));
     }
 
     @Override
-    public ValidationResult validate(Map<String, Object> request) {
+    public ValidationResult validate(Map<String, Object> request, String propertyPath) {
         if (path(request, propertyPath) == null) {
             return ValidationResult.SUCCESS;
         }

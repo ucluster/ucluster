@@ -37,21 +37,21 @@ public class DSL {
 
         final Map<String, Object> propertyDefinitionJson = (Map<String, Object>) userDefinitionJson.get(propertyPath);
         for (String validatorType : propertyDefinitionJson.keySet()) {
-            final PropertyValidator propertyValidator = loadPropertyValidator(propertyPath, propertyDefinitionJson.get(validatorType), validatorType);
+            final PropertyValidator propertyValidator = loadPropertyValidator(validatorType, propertyDefinitionJson.get(validatorType));
             if (propertyValidator != null) {
                 propertyValidators.put(validatorType, propertyValidator);
             }
         }
 
-        return new DefaultPropertyDefinition(propertyValidators);
+        return new DefaultPropertyDefinition(propertyPath, propertyValidators);
     }
 
-    private static PropertyValidator loadPropertyValidator(String propertyPath, Object propertyValidatorConfiguration, String validatorType) {
+    private static PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
         switch (validatorType) {
             case "format":
-                return new FormatPropertyValidator(propertyPath, propertyValidatorConfiguration);
+                return new FormatPropertyValidator(propertyValidatorConfiguration);
             case "required":
-                return new RequiredPropertyValidator(propertyPath, propertyValidatorConfiguration);
+                return new RequiredPropertyValidator(propertyValidatorConfiguration);
             default:
                 return null;
         }

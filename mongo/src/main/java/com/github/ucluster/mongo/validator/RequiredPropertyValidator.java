@@ -7,19 +7,17 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class RequiredPropertyValidator implements PropertyValidator {
-    private final String propertyPath;
     private final Object configuration;
 
     private final boolean isRequired;
 
-    public RequiredPropertyValidator(String propertyPath, Object configuration) {
-        this.propertyPath = propertyPath;
+    public RequiredPropertyValidator(Object configuration) {
         this.configuration = configuration;
         this.isRequired = (boolean) configuration;
     }
 
     @Override
-    public ValidationResult validate(Map<String, Object> request) {
+    public ValidationResult validate(Map<String, Object> request, String propertyPath) {
         if (!isRequired) {
             return ValidationResult.SUCCESS;
         }

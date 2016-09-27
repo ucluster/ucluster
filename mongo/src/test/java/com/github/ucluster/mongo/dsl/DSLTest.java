@@ -53,7 +53,7 @@ public class DSLTest {
         assertThat(errors.size(), is(1));
 
         final ValidationResult.ValidateFailure failure = errors.get(0);
-        assertThat(failure.getPath(), is("username"));
+        assertThat(failure.getPropertyPath(), is("username"));
         assertThat(failure.getType(), is("format"));
     }
 

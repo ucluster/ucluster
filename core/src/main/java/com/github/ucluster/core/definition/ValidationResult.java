@@ -38,16 +38,16 @@ public class ValidationResult {
     }
 
     public static class ValidateFailure {
-        String path;
+        String propertyPath;
         String type;
 
-        public ValidateFailure(String path, String type) {
-            this.path = path;
+        public ValidateFailure(String propertyPath, String type) {
+            this.propertyPath = propertyPath;
             this.type = type;
         }
 
-        public String getPath() {
-            return path;
+        public String getPropertyPath() {
+            return propertyPath;
         }
 
         public String getType() {

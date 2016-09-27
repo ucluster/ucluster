@@ -18,7 +18,7 @@ public class FormatPropertyValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator = new FormatPropertyValidator("username",
+        validator = new FormatPropertyValidator(
                 ImmutableMap.<String, Object>builder()
                         .put("pattern", "\\w{6,12}")
                         .build());
@@ -33,7 +33,7 @@ public class FormatPropertyValidatorTest {
 
     @Test
     public void should_success_if_path_value_is_null() {
-        final ValidationResult result = validator.validate(new HashMap<>());
+        final ValidationResult result = validator.validate(new HashMap<>(), "username");
 
         assertThat(result.valid(), is(true));
     }
@@ -42,7 +42,7 @@ public class FormatPropertyValidatorTest {
     public void should_validate_against_format() {
         final ValidationResult result = validator.validate(
                 ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwiwin").build());
+                        .put("username", "kiwiwin").build(), "username");
 
         assertThat(result.valid(), is(true));
     }
@@ -51,13 +51,13 @@ public class FormatPropertyValidatorTest {
     public void should_failed_to_validate_against_format() {
         final ValidationResult result = validator.validate(
                 ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwi").build());
+                        .put("username", "kiwi").build(), "username");
 
         assertThat(result.valid(), is(false));
 
         assertThat(result.errors().size(), is(1));
         final ValidationResult.ValidateFailure failure = result.errors().get(0);
-        assertThat(failure.getPath(), is("username"));
+        assertThat(failure.getPropertyPath(), is("username"));
         assertThat(failure.getType(), is("format"));
     }
 }

@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface PropertyValidator {
 
-    ValidationResult validate(Map<String, Object> request);
+    ValidationResult validate(Map<String, Object> request, String propertyPath);
 
     Object configuration();
 }

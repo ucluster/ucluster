@@ -9,8 +9,10 @@ import java.util.Map;
 
 public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinition {
     private final Map<String, PropertyValidator> validators;
+    private final String propertyPath;
 
-    public DefaultPropertyDefinition(Map<String, PropertyValidator> validators) {
+    public DefaultPropertyDefinition(String propertyPath, Map<String, PropertyValidator> validators) {
+        this.propertyPath = propertyPath;
         this.validators = validators;
     }
 
@@ -28,7 +30,7 @@ public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinit
     @Override
     public ValidationResult validate(Map<String, Object> user) {
         return validators.entrySet().stream()
-                .map(entry -> entry.getValue().validate(user))
+                .map(entry -> entry.getValue().validate(user, propertyPath))
                 .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
     }
 }
