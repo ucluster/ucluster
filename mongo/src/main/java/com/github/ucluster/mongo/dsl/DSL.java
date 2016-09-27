@@ -6,6 +6,7 @@ import com.github.ucluster.mongo.util.Json;
 import com.github.ucluster.mongo.validator.DefaultPropertyDefinition;
 import com.github.ucluster.mongo.validator.DefaultUserDefinition;
 import com.github.ucluster.mongo.validator.FormatPropertyValidator;
+import com.github.ucluster.mongo.validator.RequiredPropertyValidator;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.ScriptEngine;
@@ -36,16 +37,24 @@ public class DSL {
 
         final Map<String, Object> propertyDefinitionJson = (Map<String, Object>) userDefinitionJson.get(propertyPath);
         for (String validatorType : propertyDefinitionJson.keySet()) {
-            if (validatorType.equals("format")) {
-                propertyValidators.put(validatorType, loadPropertyValidator(propertyPath, propertyDefinitionJson.get(validatorType)));
+            final PropertyValidator propertyValidator = loadPropertyValidator(propertyPath, propertyDefinitionJson.get(validatorType), validatorType);
+            if (propertyValidator != null) {
+                propertyValidators.put(validatorType, propertyValidator);
             }
         }
 
         return new DefaultPropertyDefinition(propertyValidators);
     }
 
-    private static PropertyValidator loadPropertyValidator(String propertyPath, Object propertyValidatorConfiguration) {
-        return new FormatPropertyValidator(propertyPath, propertyValidatorConfiguration);
+    private static PropertyValidator loadPropertyValidator(String propertyPath, Object propertyValidatorConfiguration, String validatorType) {
+        switch (validatorType) {
+            case "format":
+                return new FormatPropertyValidator(propertyPath, propertyValidatorConfiguration);
+            case "required":
+                return new RequiredPropertyValidator(propertyPath, propertyValidatorConfiguration);
+            default:
+                return null;
+        }
     }
 
     private static Map<String, Object> loadUserJsonDefinition(String definition) {

@@ -33,6 +33,22 @@ In above example, `username` and `password` are two user properties definition, 
 
 In above example, `required`, `uniqueness`, `format` are property validators, which are used when you create new user or update user properties
 
+#### required
+
+Example:
+    
+    required: true
+    
+NOTE*: by convention, default `required` is `false`    
+
+#### format
+
+Example:
+
+    format: {
+        pattern: "\\w{6,16}"
+    }
+
 ## Dev-Env
 
     cd dev;

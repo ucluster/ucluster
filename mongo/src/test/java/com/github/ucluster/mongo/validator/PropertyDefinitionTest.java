@@ -24,6 +24,7 @@ public class PropertyDefinitionTest {
                                 new FormatPropertyValidator("username", ImmutableMap.<String, Object>builder()
                                         .put("pattern", "\\w{6,12}")
                                         .build()))
+                        .put("required", new RequiredPropertyValidator("username", true))
                         .build()
         );
     }
@@ -42,6 +43,18 @@ public class PropertyDefinitionTest {
                 .put("username", "kiwiwin").build());
 
         assertThat(result.valid(), is(true));
+    }
+
+    @Test
+    public void should_failed_validate_property_if_one_of_the_validator_failed() {
+        final ValidationResult result = definition.validate(ImmutableMap.<String, Object>builder().build());
+
+        assertThat(result.valid(), is(false));
+
+        assertThat(result.errors().size(), is(1));
+        final ValidationResult.ValidateFailure failure = result.errors().get(0);
+        assertThat(failure.getPath(), is("username"));
+        assertThat(failure.getType(), is("required"));
     }
 
     @Test

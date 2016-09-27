@@ -10,8 +10,9 @@ import java.util.regex.Pattern;
 public class FormatPropertyValidator implements PropertyValidator {
 
     private final String propertyPath;
-    private final Pattern pattern;
     private final Object configuration;
+
+    private final Pattern pattern;
 
     public FormatPropertyValidator(String propertyPath, Object configuration) {
         this.propertyPath = propertyPath;
