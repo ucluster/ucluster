@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo.definition;
+package com.github.ucluster.common.definition;
 
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;

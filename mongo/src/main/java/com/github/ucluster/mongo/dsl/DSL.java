@@ -1,9 +1,9 @@
 package com.github.ucluster.mongo.dsl;
 
+import com.github.ucluster.common.definition.DefaultPropertyDefinition;
+import com.github.ucluster.common.definition.DefaultUserDefinition;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
-import com.github.ucluster.mongo.definition.DefaultPropertyDefinition;
-import com.github.ucluster.mongo.definition.DefaultUserDefinition;
 import com.github.ucluster.mongo.util.Json;
 import com.google.inject.Injector;
 import com.google.inject.Key;

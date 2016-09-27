@@ -1,4 +1,5 @@
 rootProject.name = 'ucluster'
 
 include 'core'
+include 'common'
 include 'mongo'

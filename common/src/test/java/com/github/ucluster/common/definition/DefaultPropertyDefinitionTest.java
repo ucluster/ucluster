@@ -1,5 +1,7 @@
-package com.github.ucluster.mongo.definition;
+package com.github.ucluster.common.definition;
 
+import com.github.ucluster.common.definition.validator.FormatValidator;
+import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
@@ -12,7 +14,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class PropertyDefinitionTest {
+public class DefaultPropertyDefinitionTest {
 
     private UserDefinition.PropertyDefinition definition;
 

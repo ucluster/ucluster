@@ -1,0 +1,5 @@
+dependencies {
+    compile "com.google.inject:guice:$guice"
+
+    compile project(':core')
+}

@@ -1,13 +1,13 @@
 package com.github.ucluster.mongo.junit;
 
+import com.github.ucluster.common.definition.validator.FormatValidator;
+import com.github.ucluster.common.definition.validator.RequiredValidator;
+import com.github.ucluster.common.definition.validator.UniquenessValidator;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.definition.FormatValidator;
 import com.github.ucluster.mongo.definition.MongoUserDefinitionRepository;
-import com.github.ucluster.mongo.definition.RequiredValidator;
-import com.github.ucluster.mongo.definition.UniquenessValidator;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;

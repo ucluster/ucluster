@@ -1,5 +1,6 @@
-package com.github.ucluster.mongo.definition;
+package com.github.ucluster.common.definition;
 
+import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -11,7 +12,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class UserDefinitionTest {
+public class DefaultUserDefinitionTest {
 
     private DefaultUserDefinition definition;
 
