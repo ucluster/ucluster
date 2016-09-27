@@ -4,11 +4,11 @@ import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.mongo.definition.DefaultPropertyDefinition;
 import com.github.ucluster.mongo.definition.DefaultUserDefinition;
-import com.github.ucluster.mongo.definition.FormatPropertyValidator;
-import com.github.ucluster.mongo.definition.RequiredPropertyValidator;
-import com.github.ucluster.mongo.definition.UniquenessPropertyValidator;
 import com.github.ucluster.mongo.util.Json;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
@@ -18,6 +18,7 @@ import org.mongodb.morphia.annotations.Property;
 import javax.inject.Inject;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,20 +89,26 @@ public class DSL {
         return new DefaultPropertyDefinition(propertyPath, propertyValidators, propertyMetadata);
     }
 
-    private boolean isValidator(String metadata) {
-        return metadata.equals("format") || metadata.equals("required") || metadata.equals("uniqueness");
+    private boolean isValidator(String type) {
+        try {
+            injector.getInstance(Key.get(new TypeLiteral<Class>() {
+            }, Names.named("property." + type + ".validator")));
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
-        switch (validatorType) {
-            case "format":
-                return new FormatPropertyValidator(propertyValidatorConfiguration);
-            case "required":
-                return new RequiredPropertyValidator(propertyValidatorConfiguration);
-            case "uniqueness":
-                return new UniquenessPropertyValidator(propertyValidatorConfiguration);
-            default:
-                return null;
+        try {
+            final Class propertyValidatorClass = injector.getInstance(Key.get(new TypeLiteral<Class>() {
+            }, Names.named("property." + validatorType + ".validator")));
+
+            final Constructor<PropertyValidator> constructor = propertyValidatorClass.getConstructor(Object.class);
+            return constructor.newInstance(propertyValidatorConfiguration);
+        } catch (Exception e) {
+            return null;
         }
     }
 

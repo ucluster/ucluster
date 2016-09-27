@@ -20,10 +20,10 @@ public class PropertyDefinitionTest {
     public void setUp() throws Exception {
         definition = new DefaultPropertyDefinition("username",
                 asList(
-                        new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
+                        new FormatValidator(ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
                                 .build()),
-                        new RequiredPropertyValidator(true)
+                        new RequiredValidator(true)
                 )
         );
     }

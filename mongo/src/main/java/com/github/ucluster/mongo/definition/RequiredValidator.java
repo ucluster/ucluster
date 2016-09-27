@@ -6,12 +6,12 @@ import com.github.ucluster.core.definition.ValidationResult;
 import java.util.Arrays;
 import java.util.Map;
 
-public class RequiredPropertyValidator implements PropertyValidator {
+public class RequiredValidator implements PropertyValidator {
     private final Object configuration;
 
     private final boolean isRequired;
 
-    public RequiredPropertyValidator(Object configuration) {
+    public RequiredValidator(Object configuration) {
         this.configuration = configuration;
         this.isRequired = (boolean) configuration;
     }

@@ -12,4 +12,3 @@ generated
 .vagrant/
 dump.rdb
 generated-sources
-*.jar

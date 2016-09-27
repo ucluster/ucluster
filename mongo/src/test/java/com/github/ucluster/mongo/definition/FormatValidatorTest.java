@@ -12,13 +12,13 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class FormatPropertyValidatorTest {
+public class FormatValidatorTest {
 
     private PropertyValidator validator;
 
     @Before
     public void setUp() throws Exception {
-        validator = new FormatPropertyValidator(
+        validator = new FormatValidator(
                 ImmutableMap.<String, Object>builder()
                         .put("pattern", "\\w{6,12}")
                         .build());

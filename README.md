@@ -41,6 +41,10 @@ default value is `false`
 
 In above example, `required`, `uniqueness`, `format` are property validators, which are used when you create new user or update user properties
 
+#### register validator
+
+    registerValidator("property.format.validator", FormatValidator.class);
+
 #### required
 
 Example:

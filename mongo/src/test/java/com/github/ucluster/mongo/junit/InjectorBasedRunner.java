@@ -1,11 +1,17 @@
 package com.github.ucluster.mongo.junit;
 
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.definition.FormatValidator;
 import com.github.ucluster.mongo.definition.MongoUserDefinitionRepository;
+import com.github.ucluster.mongo.definition.RequiredValidator;
+import com.github.ucluster.mongo.definition.UniquenessValidator;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import com.mongodb.MongoClient;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
@@ -63,6 +69,15 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(UserRepository.class).to(MongoUserRepository.class);
 
                         bind(UserDefinitionRepository.class).to(MongoUserDefinitionRepository.class);
+
+                        registerValidator("property.format.validator", FormatValidator.class);
+                        registerValidator("property.required.validator", RequiredValidator.class);
+                        registerValidator("property.uniqueness.validator", UniquenessValidator.class);
+                    }
+
+                    private void registerValidator(String key, Class<? extends PropertyValidator> propertyValidatorClass) {
+                        bind(new TypeLiteral<Class>() {
+                        }).annotatedWith(Names.named(key)).toInstance(propertyValidatorClass);
                     }
                 }}));
     }

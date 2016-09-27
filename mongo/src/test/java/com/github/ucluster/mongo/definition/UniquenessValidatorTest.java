@@ -23,14 +23,14 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UniquenessPropertyValidatorTest {
+public class UniquenessValidatorTest {
     private PropertyValidator validator;
     private Injector injector;
     private UserRepository users;
 
     @Before
     public void setUp() throws Exception {
-        validator = new UniquenessPropertyValidator(true);
+        validator = new UniquenessValidator(true);
 
         injector = getInjector();
         injector.injectMembers(validator);

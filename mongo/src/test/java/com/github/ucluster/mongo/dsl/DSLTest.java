@@ -1,11 +1,17 @@
 package com.github.ucluster.mongo.dsl;
 
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
+import com.github.ucluster.mongo.definition.FormatValidator;
+import com.github.ucluster.mongo.definition.RequiredValidator;
+import com.github.ucluster.mongo.definition.UniquenessValidator;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -91,6 +97,15 @@ public class DSLTest {
                     @Override
                     protected void configure() {
                         bind(UserRepository.class).toInstance(users);
+
+                        registerValidator("property.format.validator", FormatValidator.class);
+                        registerValidator("property.required.validator", RequiredValidator.class);
+                        registerValidator("property.uniqueness.validator", UniquenessValidator.class);
+                    }
+
+                    private void registerValidator(String key, Class<? extends PropertyValidator> propertyValidatorClass) {
+                        bind(new TypeLiteral<Class>() {
+                        }).annotatedWith(Names.named(key)).toInstance(propertyValidatorClass);
                     }
                 }}));
     }

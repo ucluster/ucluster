@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class FormatPropertyValidator implements PropertyValidator {
+public class FormatValidator implements PropertyValidator {
 
     private final Object configuration;
 
     private final Pattern pattern;
 
-    public FormatPropertyValidator(Object configuration) {
+    public FormatValidator(Object configuration) {
         this.configuration = configuration;
         this.pattern = Pattern.compile((String) ((Map<String, Object>) configuration).get("pattern"));
     }

@@ -10,14 +10,14 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
-public class UniquenessPropertyValidator implements PropertyValidator {
+public class UniquenessValidator implements PropertyValidator {
     @Inject
     UserRepository users;
 
     private final Object configuration;
     private final boolean isUnique;
 
-    public UniquenessPropertyValidator(Object configuration) {
+    public UniquenessValidator(Object configuration) {
         this.configuration = configuration;
         this.isUnique = (boolean) configuration;
     }

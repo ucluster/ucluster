@@ -11,15 +11,15 @@ import java.util.HashMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class RequiredPropertyValidatorTest {
+public class RequiredValidatorTest {
 
     private PropertyValidator required;
     private PropertyValidator optional;
 
     @Before
     public void setUp() throws Exception {
-        required = new RequiredPropertyValidator(true);
-        optional = new RequiredPropertyValidator(false);
+        required = new RequiredValidator(true);
+        optional = new RequiredValidator(false);
     }
 
     @Test
