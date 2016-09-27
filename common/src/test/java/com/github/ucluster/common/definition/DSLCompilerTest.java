@@ -33,17 +33,13 @@ public class DSLCompilerTest {
     private Injector injector;
     private UserRepository users;
 
-    private DSLCompiler dslCompiler;
-
     private UserDefinition definition;
 
     @Before
     public void setUp() throws Exception {
         injector = getInjector();
 
-        dslCompiler = new DSLCompiler();
-
-        definition = dslCompiler.userDefinition(injector, ResourceReader.read("dsl.js"));
+        definition = DSLCompiler.load(injector, ResourceReader.read("dsl.js"));
     }
 
     @Test

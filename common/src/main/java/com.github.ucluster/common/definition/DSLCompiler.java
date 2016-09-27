@@ -21,37 +21,24 @@ public class DSLCompiler {
     private static String DSL_COMPILER = "var user_definition = {};" +
             "var user = function (user) { user_definition = user; };";
 
-    protected String script;
-
-    private Injector injector;
-
-    public DSLCompiler() {
-    }
-
-    public UserDefinition userDefinition(Injector injector, String script) {
-        this.injector = injector;
-        this.script = script;
-        return load();
-    }
-
-    private UserDefinition load() {
+    public static UserDefinition load(Injector injector, String script) {
         final List<UserDefinition.PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
         final Map<String, Object> userDefinitionJson = loadUserJsonDefinition(script);
         for (String propertyPath : userDefinitionJson.keySet()) {
-            propertyDefinitions.add(loadPropertyDefinition(userDefinitionJson, propertyPath));
+            propertyDefinitions.add(loadPropertyDefinition(injector, userDefinitionJson, propertyPath));
         }
 
         return new DefaultUserDefinition(propertyDefinitions);
     }
 
-    private UserDefinition.PropertyDefinition loadPropertyDefinition(Map<String, Object> userDefinitionJson, String propertyPath) {
+    private static UserDefinition.PropertyDefinition loadPropertyDefinition(Injector injector, Map<String, Object> userDefinitionJson, String propertyPath) {
         final List<PropertyValidator> propertyValidators = new ArrayList<>();
 
         final Map<String, Object> propertyDefinitionJson = (Map<String, Object>) userDefinitionJson.get(propertyPath);
 
         for (String validatorType : propertyDefinitionJson.keySet()) {
-            final PropertyValidator propertyValidator = loadPropertyValidator(validatorType, propertyDefinitionJson.get(validatorType));
+            final PropertyValidator propertyValidator = loadPropertyValidator(injector, validatorType, propertyDefinitionJson.get(validatorType));
             if (propertyValidator != null) {
                 injector.injectMembers(propertyValidator);
                 propertyValidators.add(propertyValidator);
@@ -60,7 +47,7 @@ public class DSLCompiler {
 
         final Map<String, Object> propertyMetadata = new HashMap<>();
         for (String metadataType : propertyDefinitionJson.keySet()) {
-            if (!isValidator(metadataType)) {
+            if (!isValidator(injector, metadataType)) {
                 propertyMetadata.put(metadataType, propertyDefinitionJson.get(metadataType));
             }
         }
@@ -68,7 +55,7 @@ public class DSLCompiler {
         return new DefaultPropertyDefinition(propertyPath, propertyValidators, propertyMetadata);
     }
 
-    private boolean isValidator(String type) {
+    private static boolean isValidator(Injector injector, String type) {
         try {
             injector.getInstance(Key.get(new TypeLiteral<Class>() {
             }, Names.named("property." + type + ".validator")));
@@ -79,7 +66,7 @@ public class DSLCompiler {
         }
     }
 
-    private PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
+    private static PropertyValidator loadPropertyValidator(Injector injector, String validatorType, Object propertyValidatorConfiguration) {
         try {
             final Class propertyValidatorClass = injector.getInstance(Key.get(new TypeLiteral<Class>() {
             }, Names.named("property." + validatorType + ".validator")));
@@ -91,7 +78,7 @@ public class DSLCompiler {
         }
     }
 
-    private Map<String, Object> loadUserJsonDefinition(String definition) {
+    private static Map<String, Object> loadUserJsonDefinition(String definition) {
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
         try {
             engine.eval(DSL_COMPILER);

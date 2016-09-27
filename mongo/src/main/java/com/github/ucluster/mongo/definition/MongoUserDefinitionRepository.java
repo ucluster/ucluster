@@ -22,6 +22,6 @@ public class MongoUserDefinitionRepository implements UserDefinitionRepository {
         final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
                 .get();
 
-        return new DSLCompiler().userDefinition(injector, dsl.script());
+        return DSLCompiler.load(injector, dsl.script());
     }
 }
