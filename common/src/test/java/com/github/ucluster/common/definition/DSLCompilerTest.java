@@ -1,8 +1,9 @@
-package com.github.ucluster.mongo.dsl;
+package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
+import com.github.ucluster.common.junit.ResourceReader;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.ucluster.mongo.junit.ResourceReader.read;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,12 +28,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DSLTest {
+public class DSLCompilerTest {
 
     private Injector injector;
     private UserRepository users;
 
-    private DSL dsl;
+    private DSLCompiler dslCompiler;
 
     private UserDefinition definition;
 
@@ -41,10 +41,9 @@ public class DSLTest {
     public void setUp() throws Exception {
         injector = getInjector();
 
-        dsl = new DSL(read("dsl.js"));
-        injector.injectMembers(dsl);
+        dslCompiler = new DSLCompiler();
 
-        definition = dsl.userDefinition();
+        definition = dslCompiler.userDefinition(injector, ResourceReader.read("dsl.js"));
     }
 
     @Test

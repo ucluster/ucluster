@@ -1,6 +1,6 @@
 package com.github.ucluster.mongo.junit;
 
-import com.github.ucluster.mongo.dsl.DSL;
+import com.github.ucluster.mongo.dsl.MongoDSLScript;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -22,7 +22,7 @@ public class MongoTestRunner extends InjectorBasedRunner {
         @Override
         public void evaluate() throws Throwable {
             try {
-                datastore.save(new DSL(read("dsl.js")));
+                datastore.save(new MongoDSLScript(read("dsl.js")));
                 base.evaluate();
             } finally {
                 final MongoDatabase database = mongoClient.getDatabase("ucluster");

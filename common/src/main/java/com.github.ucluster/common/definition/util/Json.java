@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo.util;
+package com.github.ucluster.common.definition.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

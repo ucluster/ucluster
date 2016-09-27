@@ -1,8 +1,9 @@
 package com.github.ucluster.mongo.definition;
 
+import com.github.ucluster.common.definition.DSLCompiler;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
-import com.github.ucluster.mongo.dsl.DSL;
+import com.github.ucluster.mongo.dsl.MongoDSLScript;
 import com.google.inject.Injector;
 import org.mongodb.morphia.Datastore;
 
@@ -18,11 +19,9 @@ public class MongoUserDefinitionRepository implements UserDefinitionRepository {
 
     @Override
     public UserDefinition find(Map<String, Object> request) {
-        final DSL dsl = datastore.createQuery(DSL.class)
+        final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
                 .get();
 
-        injector.injectMembers(dsl);
-
-        return dsl.userDefinition();
+        return new DSLCompiler().userDefinition(injector, dsl.script());
     }
 }
