@@ -1,12 +1,13 @@
 package com.github.ucluster.common.definition;
 
+import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultUserDefinition implements com.github.ucluster.core.definition.UserDefinition {
+public class DefaultUserDefinition implements UserDefinition {
     private Map<String, PropertyDefinition> propertyDefinitions = new HashMap<>();
 
     public DefaultUserDefinition(List<PropertyDefinition> propertyDefinitions) {
