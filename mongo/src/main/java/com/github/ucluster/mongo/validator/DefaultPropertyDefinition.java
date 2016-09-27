@@ -5,15 +5,21 @@ import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinition {
-    private final Map<String, PropertyValidator> validators;
+    private Map<String, PropertyValidator> validators = new HashMap<>();
     private final String propertyPath;
 
-    public DefaultPropertyDefinition(String propertyPath, Map<String, PropertyValidator> validators) {
+    public DefaultPropertyDefinition(String propertyPath, List<PropertyValidator> validators) {
         this.propertyPath = propertyPath;
-        this.validators = validators;
+        validators.stream().forEach(propertyValidator -> this.validators.put(propertyValidator.type(), propertyValidator));
+    }
+
+    @Override
+    public String propertyPath() {
+        return propertyPath;
     }
 
     @Override

@@ -3,13 +3,14 @@ package com.github.ucluster.mongo.validator;
 import com.github.ucluster.core.definition.ValidationResult;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DefaultUserDefinition implements com.github.ucluster.core.definition.UserDefinition {
-    private final Map<String, PropertyDefinition> propertyDefinitions;
+    private Map<String, PropertyDefinition> propertyDefinitions = new HashMap<>();
 
-    public DefaultUserDefinition(Map<String, PropertyDefinition> propertyDefinitions) {
-        this.propertyDefinitions = propertyDefinitions;
+    public DefaultUserDefinition(List<PropertyDefinition> propertyDefinitions) {
+        propertyDefinitions.stream().forEach(propertyDefinition -> this.propertyDefinitions.put(propertyDefinition.propertyPath(), propertyDefinition));
     }
 
     @Override

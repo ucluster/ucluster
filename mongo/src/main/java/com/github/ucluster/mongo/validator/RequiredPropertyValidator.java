@@ -17,6 +17,11 @@ public class RequiredPropertyValidator implements PropertyValidator {
     }
 
     @Override
+    public String type() {
+        return "required";
+    }
+
+    @Override
     public ValidationResult validate(Map<String, Object> request, String propertyPath) {
         if (!isRequired) {
             return ValidationResult.SUCCESS;
@@ -26,7 +31,7 @@ public class RequiredPropertyValidator implements PropertyValidator {
             return ValidationResult.SUCCESS;
         }
 
-        return new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, "required")));
+        return new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, type())));
     }
 
     @Override

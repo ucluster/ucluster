@@ -11,7 +11,8 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class DSL {
@@ -22,24 +23,24 @@ public class DSL {
             "};";
 
     public static UserDefinition load(String script) {
-        final Map<String, UserDefinition.PropertyDefinition> propertyDefinitions = new HashMap<>();
+        final List<UserDefinition.PropertyDefinition> propertyDefinitions = new ArrayList<>();
 
         final Map<String, Object> userDefinitionJson = loadUserJsonDefinition(script);
         for (String propertyPath : userDefinitionJson.keySet()) {
-            propertyDefinitions.put(propertyPath, loadPropertyDefinition(userDefinitionJson, propertyPath));
+            propertyDefinitions.add(loadPropertyDefinition(userDefinitionJson, propertyPath));
         }
 
         return new DefaultUserDefinition(propertyDefinitions);
     }
 
     private static UserDefinition.PropertyDefinition loadPropertyDefinition(Map<String, Object> userDefinitionJson, String propertyPath) {
-        final Map<String, PropertyValidator> propertyValidators = new HashMap<>();
+        final List<PropertyValidator> propertyValidators = new ArrayList<>();
 
         final Map<String, Object> propertyDefinitionJson = (Map<String, Object>) userDefinitionJson.get(propertyPath);
         for (String validatorType : propertyDefinitionJson.keySet()) {
             final PropertyValidator propertyValidator = loadPropertyValidator(validatorType, propertyDefinitionJson.get(validatorType));
             if (propertyValidator != null) {
-                propertyValidators.put(validatorType, propertyValidator);
+                propertyValidators.add(propertyValidator);
             }
         }
 

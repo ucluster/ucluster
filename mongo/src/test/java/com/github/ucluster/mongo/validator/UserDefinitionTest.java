@@ -1,7 +1,5 @@
 package com.github.ucluster.mongo.validator;
 
-import com.github.ucluster.core.definition.PropertyValidator;
-import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -9,6 +7,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -18,22 +17,16 @@ public class UserDefinitionTest {
 
     @Before
     public void setUp() throws Exception {
-        definition = new DefaultUserDefinition(
-                ImmutableMap.<String, UserDefinition.PropertyDefinition>builder()
-                        .put("username", new DefaultPropertyDefinition("username",
-                                ImmutableMap.<String, PropertyValidator>builder()
-                                        .put("format", new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
-                                                .put("pattern", "\\w{6,12}")
-                                                .build()))
-                                        .build()))
-                        .put("nickname", new DefaultPropertyDefinition("nickname",
-                                ImmutableMap.<String, PropertyValidator>builder()
-                                        .put("format", new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
-                                                .put("pattern", "\\w{6,12}")
-                                                .build()))
-                                        .build()))
-                        .build()
-        );
+        definition = new DefaultUserDefinition(asList(
+                new DefaultPropertyDefinition("username",
+                        asList(new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
+                                .put("pattern", "\\w{6,12}")
+                                .build()))),
+                new DefaultPropertyDefinition("nickname",
+                        asList(new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
+                                .put("pattern", "\\w{6,12}")
+                                .build())))
+        ));
     }
 
     @Test
@@ -87,11 +80,11 @@ public class UserDefinitionTest {
 
         assertThat(result.errors().size(), is(2));
         final ValidationResult.ValidateFailure usernameFailure = result.errors().get(0);
-        assertThat(usernameFailure.getPropertyPath(), is("username"));
+        assertThat(usernameFailure.getPropertyPath(), is("nickname"));
         assertThat(usernameFailure.getType(), is("format"));
 
         final ValidationResult.ValidateFailure nicknameFailure = result.errors().get(1);
-        assertThat(nicknameFailure.getPropertyPath(), is("nickname"));
+        assertThat(nicknameFailure.getPropertyPath(), is("username"));
         assertThat(nicknameFailure.getType(), is("format"));
     }
 }

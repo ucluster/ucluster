@@ -19,6 +19,11 @@ public class FormatPropertyValidator implements PropertyValidator {
     }
 
     @Override
+    public String type() {
+        return "format";
+    }
+
+    @Override
     public ValidationResult validate(Map<String, Object> request, String propertyPath) {
         if (path(request, propertyPath) == null) {
             return ValidationResult.SUCCESS;
@@ -26,7 +31,7 @@ public class FormatPropertyValidator implements PropertyValidator {
 
         return pattern.matcher(String.valueOf(path(request, propertyPath))).matches()
                 ? ValidationResult.SUCCESS
-                : new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, "format")));
+                : new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, type())));
     }
 
     @Override

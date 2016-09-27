@@ -1,6 +1,5 @@
 package com.github.ucluster.mongo.validator;
 
-import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
@@ -9,6 +8,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -19,13 +19,12 @@ public class PropertyDefinitionTest {
     @Before
     public void setUp() throws Exception {
         definition = new DefaultPropertyDefinition("username",
-                ImmutableMap.<String, PropertyValidator>builder()
-                        .put("format",
-                                new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
-                                        .put("pattern", "\\w{6,12}")
-                                        .build()))
-                        .put("required", new RequiredPropertyValidator(true))
-                        .build()
+                asList(
+                        new FormatPropertyValidator(ImmutableMap.<String, Object>builder()
+                                .put("pattern", "\\w{6,12}")
+                                .build()),
+                        new RequiredPropertyValidator(true)
+                )
         );
     }
 
