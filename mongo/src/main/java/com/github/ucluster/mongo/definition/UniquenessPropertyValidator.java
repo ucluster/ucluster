@@ -29,7 +29,6 @@ public class UniquenessPropertyValidator implements PropertyValidator {
 
     @Override
     public ValidationResult validate(Map<String, Object> request, String propertyPath) {
-        System.out.println(request);
         final Optional<User> user = users.find(new User.Property() {
             @Override
             public String key() {

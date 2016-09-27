@@ -6,6 +6,7 @@ import com.github.ucluster.mongo.definition.DefaultPropertyDefinition;
 import com.github.ucluster.mongo.definition.DefaultUserDefinition;
 import com.github.ucluster.mongo.definition.FormatPropertyValidator;
 import com.github.ucluster.mongo.definition.RequiredPropertyValidator;
+import com.github.ucluster.mongo.definition.UniquenessPropertyValidator;
 import com.github.ucluster.mongo.util.Json;
 import com.google.inject.Injector;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +69,7 @@ public class DSL {
         final List<PropertyValidator> propertyValidators = new ArrayList<>();
 
         final Map<String, Object> propertyDefinitionJson = (Map<String, Object>) userDefinitionJson.get(propertyPath);
+
         for (String validatorType : propertyDefinitionJson.keySet()) {
             final PropertyValidator propertyValidator = loadPropertyValidator(validatorType, propertyDefinitionJson.get(validatorType));
             if (propertyValidator != null) {
@@ -75,7 +78,18 @@ public class DSL {
             }
         }
 
-        return new DefaultPropertyDefinition(propertyPath, propertyValidators);
+        final Map<String, Object> propertyMetadata = new HashMap<>();
+        for (String metadataType : propertyDefinitionJson.keySet()) {
+            if (!isValidator(metadataType)) {
+                propertyMetadata.put(metadataType, propertyDefinitionJson.get(metadataType));
+            }
+        }
+
+        return new DefaultPropertyDefinition(propertyPath, propertyValidators, propertyMetadata);
+    }
+
+    private boolean isValidator(String metadata) {
+        return metadata.equals("format") || metadata.equals("required") || metadata.equals("uniqueness");
     }
 
     private PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
@@ -84,6 +98,8 @@ public class DSL {
                 return new FormatPropertyValidator(propertyValidatorConfiguration);
             case "required":
                 return new RequiredPropertyValidator(propertyValidatorConfiguration);
+            case "uniqueness":
+                return new UniquenessPropertyValidator(propertyValidatorConfiguration);
             default:
                 return null;
         }

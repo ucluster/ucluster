@@ -29,4 +29,9 @@ public class DefaultUserDefinition implements com.github.ucluster.core.definitio
                 .map(fv -> fv.validate(request))
                 .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
     }
+
+    @Override
+    public PropertyDefinition property(String key) {
+        return propertyDefinitions.get(key);
+    }
 }

@@ -8,6 +8,8 @@ public interface UserDefinition {
 
     ValidationResult validate(Map<String, Object> user);
 
+    PropertyDefinition property(String key);
+
     interface PropertyDefinition {
 
         String propertyPath();

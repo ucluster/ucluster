@@ -11,13 +11,16 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.ucluster.mongo.junit.ResourceReader.read;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DSLTest {
 
@@ -67,6 +70,12 @@ public class DSLTest {
         assertThat(failure.getType(), is("format"));
     }
 
+    @Test
+    public void should_get_definition() {
+        final UserDefinition.PropertyDefinition passwordDefinition = definition.property("password");
+
+        assertThat(passwordDefinition.definition().get("password"), is(true));
+    }
 
     private Injector getInjector() {
         return createInjector(getAbstractModules());
@@ -74,6 +83,8 @@ public class DSLTest {
 
     private List<AbstractModule> getAbstractModules() {
         users = mock(UserRepository.class);
+
+        when(users.find(any())).thenReturn(Optional.empty());
 
         return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {

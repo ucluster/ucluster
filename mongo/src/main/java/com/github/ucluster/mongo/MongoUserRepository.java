@@ -13,6 +13,7 @@ import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MongoUserRepository implements UserRepository {
@@ -24,21 +25,34 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public User create(Map<String, Object> request) {
-        ensureUserDefinitionSatisified(request);
+        final UserDefinition userDefinition = userDefinitions.find(request);
+        ensureRequestMatchUserDefinition(userDefinition, request);
 
-        final MongoUser user = new MongoUser();
-        user.createdAt = new DateTime();
-
-        getProperties(request).keySet().forEach(key -> {
-            user.update(new MongoUserProperty(key, convertPropertyValue(getProperties(request), key)));
-        });
-
+        final User user = constructUser(userDefinition, request);
         datastore.save(user);
         return user;
     }
 
-    private void ensureUserDefinitionSatisified(Map<String, Object> request) {
-        final UserDefinition userDefinition = userDefinitions.find(request);
+    private MongoUser constructUser(UserDefinition userDefinition, Map<String, Object> request) {
+        final MongoUser user = new MongoUser();
+        user.createdAt = new DateTime();
+
+        getProperties(request).keySet().forEach(propertyKey -> {
+            final UserDefinition.PropertyDefinition propertyDefinition = userDefinition.property(propertyKey);
+
+            user.update(constructProperty(propertyDefinition, (String) getProperties(request).get(propertyKey)));
+        });
+        return user;
+    }
+
+    private User.Property constructProperty(UserDefinition.PropertyDefinition propertyDefinition, String propertyValue) {
+        if (Objects.equals(propertyDefinition.definition().get("password"), true)) {
+            return new MongoUserProperty(propertyDefinition.propertyPath(), Encryption.BCRYPT.encrypt(propertyValue));
+        }
+        return new MongoUserProperty(propertyDefinition.propertyPath(), propertyValue);
+    }
+
+    private void ensureRequestMatchUserDefinition(UserDefinition userDefinition, Map<String, Object> request) {
         final ValidationResult validationResult = userDefinition.validate(getProperties(request));
 
         if (!validationResult.valid()) {
@@ -48,15 +62,6 @@ public class MongoUserRepository implements UserRepository {
 
     private Map<String, Object> getProperties(Map<String, Object> request) {
         return (Map<String, Object>) request.get("properties");
-    }
-
-    private String convertPropertyValue(Map<String, Object> properties, String key) {
-        //convert property value, such as password and deal-password, etc..
-        final String original = (String) properties.get(key);
-        if (key.equals("password")) {
-            return Encryption.BCRYPT.encrypt(original);
-        }
-        return original;
     }
 
     @Override

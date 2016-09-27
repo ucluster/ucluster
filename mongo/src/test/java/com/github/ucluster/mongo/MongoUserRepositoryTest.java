@@ -3,7 +3,6 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.UserValidationException;
-import com.github.ucluster.mongo.dsl.DSL;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -16,7 +15,6 @@ import org.mongodb.morphia.Datastore;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static com.github.ucluster.mongo.junit.ResourceReader.read;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -37,13 +35,13 @@ public class MongoUserRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        datastore.save(new DSL(read("dsl.js")));
-
         user = users.create(ImmutableMap.<String, Object>builder()
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password").build())
                 .build());
+
+        System.out.println(user.uuid());
     }
 
     @Test

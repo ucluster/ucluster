@@ -10,9 +10,15 @@ import java.util.Map;
 
 public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinition {
     private Map<String, PropertyValidator> validators = new HashMap<>();
+    private final Map<String, Object> metadata;
     private final String propertyPath;
 
     public DefaultPropertyDefinition(String propertyPath, List<PropertyValidator> validators) {
+        this(propertyPath, validators, new HashMap<>());
+    }
+
+    public DefaultPropertyDefinition(String propertyPath, List<PropertyValidator> validators, Map<String, Object> metadata) {
+        this.metadata = metadata;
         this.propertyPath = propertyPath;
         validators.stream().forEach(propertyValidator -> this.validators.put(propertyValidator.type(), propertyValidator));
     }
@@ -29,6 +35,8 @@ public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinit
         for (String validatorType : validators.keySet()) {
             definition.put(validatorType, validators.get(validatorType).configuration());
         }
+
+        definition.putAll(metadata);
 
         return definition;
     }
