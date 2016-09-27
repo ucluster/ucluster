@@ -66,7 +66,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_find_user_by_property() {
-        final Optional<User> userFound = users.find(new MongoUserProperty("username", "kiwiwin"));
+        final Optional<User> userFound = users.find(new MongoUserProperty<>("username", "kiwiwin"));
 
         assertThat(userFound.isPresent(), is(true));
     }

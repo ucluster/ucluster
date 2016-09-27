@@ -16,10 +16,10 @@ public interface User {
 
     Optional<Property> property(String key);
 
-    interface Property {
+    interface Property<T> {
 
         String key();
 
-        String value();
+        T value();
     }
 }

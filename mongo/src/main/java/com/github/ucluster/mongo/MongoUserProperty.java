@@ -5,18 +5,18 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 
 @Embedded
-public class MongoUserProperty implements User.Property {
+public class MongoUserProperty<T> implements User.Property<T> {
 
     @Property
     private String key;
 
     @Property
-    private String value;
+    private T value;
 
     MongoUserProperty() {
     }
 
-    MongoUserProperty(String key, String value) {
+    MongoUserProperty(String key, T value) {
         this.key = key;
         this.value = value;
     }
@@ -27,7 +27,7 @@ public class MongoUserProperty implements User.Property {
     }
 
     @Override
-    public String value() {
+    public T value() {
         return value;
     }
 }

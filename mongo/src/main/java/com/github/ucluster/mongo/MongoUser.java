@@ -40,7 +40,6 @@ public class MongoUser implements User {
 
     @Override
     public void authenticate(Property identityProperty, String password) {
-        //check property is identity property or not
         final Optional<Property> property = property(identityProperty.key());
 
         if (!property.isPresent()) {
@@ -51,7 +50,7 @@ public class MongoUser implements User {
             throw new UserAuthenticationException();
         }
 
-        if (!Encryption.BCRYPT.check(password, property("password").get().value())) {
+        if (!Encryption.BCRYPT.check(password, (String) property("password").get().value())) {
             throw new UserAuthenticationException();
         }
     }

@@ -29,11 +29,11 @@ public class MongoUserTest {
 
     @Test
     public void should_user_authenticate_success() {
-        user.authenticate(new MongoUserProperty("username", "kiwiwin"), "password");
+        user.authenticate(new MongoUserProperty<>("username", "kiwiwin"), "password");
     }
 
     @Test(expected = UserAuthenticationException.class)
     public void should_user_failed_authenticate() {
-        user.authenticate(new MongoUserProperty("username", "kiwiwin"), "invalid_password");
+        user.authenticate(new MongoUserProperty<>("username", "kiwiwin"), "invalid_password");
     }
 }

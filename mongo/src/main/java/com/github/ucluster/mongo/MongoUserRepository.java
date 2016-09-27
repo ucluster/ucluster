@@ -47,9 +47,9 @@ public class MongoUserRepository implements UserRepository {
 
     private User.Property constructProperty(UserDefinition.PropertyDefinition propertyDefinition, String propertyValue) {
         if (Objects.equals(propertyDefinition.definition().get("password"), true)) {
-            return new MongoUserProperty(propertyDefinition.propertyPath(), Encryption.BCRYPT.encrypt(propertyValue));
+            return new MongoUserProperty<>(propertyDefinition.propertyPath(), Encryption.BCRYPT.encrypt(propertyValue));
         }
-        return new MongoUserProperty(propertyDefinition.propertyPath(), propertyValue);
+        return new MongoUserProperty<>(propertyDefinition.propertyPath(), propertyValue);
     }
 
     private void ensureRequestMatchUserDefinition(UserDefinition userDefinition, Map<String, Object> request) {
