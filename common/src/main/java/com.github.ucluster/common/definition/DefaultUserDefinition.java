@@ -6,6 +6,7 @@ import com.github.ucluster.core.definition.ValidationResult;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DefaultUserDefinition implements UserDefinition {
     private Map<String, PropertyDefinition> propertyDefinitions = new HashMap<>();
@@ -16,13 +17,11 @@ public class DefaultUserDefinition implements UserDefinition {
 
     @Override
     public Map<String, Object> definition() {
-        final Map<String, Object> definition = new HashMap<>();
-
-        for (String propertyPath : propertyDefinitions.keySet()) {
-            definition.put(propertyPath, propertyDefinitions.get(propertyPath).definition());
-        }
-
-        return definition;
+        return propertyDefinitions.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue().definition()
+                ));
     }
 
     public ValidationResult validate(Map<String, Object> request) {
