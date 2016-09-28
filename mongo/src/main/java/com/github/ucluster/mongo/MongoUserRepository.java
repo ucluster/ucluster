@@ -7,15 +7,10 @@ import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.github.ucluster.core.exception.UserValidationException;
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MongoUserRepository implements UserRepository {
     @Inject
@@ -25,8 +20,8 @@ public class MongoUserRepository implements UserRepository {
     protected UserDefinitionRepository userDefinitions;
 
     @Override
-    public User create(Map<String, Object> request) {
-        final UserDefinition userDefinition = userDefinitions.find(getMetadata(request));
+    public User create(User.Request request) {
+        final UserDefinition userDefinition = userDefinitions.find(request.metadata());
         ensureRequestMatchUserDefinition(userDefinition, request);
 
         final User user = constructUser(userDefinition, request);
@@ -49,6 +44,12 @@ public class MongoUserRepository implements UserRepository {
         return enhance(user);
     }
 
+    @Override
+    public User update(User user) {
+        ((MongoUser) user).flush();
+        return user;
+    }
+
     private Optional<User> enhance(MongoUser user) {
         if (user == null) {
             return Optional.empty();
@@ -59,43 +60,17 @@ public class MongoUserRepository implements UserRepository {
         return Optional.of(user);
     }
 
-    @Override
-    public User update(User user) {
-        ((MongoUser) user).flush();
-        return user;
+    private User constructUser(UserDefinition userDefinition, User.Request request) {
+        final MongoUser user = new MongoUser.Builder(userDefinition).create(request);
+
+        return enhance(user).get();
     }
 
-    private MongoUser constructUser(UserDefinition userDefinition, Map<String, Object> request) {
-        final List<User.Property> properties = getProperties(request).keySet().stream()
-                .map(propertyKey -> constructProperty(userDefinition.property(propertyKey), (String) getProperties(request).get(propertyKey)))
-                .collect(Collectors.toList());
-
-        final MongoUser user = new MongoUser(new DateTime(), getMetadata(request), properties, userDefinition);
-        user.definition = userDefinition;
-        user.datastore = datastore;
-        return user;
-    }
-
-    private User.Property constructProperty(UserDefinition.PropertyDefinition propertyDefinition, String propertyValue) {
-        return new MongoUserProperty<>(propertyDefinition.propertyPath(), propertyValue);
-    }
-
-    private void ensureRequestMatchUserDefinition(UserDefinition userDefinition, Map<String, Object> request) {
-        final ValidationResult validationResult = userDefinition.validate(getProperties(request));
+    private void ensureRequestMatchUserDefinition(UserDefinition userDefinition, User.Request request) {
+        final ValidationResult validationResult = userDefinition.validate(request.properties());
 
         if (!validationResult.valid()) {
             throw new UserValidationException(validationResult);
         }
-    }
-
-    private Map<String, Object> getProperties(Map<String, Object> request) {
-        return (Map<String, Object>) request.getOrDefault("properties", new HashMap<>());
-    }
-
-    private Map<String, Object> getMetadata(Map<String, Object> request) {
-        final Map<Object, Object> defaultMetadata = new HashMap<>();
-        defaultMetadata.put("type", "default");
-
-        return (Map<String, Object>) request.getOrDefault("metadata", defaultMetadata);
     }
 }

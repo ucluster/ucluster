@@ -10,7 +10,9 @@ public class MongoDSLScript {
     @Id
     protected ObjectId uuid;
 
+    @Property
     private String type;
+
     @Property
     protected String script;
 

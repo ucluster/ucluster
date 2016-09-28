@@ -1,11 +1,10 @@
 package com.github.ucluster.core;
 
-import java.util.Map;
 import java.util.Optional;
 
 public interface UserRepository {
 
-    User create(Map<String, Object> request);
+    User create(User.Request request);
 
     Optional<User> uuid(String uuid);
 

@@ -142,4 +142,20 @@ public class MongoUser implements User {
     protected UserDefinition.PropertyDefinition propertyDefinition(Property property) {
         return definition.property(property.key());
     }
+
+    static class Builder {
+        private UserDefinition definition;
+
+        Builder(UserDefinition definition) {
+            this.definition = definition;
+        }
+
+        MongoUser create(Request request) {
+            final List<User.Property> properties = request.properties().keySet().stream()
+                    .map(propertyKey -> new MongoUserProperty<>(definition.property(propertyKey).propertyPath(), request.properties().get(propertyKey)))
+                    .collect(Collectors.toList());
+
+            return new MongoUser(new DateTime(), request.metadata(), properties, definition);
+        }
+    }
 }

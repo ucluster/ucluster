@@ -27,6 +27,6 @@ public class MongoUserDefinitionRepository implements UserDefinitionRepository {
     }
 
     private String type(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("type", "default");
+        return (String) metadata.getOrDefault("user_type", "default");
     }
 }

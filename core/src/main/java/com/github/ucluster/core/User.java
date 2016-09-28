@@ -2,6 +2,7 @@ package com.github.ucluster.core;
 
 import org.joda.time.DateTime;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface User {
@@ -21,5 +22,16 @@ public interface User {
         String key();
 
         T value();
+    }
+
+    interface Request {
+
+        String type();
+
+        Map<String, Object> metadata();
+
+        Map<String, Object> properties();
+
+        Map<String, Object> request();
     }
 }

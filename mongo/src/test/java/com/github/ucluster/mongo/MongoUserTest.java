@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.common.request.RequestBuilder;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.UserAuthenticationException;
@@ -20,11 +21,14 @@ public class MongoUserTest {
 
     @Before
     public void setUp() throws Exception {
-        user = users.create(ImmutableMap.<String, Object>builder()
-                .put("properties", ImmutableMap.<String, Object>builder()
+        final User.Request request = RequestBuilder.of("register")
+                .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
-                        .put("password", "password").build())
-                .build());
+                        .put("password", "password")
+                        .build())
+                .get();
+
+        user = users.create(request);
     }
 
     @Test
