@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+
 public class DefaultUserDefinition implements UserDefinition {
     private Map<String, PropertyDefinition> propertyDefinitions = new HashMap<>();
 
@@ -26,7 +28,13 @@ public class DefaultUserDefinition implements UserDefinition {
     }
 
     public ValidationResult validate(User user) {
-        return propertyDefinitions.values().stream()
+        return validate(user, propertyDefinitions.keySet().toArray(new String[propertyDefinitions.size()]));
+    }
+
+    @Override
+    public ValidationResult validate(User user, String... propertyPaths) {
+        return asList(propertyPaths).stream()
+                .map(propertyPath -> propertyDefinitions.get(propertyPath))
                 .map(propertyDefinition -> propertyDefinition.validate(user))
                 .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
     }

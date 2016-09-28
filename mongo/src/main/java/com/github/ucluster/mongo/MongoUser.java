@@ -137,16 +137,11 @@ public class MongoUser implements User {
         dirtyTracker.flush();
     }
 
-    //TODO: hide the BEFORE_CREATE / BEFORE_UPDATE logic in MongUser
     protected ValidationResult validate(PropertyProcessor.Type processType) {
         if (processType == PropertyProcessor.Type.BEFORE_CREATE) {
             return definition.validate(this);
         } else if (processType == PropertyProcessor.Type.BEFORE_UPDATE) {
-            return properties.keySet().stream()
-                    .filter(propertyPath -> dirtyTracker.isDirty(propertyPath))
-                    .map(propertyPath -> definition.property(propertyPath))
-                    .map(propertyDefinition -> propertyDefinition.validate(this))
-                    .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
+            return definition.validate(this, dirtyTracker.asArray());
         }
 
         throw new RuntimeException("not supported process type");
@@ -199,6 +194,10 @@ public class MongoUser implements User {
 
         boolean isDirty(String propertyPath) {
             return dirtyProperties.contains(propertyPath);
+        }
+
+        String[] asArray() {
+            return dirtyProperties.toArray(new String[dirtyProperties.size()]);
         }
     }
 
