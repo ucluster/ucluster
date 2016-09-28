@@ -30,4 +30,12 @@ public class MongoUserProperty<T> implements User.Property<T> {
     public T value() {
         return value;
     }
+
+    static String valueMongoField(User.Property property) {
+        return mongoField(property) + ".value";
+    }
+
+    static String mongoField(User.Property property) {
+        return "properties." + property.key();
+    }
 }

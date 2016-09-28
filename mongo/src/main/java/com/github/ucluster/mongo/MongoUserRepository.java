@@ -43,7 +43,7 @@ public class MongoUserRepository implements UserRepository {
     public Optional<User> find(User.Property property) {
         final MongoUser user = datastore.createQuery(MongoUser.class)
                 .disableValidation()
-                .field("properties." + property.key() + ".value").equal(property.value())
+                .field(MongoUserProperty.valueMongoField(property)).equal(property.value())
                 .get();
 
         return enhance(user);

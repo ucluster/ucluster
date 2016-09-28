@@ -131,7 +131,7 @@ public class MongoUser implements User {
                 .disableValidation();
 
         dirtyProperties.entrySet().stream().forEach(e ->
-                operations.set("properties." + e.getKey(), e.getValue())
+                operations.set(MongoUserProperty.mongoField(e.getValue()), e.getValue())
         );
 
         dirtyProperties.clear();
