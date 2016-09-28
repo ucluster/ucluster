@@ -7,18 +7,20 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class RequiredValidator implements PropertyValidator {
+    private String type;
     private final Object configuration;
 
     private final boolean isRequired;
 
-    public RequiredValidator(Object configuration) {
+    public RequiredValidator(String type, Object configuration) {
+        this.type = type;
         this.configuration = configuration;
         this.isRequired = (boolean) configuration;
     }
 
     @Override
     public String type() {
-        return "required";
+        return type;
     }
 
     @Override

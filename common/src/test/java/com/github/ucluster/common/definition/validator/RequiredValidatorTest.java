@@ -18,8 +18,8 @@ public class RequiredValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        required = new RequiredValidator(true);
-        optional = new RequiredValidator(false);
+        required = new RequiredValidator("required", true);
+        optional = new RequiredValidator("required", false);
     }
 
     @Test

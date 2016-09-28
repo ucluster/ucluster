@@ -25,14 +25,13 @@ import static org.mockito.Mockito.when;
 
 public class UniquenessValidatorTest {
     private PropertyValidator validator;
-    private Injector injector;
     private UserRepository users;
 
     @Before
     public void setUp() throws Exception {
-        validator = new UniquenessValidator(true);
+        validator = new UniquenessValidator("uniqueness", true);
 
-        injector = getInjector();
+        Injector injector = getInjector();
         injector.injectMembers(validator);
     }
 

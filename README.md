@@ -45,7 +45,8 @@ In above example, `required`, `uniqueness`, `format` are property validators, wh
 
     registerValidator("property.format.validator", FormatValidator.class);
     
-NOTE: in the example above `property.format.validator` is internally used as `@Named("property.format.validator")`, the convention is `property.<validator_type>.validator`, which should be as same as `FormatValidator.class` type (Q: a better way not fill information twice?)
+NOTE: in the example above `property.format.validator` is internally used as `@Named("property.format.validator")`, the convention is `property.<validator_type>.validator`.
+After registration, you can use this validator as `<validator_type>: { ...<configuration_json>...}`
 
 #### required
 

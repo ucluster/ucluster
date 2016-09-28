@@ -3,12 +3,13 @@ package com.github.ucluster.common.definition;
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
-import com.github.ucluster.common.junit.ResourceReader;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -16,6 +17,7 @@ import com.google.inject.name.Names;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,16 +32,15 @@ import static org.mockito.Mockito.when;
 
 public class DSLCompilerTest {
 
-    private Injector injector;
     private UserRepository users;
 
     private UserDefinition definition;
 
     @Before
     public void setUp() throws Exception {
-        injector = getInjector();
+        Injector injector = getInjector();
 
-        definition = DSLCompiler.load(injector, ResourceReader.read("dsl.js"));
+        definition = DSLCompiler.load(injector, read("dsl.js"));
     }
 
     @Test
@@ -103,5 +104,14 @@ public class DSLCompilerTest {
                         }).annotatedWith(Names.named(key)).toInstance(propertyValidatorClass);
                     }
                 }}));
+    }
+
+    private String read(String classpath) {
+        try {
+            return Resources.toString(Resources.getResource(classpath), Charsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

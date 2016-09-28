@@ -20,11 +20,11 @@ public class DefaultUserDefinitionTest {
     public void setUp() throws Exception {
         definition = new DefaultUserDefinition(asList(
                 new DefaultPropertyDefinition("username",
-                        asList(new FormatValidator(ImmutableMap.<String, Object>builder()
+                        asList(new FormatValidator("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
                                 .build()))),
                 new DefaultPropertyDefinition("nickname",
-                        asList(new FormatValidator(ImmutableMap.<String, Object>builder()
+                        asList(new FormatValidator("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
                                 .build())))
         ));

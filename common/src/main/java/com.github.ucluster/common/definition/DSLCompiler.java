@@ -104,10 +104,10 @@ public class DSLCompiler {
                     final Class propertyValidatorClass = injector.getInstance(Key.get(new TypeLiteral<Class>() {
                     }, Names.named("property." + validatorType + ".validator")));
 
-                    final Constructor<PropertyValidator> constructor = propertyValidatorClass.getConstructor(Object.class);
-                    return constructor.newInstance(propertyValidatorConfiguration);
+                    final Constructor<PropertyValidator> constructor = propertyValidatorClass.getConstructor(String.class, Object.class);
+                    return constructor.newInstance(validatorType, propertyValidatorConfiguration);
                 } catch (Exception e) {
-                    return null;
+                    throw new RuntimeException(e);
                 }
             }
         }

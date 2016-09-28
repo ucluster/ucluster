@@ -22,10 +22,10 @@ public class DefaultPropertyDefinitionTest {
     public void setUp() throws Exception {
         definition = new DefaultPropertyDefinition("username",
                 asList(
-                        new FormatValidator(ImmutableMap.<String, Object>builder()
+                        new FormatValidator("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
                                 .build()),
-                        new RequiredValidator(true)
+                        new RequiredValidator("required", true)
                 )
         );
     }

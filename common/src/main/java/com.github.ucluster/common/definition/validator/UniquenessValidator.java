@@ -14,17 +14,19 @@ public class UniquenessValidator implements PropertyValidator {
     @Inject
     UserRepository users;
 
+    private String type;
     private final Object configuration;
     private final boolean isUnique;
 
-    public UniquenessValidator(Object configuration) {
+    public UniquenessValidator(String type, Object configuration) {
+        this.type = type;
         this.configuration = configuration;
         this.isUnique = (boolean) configuration;
     }
 
     @Override
     public String type() {
-        return "uniqueness";
+        return type;
     }
 
     @Override

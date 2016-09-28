@@ -9,18 +9,19 @@ import java.util.regex.Pattern;
 
 public class FormatValidator implements PropertyValidator {
 
+    private final String type;
     private final Object configuration;
-
     private final Pattern pattern;
 
-    public FormatValidator(Object configuration) {
+    public FormatValidator(String type, Object configuration) {
+        this.type = type;
         this.configuration = configuration;
         this.pattern = Pattern.compile((String) ((Map<String, Object>) configuration).get("pattern"));
     }
 
     @Override
     public String type() {
-        return "format";
+        return type;
     }
 
     @Override

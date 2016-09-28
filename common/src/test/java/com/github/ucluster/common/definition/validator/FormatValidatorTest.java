@@ -18,10 +18,9 @@ public class FormatValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        validator = new FormatValidator(
-                ImmutableMap.<String, Object>builder()
-                        .put("pattern", "\\w{6,12}")
-                        .build());
+        validator = new FormatValidator("format", ImmutableMap.<String, Object>builder()
+                .put("pattern", "\\w{6,12}")
+                .build());
     }
 
     @Test
