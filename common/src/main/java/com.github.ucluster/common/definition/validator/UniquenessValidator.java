@@ -39,8 +39,8 @@ public class UniquenessValidator implements PropertyValidator {
                 }
 
                 @Override
-                public String value() {
-                    return (String) request.get(propertyPath);
+                public Object value() {
+                    return request.get(propertyPath);
                 }
             });
 

@@ -92,6 +92,21 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
+    public void should_success_update_password() {
+        final User userBeforeUpdate = users.uuid(user.uuid()).get();
+
+        userBeforeUpdate.update(new MongoUserProperty<>("password", "newpassword"));
+
+        users.update(userBeforeUpdate);
+
+        final User userAfterUpdate = users.uuid(this.user.uuid()).get();
+
+        assertThat(userAfterUpdate.createdAt(), is(userBeforeUpdate.createdAt()));
+        assertThat(userAfterUpdate.property("username").get().value(), is("kiwiwin"));
+        assertThat(userAfterUpdate.property("password").get().value(), is(not("newpassword")));
+    }
+
+    @Test
     public void should_handle_concurrent_update_user_property() {
         final User updateNicknameUser = users.uuid(user.uuid()).get();
         final User updateEmailUser = users.uuid(user.uuid()).get();

@@ -6,7 +6,6 @@ import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.github.ucluster.core.exception.UserValidationException;
-import com.github.ucluster.mongo.security.Encryption;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
@@ -15,7 +14,6 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -72,16 +70,13 @@ public class MongoUserRepository implements UserRepository {
                 .map(propertyKey -> constructProperty(userDefinition.property(propertyKey), (String) getProperties(request).get(propertyKey)))
                 .collect(Collectors.toList());
 
-        final MongoUser user = new MongoUser(new DateTime(), getMetadata(request), properties);
+        final MongoUser user = new MongoUser(new DateTime(), getMetadata(request), properties, userDefinition);
         user.definition = userDefinition;
         user.datastore = datastore;
         return user;
     }
 
     private User.Property constructProperty(UserDefinition.PropertyDefinition propertyDefinition, String propertyValue) {
-        if (Objects.equals(propertyDefinition.definition().get("password"), true)) {
-            return new MongoUserProperty<>(propertyDefinition.propertyPath(), Encryption.BCRYPT.encrypt(propertyValue));
-        }
         return new MongoUserProperty<>(propertyDefinition.propertyPath(), propertyValue);
     }
 

@@ -20,6 +20,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,10 +49,11 @@ public class MongoUser implements User {
     MongoUser() {
     }
 
-    MongoUser(DateTime createdAt, Map<String, Object> metadata, List<Property> properties) {
+    MongoUser(DateTime createdAt, Map<String, Object> metadata, List<Property> properties, UserDefinition definition) {
         this.createdAt = createdAt;
         this.metadata = metadata;
-        this.properties = properties.stream().collect(Collectors.toMap(Property::key, property -> property));
+        this.definition = definition;
+        this.properties = properties.stream().collect(Collectors.toMap(Property::key, this::encryptPasswordProperty));
     }
 
     @Override
@@ -84,8 +86,10 @@ public class MongoUser implements User {
     @Override
     public void update(Property property) {
         ensurePropertyMutable(property);
-        dirty(property);
-        properties.put(property.key(), property);
+
+        final Property propertyToUpdate = encryptPasswordProperty(property);
+        dirty(propertyToUpdate);
+        properties.put(property.key(), propertyToUpdate);
     }
 
     @Override
@@ -100,10 +104,20 @@ public class MongoUser implements User {
         dirtyProperties.put(property.key(), property);
     }
 
-    protected void ensurePropertyMutable(Property property) {
-        final UserDefinition.PropertyDefinition propertyDefinition = definition.property(property.key());
+    protected Property encryptPasswordProperty(Property property) {
+        if (Objects.equals(propertyDefinition(property).definition().getOrDefault("password", false), true)) {
+            return encrypt(property);
+        }
 
-        if (propertyDefinition.definition().getOrDefault("immutable", false).equals(true)) {
+        return property;
+    }
+
+    protected Property<String> encrypt(Property<String> passwordProperty) {
+        return new MongoUserProperty<>(passwordProperty.key(), Encryption.BCRYPT.encrypt(passwordProperty.value()));
+    }
+
+    protected void ensurePropertyMutable(Property property) {
+        if (Objects.equals(propertyDefinition(property).definition().getOrDefault("immutable", false), true)) {
             throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.key(), "immutable")));
         }
     }
@@ -119,5 +133,9 @@ public class MongoUser implements User {
         dirtyProperties.clear();
 
         return operations;
+    }
+
+    protected UserDefinition.PropertyDefinition propertyDefinition(Property property) {
+        return definition.property(property.key());
     }
 }
