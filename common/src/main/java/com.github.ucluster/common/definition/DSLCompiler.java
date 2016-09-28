@@ -21,7 +21,7 @@ public class DSLCompiler {
             "var user = function (user) { user_definition = user; };";
 
     public static UserDefinition load(Injector injector, String script) {
-        return UserDSL.load(injector, loadUserJsonDefinition(script));
+        return new UserDSL(injector, loadUserJsonDefinition(script)).load();
     }
 
     private static Map<String, Object> loadUserJsonDefinition(String definition) {
@@ -38,39 +38,57 @@ public class DSLCompiler {
     }
 
     private static class UserDSL {
-        static UserDefinition load(Injector injector, Map<String, Object> json) {
-            final List<UserDefinition.PropertyDefinition> propertyDefinitions = json.keySet().stream()
-                    .map(propertyPath -> PropertyDSL.loadPropertyDefinition(injector, json, propertyPath))
+        private final Injector injector;
+        private final Map<String, Object> userJson;
+
+        UserDSL(Injector injector, Map<String, Object> userJson) {
+            this.injector = injector;
+            this.userJson = userJson;
+        }
+
+        UserDefinition load() {
+            final List<UserDefinition.PropertyDefinition> propertyDefinitions = userJson.keySet().stream()
+                    .map(propertyPath -> mapPropertyDSL(propertyPath).load())
                     .collect(Collectors.toList());
 
             return new DefaultUserDefinition(propertyDefinitions);
         }
 
-        private static class PropertyDSL {
+        private PropertyDSL mapPropertyDSL(String propertyPath) {
+            return new PropertyDSL(propertyPath, (Map<String, Object>) userJson.get(propertyPath));
+        }
 
-            private static UserDefinition.PropertyDefinition loadPropertyDefinition(Injector injector, Map<String, Object> userDefinitionJson, String propertyPath) {
-                final Map<String, Object> propertyDefinitionJson = (Map<String, Object>) userDefinitionJson.get(propertyPath);
+        private class PropertyDSL {
 
-                return new DefaultPropertyDefinition(propertyPath, loadPropertyValidators(injector, propertyDefinitionJson), loadPropertyMetadata(injector, propertyDefinitionJson));
+            private final String propertyPath;
+            private final Map<String, Object> propertyJson;
+
+            PropertyDSL(String propertyPath, Map<String, Object> propertyJson) {
+                this.propertyPath = propertyPath;
+                this.propertyJson = propertyJson;
             }
 
-            private static Map<String, Object> loadPropertyMetadata(Injector injector, Map<String, Object> json) {
-                return json.keySet().stream()
-                        .filter(key -> !isValidator(injector, key))
-                        .collect(Collectors.toMap(key -> key, json::get));
+            private UserDefinition.PropertyDefinition load() {
+                return new DefaultPropertyDefinition(propertyPath, loadPropertyValidators(), loadPropertyMetadata());
             }
 
-            private static List<PropertyValidator> loadPropertyValidators(Injector injector, Map<String, Object> json) {
-                return json.keySet().stream()
-                        .filter(key -> isValidator(injector, key))
+            private Map<String, Object> loadPropertyMetadata() {
+                return propertyJson.keySet().stream()
+                        .filter(key -> !isValidator(key))
+                        .collect(Collectors.toMap(key -> key, propertyJson::get));
+            }
+
+            private List<PropertyValidator> loadPropertyValidators() {
+                return propertyJson.keySet().stream()
+                        .filter(this::isValidator)
                         .map(key -> {
-                            final PropertyValidator propertyValidator = loadPropertyValidator(injector, key, json.get(key));
+                            final PropertyValidator propertyValidator = loadPropertyValidator(key, propertyJson.get(key));
                             injector.injectMembers(propertyValidator);
                             return propertyValidator;
                         }).collect(Collectors.toList());
             }
 
-            private static boolean isValidator(Injector injector, String type) {
+            private boolean isValidator(String type) {
                 try {
                     injector.getInstance(Key.get(new TypeLiteral<Class>() {
                     }, Names.named("property." + type + ".validator")));
@@ -81,7 +99,7 @@ public class DSLCompiler {
                 }
             }
 
-            private static PropertyValidator loadPropertyValidator(Injector injector, String validatorType, Object propertyValidatorConfiguration) {
+            private PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
                 try {
                     final Class propertyValidatorClass = injector.getInstance(Key.get(new TypeLiteral<Class>() {
                     }, Names.named("property." + validatorType + ".validator")));
