@@ -9,6 +9,7 @@ Example:
     user({
         username: {
             required: true,
+            immutable: true,
             uniqueness: true,
             format: {
                 pattern: "\\w{6,16}"
@@ -34,6 +35,12 @@ In above example, `username` and `password` are two user properties definition, 
 #### password
 
 if property is declared as `password`, then it will encrypted(BCrypt) before save to database, and this property cannot be searched
+
+default value is `false`
+
+#### immutable
+
+if property is declared as `immutable`, then it will cannot be updated.
 
 default value is `false`
 

@@ -2,6 +2,7 @@ user({
     username: {
         required: true,
         uniqueness: true,
+        immutable: true,
         format: {
             pattern: "\\w{6,16}"
         }

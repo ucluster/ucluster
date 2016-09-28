@@ -18,15 +18,15 @@ public class MongoUserDefinitionRepository implements UserDefinitionRepository {
     protected Datastore datastore;
 
     @Override
-    public UserDefinition find(Map<String, Object> request) {
+    public UserDefinition find(Map<String, Object> metadata) {
         final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
-                .field("type").equal(type(request))
+                .field("type").equal(type(metadata))
                 .get();
 
         return DSLCompiler.load(injector, dsl.script());
     }
 
-    private String type(Map<String, Object> request) {
-        return (String) request.getOrDefault("type", "default");
+    private String type(Map<String, Object> metadata) {
+        return (String) metadata.getOrDefault("type", "default");
     }
 }

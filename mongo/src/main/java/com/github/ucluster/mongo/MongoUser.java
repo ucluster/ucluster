@@ -28,14 +28,18 @@ public class MongoUser implements User {
     @org.mongodb.morphia.annotations.Property
     protected DateTime createdAt;
 
+    @org.mongodb.morphia.annotations.Property
+    protected Map<String, Object> metadata;
+
     @Embedded
     protected Map<String, Property> properties = new HashMap<>();
 
     MongoUser() {
     }
 
-    MongoUser(DateTime createdAt, List<Property> properties) {
+    MongoUser(DateTime createdAt, Map<String, Object> metadata, List<Property> properties) {
         this.createdAt = createdAt;
+        this.metadata = metadata;
         this.properties = properties.stream().collect(Collectors.toMap(Property::key, property -> property));
     }
 

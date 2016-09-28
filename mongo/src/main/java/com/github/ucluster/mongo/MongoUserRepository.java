@@ -13,6 +13,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,11 +29,32 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public User create(Map<String, Object> request) {
-        final UserDefinition userDefinition = userDefinitions.find(request);
+        final UserDefinition userDefinition = userDefinitions.find(getMetadata(request));
         ensureRequestMatchUserDefinition(userDefinition, request);
 
         final User user = constructUser(userDefinition, request);
         datastore.save(user);
+        return user;
+    }
+
+    @Override
+    public User uuid(String uuid) {
+        return datastore.get(MongoUser.class, new ObjectId(uuid));
+    }
+
+    @Override
+    public Optional<User> find(User.Property property) {
+        final User user = datastore.createQuery(MongoUser.class)
+                .disableValidation()
+                .field("properties." + property.key() + ".value").equal(property.value())
+                .get();
+
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    public User update(User user) {
+        datastore.update(user, getDirtyUpdateOperations(user));
         return user;
     }
 
@@ -41,7 +63,7 @@ public class MongoUserRepository implements UserRepository {
                 .map(propertyKey -> constructProperty(userDefinition.property(propertyKey), (String) getProperties(request).get(propertyKey)))
                 .collect(Collectors.toList());
 
-        return new MongoUser(new DateTime(), properties);
+        return new MongoUser(new DateTime(), getMetadata(request), properties);
     }
 
     private User.Property constructProperty(UserDefinition.PropertyDefinition propertyDefinition, String propertyValue) {
@@ -60,33 +82,20 @@ public class MongoUserRepository implements UserRepository {
     }
 
     private Map<String, Object> getProperties(Map<String, Object> request) {
-        return (Map<String, Object>) request.get("properties");
+        return (Map<String, Object>) request.getOrDefault("properties", new HashMap<>());
     }
 
-    @Override
-    public User uuid(String uuid) {
-        return datastore.get(MongoUser.class, new ObjectId(uuid));
-    }
+    private Map<String, Object> getMetadata(Map<String, Object> request) {
+        final Map<Object, Object> defaultMetadata = new HashMap<>();
+        defaultMetadata.put("type", "default");
 
-    @Override
-    public Optional<User> find(User.Property property) {
-        //disable validation since the mismatch for java object and mongo storage
-        final User user = datastore.createQuery(MongoUser.class)
-                .disableValidation()
-                .field("properties." + property.key() + ".value").equal(property.value())
-                .get();
-
-        return Optional.ofNullable(user);
-    }
-
-    @Override
-    public User update(User user) {
-        datastore.update(user, getDirtyUpdateOperations(user));
-        return user;
+        return (Map<String, Object>) request.getOrDefault("metadata", defaultMetadata);
     }
 
     private UpdateOperations<User> getDirtyUpdateOperations(User user) {
         MongoUser updateUser = (MongoUser) user;
+
+        ensureNoImmutablePropertyToUpdate(updateUser);
 
         final UpdateOperations<User> operations = datastore.createUpdateOperations(User.class)
                 .disableValidation();
@@ -98,5 +107,17 @@ public class MongoUserRepository implements UserRepository {
         updateUser.dirtyProperties.clear();
 
         return operations;
+    }
+
+    private void ensureNoImmutablePropertyToUpdate(MongoUser user) {
+        final UserDefinition userDefinition = userDefinitions.find(user.metadata);
+
+        user.dirtyProperties.values().forEach(property -> {
+            final UserDefinition.PropertyDefinition propertyDefinition = userDefinition.property(property.key());
+
+            if (propertyDefinition.definition().getOrDefault("immutable", false).equals(true)) {
+                throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.key(), "immutable")));
+            }
+        });
     }
 }

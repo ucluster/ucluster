@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface UserDefinitionRepository {
 
-    UserDefinition find(Map<String, Object> request);
+    UserDefinition find(Map<String, Object> metadata);
 }

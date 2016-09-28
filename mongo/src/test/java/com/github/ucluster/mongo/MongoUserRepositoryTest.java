@@ -82,6 +82,16 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
+    public void should_failed_to_update_immutable_property() {
+        thrown.expect(UserValidationException.class);
+
+        final User userUpdateImmutableProperty = users.uuid(user.uuid());
+        userUpdateImmutableProperty.update(new MongoUserProperty<>("username", "anotherkiwi"));
+
+        users.update(userUpdateImmutableProperty);
+    }
+
+    @Test
     public void should_handle_concurrent_update_user_property() {
         final User updateNicknameUser = users.uuid(user.uuid());
         final User updateEmailUser = users.uuid(user.uuid());
