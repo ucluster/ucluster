@@ -97,6 +97,10 @@ public class MongoUser implements User {
         return Optional.ofNullable(properties.get(key));
     }
 
+    protected void flush() {
+        datastore.update(this, generateDirtyUpdateOperations());
+    }
+
     @Transient
     protected Map<String, Property> dirtyProperties = new HashMap<>();
 

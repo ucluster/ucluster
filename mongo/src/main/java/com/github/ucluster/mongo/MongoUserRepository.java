@@ -61,7 +61,7 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public User update(User user) {
-        datastore.update(user, ((MongoUser) user).generateDirtyUpdateOperations());
+        ((MongoUser) user).flush();
         return user;
     }
 
