@@ -40,8 +40,6 @@ public class MongoUserRepositoryTest {
                         .put("username", "kiwiwin")
                         .put("password", "password").build())
                 .build());
-
-        System.out.println(user.uuid());
     }
 
     @Test

@@ -12,9 +12,11 @@ import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MongoUserRepository implements UserRepository {
     @Inject
@@ -34,15 +36,11 @@ public class MongoUserRepository implements UserRepository {
     }
 
     private MongoUser constructUser(UserDefinition userDefinition, Map<String, Object> request) {
-        final MongoUser user = new MongoUser();
-        user.createdAt = new DateTime();
+        final List<User.Property> properties = getProperties(request).keySet().stream()
+                .map(propertyKey -> constructProperty(userDefinition.property(propertyKey), (String) getProperties(request).get(propertyKey)))
+                .collect(Collectors.toList());
 
-        getProperties(request).keySet().forEach(propertyKey -> {
-            final UserDefinition.PropertyDefinition propertyDefinition = userDefinition.property(propertyKey);
-
-            user.update(constructProperty(propertyDefinition, (String) getProperties(request).get(propertyKey)));
-        });
-        return user;
+        return new MongoUser(new DateTime(), properties);
     }
 
     private User.Property constructProperty(UserDefinition.PropertyDefinition propertyDefinition, String propertyValue) {

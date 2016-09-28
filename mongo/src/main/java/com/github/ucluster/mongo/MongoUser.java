@@ -12,8 +12,10 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity("users")
 @Converters(JodaDateTimeConverter.class)
@@ -27,6 +29,14 @@ public class MongoUser implements User {
 
     @Embedded
     protected Map<String, Property> properties = new HashMap<>();
+
+    MongoUser() {
+    }
+
+    MongoUser(DateTime createdAt, List<Property> properties) {
+        this.createdAt = createdAt;
+        this.properties = properties.stream().collect(Collectors.toMap(Property::key, property -> property));
+    }
 
     @Override
     public String uuid() {
