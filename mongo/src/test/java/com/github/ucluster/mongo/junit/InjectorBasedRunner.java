@@ -4,6 +4,7 @@ import com.github.ucluster.common.definition.processor.ImmutableProcessor;
 import com.github.ucluster.common.definition.processor.PasswordProcessor;
 import com.github.ucluster.common.definition.validator.EmailValidator;
 import com.github.ucluster.common.definition.validator.FormatValidator;
+import com.github.ucluster.common.definition.validator.IdentityValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
 import com.github.ucluster.core.UserRepository;
@@ -78,6 +79,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         registerValidator("email", EmailValidator.class);
                         registerValidator("required", RequiredValidator.class);
                         registerValidator("uniqueness", UniquenessValidator.class);
+                        registerValidator("identity", IdentityValidator.class);
 
                         registerProcessor("password", PasswordProcessor.class);
                         registerProcessor("immutable", ImmutableProcessor.class);

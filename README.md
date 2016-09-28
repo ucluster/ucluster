@@ -8,9 +8,8 @@ Example:
      
     user({
         username: {
-            required: true,
+            identity: true,
             immutable: true,
-            uniqueness: true,
             format: {
                 pattern: "\\w{6,16}"
             }
@@ -96,6 +95,14 @@ Example:
     email: true
     
 default `email` is `false`
+
+#### identity
+
+Example:
+
+    identity: true
+
+default `identity` is `false`. `identity` is a combination of `required` and `uniqueness`    
 
 email validator regex patterns: 
 positive pattern: 
