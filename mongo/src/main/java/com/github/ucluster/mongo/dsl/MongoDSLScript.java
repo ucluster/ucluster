@@ -10,6 +10,7 @@ public class MongoDSLScript {
     @Id
     protected ObjectId uuid;
 
+    private String type;
     @Property
     protected String script;
 
@@ -17,8 +18,13 @@ public class MongoDSLScript {
     }
 
     //more attribute comes later for selection
-    public MongoDSLScript(String script) {
+    public MongoDSLScript(String type, String script) {
+        this.type = type;
         this.script = script;
+    }
+
+    public String type() {
+        return type;
     }
 
     public String script() {

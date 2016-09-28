@@ -22,7 +22,7 @@ public class MongoTestRunner extends InjectorBasedRunner {
         @Override
         public void evaluate() throws Throwable {
             try {
-                datastore.save(new MongoDSLScript(read("dsl.js")));
+                datastore.save(new MongoDSLScript("default", read("dsl.js")));
                 base.evaluate();
             } finally {
                 final MongoDatabase database = mongoClient.getDatabase("ucluster");

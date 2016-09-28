@@ -20,8 +20,13 @@ public class MongoUserDefinitionRepository implements UserDefinitionRepository {
     @Override
     public UserDefinition find(Map<String, Object> request) {
         final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
+                .field("type").equal(type(request))
                 .get();
 
         return DSLCompiler.load(injector, dsl.script());
+    }
+
+    private String type(Map<String, Object> request) {
+        return (String) request.getOrDefault("type", "default");
     }
 }
