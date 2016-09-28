@@ -11,7 +11,7 @@ public interface User {
 
     DateTime createdAt();
 
-    void authenticate(Property identityProperty, String password);
+    void authenticate(Property identityProperty, Property passwordProperty);
 
     void update(Property property);
 

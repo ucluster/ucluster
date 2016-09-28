@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,19 +77,45 @@ public class MongoUser implements User {
     }
 
     @Override
-    public void authenticate(Property identityProperty, String password) {
-        final Optional<Property> property = property(identityProperty.path());
+    public void authenticate(Property identityProperty, Property passwordProperty) {
+        ensureIdentityPropertyMatches(identityProperty);
+        ensurePasswordPropertyMatches(passwordProperty);
+    }
 
-        if (!property.isPresent()) {
+    private void ensurePasswordPropertyMatches(Property property) {
+        final Optional<Property> passwordProperty = property(property.path());
+
+        if (!passwordProperty.isPresent()) {
             throw new UserAuthenticationException();
         }
 
-        if (!property.get().value().equals(identityProperty.value())) {
+        if (!Objects.equals(definition.property(property.path()).definition().get("password"), true)) {
             throw new UserAuthenticationException();
         }
 
-        if (!Encryption.BCRYPT.check(password, (String) property("password").get().value())) {
+        if (!Encryption.BCRYPT.check((String) property.value(), (String) passwordProperty.get().value())) {
             throw new UserAuthenticationException();
+        }
+    }
+
+    private void ensureIdentityPropertyMatches(Property property) {
+        final Optional<Property> identityProperty = property(property.path());
+
+        if (!identityProperty.isPresent()) {
+            throw new UserAuthenticationException();
+        }
+
+        if (!identityProperty.get().value().equals(property.value())) {
+            throw new UserAuthenticationException();
+        }
+    }
+
+
+    private void ensurePropertyExist(Property... properties) {
+        for (Property property : properties) {
+            if (!property(property.path()).isPresent()) {
+                throw new UserAuthenticationException();
+            }
         }
     }
 

@@ -117,7 +117,10 @@ public class MongoUserRepositoryTest {
         users.update(userBeforeUpdate);
 
         final User userAfterUpdate = users.uuid(this.user.uuid()).get();
-        userAfterUpdate.authenticate(new MongoUserProperty<>("username", "kiwiwin"), "newpassword");
+        userAfterUpdate.authenticate(
+                new MongoUserProperty<>("username", "kiwiwin"),
+                new MongoUserProperty<>("password", "newpassword")
+        );
     }
 
     @Test
