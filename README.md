@@ -30,7 +30,17 @@ In above example, `username` and `password` are two user properties definition, 
 
 *NOTE: currently nested property are not supported yet.
 
-### Property Metadata
+### Property Lifecycle
+
+validation -> before_create
+
+validation -> before_update
+
+see http://guides.rubyonrails.org/active_record_basics.html#callbacks as a reference
+
+(TBD)
+
+### Property Processor
 
 #### password
 
@@ -40,7 +50,7 @@ default value is `false`
 
 #### immutable
 
-if property is declared as `immutable`, then it will cannot be updated.
+if property is declared as `immutable`, then it will cannot be updated, and exception will be thrown
 
 default value is `false`
 

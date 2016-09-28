@@ -20,8 +20,6 @@ public interface UserDefinition {
 
         ValidationResult validate(Map<String, Object> user);
 
-        <T> User.Property<T> processSave(User.Property<T> property);
-
-        <T> User.Property<T> processUpdate(User.Property<T> property);
+        <T> User.Property<T> process(PropertyProcessor.Type type, User.Property<T> property);
     }
 }

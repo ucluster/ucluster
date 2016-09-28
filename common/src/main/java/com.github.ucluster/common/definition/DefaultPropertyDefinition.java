@@ -66,24 +66,16 @@ public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinit
     }
 
     @Override
-    public <T> User.Property<T> processSave(User.Property<T> property) {
+    public <T> User.Property<T> process(PropertyProcessor.Type type, User.Property<T> property) {
         User.Property<T> result = property;
 
-        for (PropertyProcessor propertyProcessor : processors.values()) {
-            result = propertyProcessor.processSave(property);
+        for (PropertyProcessor processor : processors.values()) {
+            if (processor.isAppliable(type)) {
+                result = processor.process(property);
+            }
         }
 
         return result;
     }
 
-    @Override
-    public <T> User.Property<T> processUpdate(User.Property<T> property) {
-        User.Property<T> result = property;
-
-        for (PropertyProcessor propertyProcessor : processors.values()) {
-            result = propertyProcessor.processUpdate(property);
-        }
-
-        return result;
-    }
 }

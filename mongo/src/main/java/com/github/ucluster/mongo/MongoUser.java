@@ -2,6 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.common.definition.processor.Encryption;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
@@ -53,7 +54,12 @@ public class MongoUser implements User {
         this.createdAt = createdAt;
         this.metadata = metadata;
         this.definition = definition;
-        this.properties = properties.stream().collect(Collectors.toMap(Property::key, this::processSave));
+        this.properties = properties.stream()
+                .collect(
+                        Collectors.toMap(
+                                Property::key,
+                                property -> process(property, PropertyProcessor.Type.BEFORE_CREATE)
+                        ));
     }
 
     @Override
@@ -85,7 +91,7 @@ public class MongoUser implements User {
 
     @Override
     public void update(Property property) {
-        final Property propertyToUpdate = processUpdate(property);
+        final Property propertyToUpdate = process(property, PropertyProcessor.Type.BEFORE_UPDATE);
         dirtyTracker.dirty(propertyToUpdate);
         properties.put(property.key(), propertyToUpdate);
     }
@@ -95,16 +101,12 @@ public class MongoUser implements User {
         return Optional.ofNullable(properties.get(key));
     }
 
+    protected Property process(Property property, PropertyProcessor.Type beforeCreate) {
+        return definition.property(property.key()).process(beforeCreate, property);
+    }
+
     protected void flush() {
         dirtyTracker.flush();
-    }
-
-    protected Property processSave(Property property) {
-        return definition.property(property.key()).processSave(property);
-    }
-
-    protected Property processUpdate(Property property) {
-        return definition.property(property.key()).processUpdate(property);
     }
 
     @Transient

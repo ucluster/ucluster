@@ -4,7 +4,6 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class UniquenessValidator implements PropertyValidator {
 
                 @Override
                 public void value(Object value) {
-                    throw new NotImplementedException();
+                    throw new RuntimeException("this method should not be used");
                 }
             });
 

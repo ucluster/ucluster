@@ -18,7 +18,12 @@ public class PasswordProcessor implements PropertyProcessor {
     }
 
     @Override
-    public User.Property processSave(User.Property property) {
+    public boolean isAppliable(Type type) {
+        return type == Type.BEFORE_CREATE || type == Type.BEFORE_UPDATE;
+    }
+
+    @Override
+    public User.Property process(User.Property property) {
         return encrypt(property);
     }
 
