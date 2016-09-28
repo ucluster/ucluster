@@ -69,16 +69,16 @@ public class DSLCompiler {
             }
 
             private UserDefinition.PropertyDefinition load() {
-                return new DefaultPropertyDefinition(propertyPath, loadPropertyValidators(), loadPropertyMetadata());
+                return new DefaultPropertyDefinition(propertyPath, propertyValidators(), metadata());
             }
 
-            private Map<String, Object> loadPropertyMetadata() {
+            private Map<String, Object> metadata() {
                 return propertyJson.keySet().stream()
                         .filter(key -> !isValidator(key))
                         .collect(Collectors.toMap(key -> key, propertyJson::get));
             }
 
-            private List<PropertyValidator> loadPropertyValidators() {
+            private List<PropertyValidator> propertyValidators() {
                 return propertyJson.keySet().stream()
                         .filter(this::isValidator)
                         .map(key -> {
