@@ -39,17 +39,24 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public User uuid(String uuid) {
-        return datastore.get(MongoUser.class, new ObjectId(uuid));
+        final MongoUser user = datastore.get(MongoUser.class, new ObjectId(uuid));
+        user.definition = userDefinitions.find(user.metadata);
+        return user;
     }
 
     @Override
     public Optional<User> find(User.Property property) {
-        final User user = datastore.createQuery(MongoUser.class)
+        final MongoUser user = datastore.createQuery(MongoUser.class)
                 .disableValidation()
                 .field("properties." + property.key() + ".value").equal(property.value())
                 .get();
 
-        return Optional.ofNullable(user);
+        if (user == null) {
+            return Optional.empty();
+        }
+
+        user.definition = userDefinitions.find(user.metadata);
+        return Optional.of(user);
     }
 
     @Override
@@ -63,7 +70,9 @@ public class MongoUserRepository implements UserRepository {
                 .map(propertyKey -> constructProperty(userDefinition.property(propertyKey), (String) getProperties(request).get(propertyKey)))
                 .collect(Collectors.toList());
 
-        return new MongoUser(new DateTime(), getMetadata(request), properties);
+        final MongoUser user = new MongoUser(new DateTime(), getMetadata(request), properties);
+        user.definition = userDefinition;
+        return user;
     }
 
     private User.Property constructProperty(UserDefinition.PropertyDefinition propertyDefinition, String propertyValue) {
@@ -95,8 +104,6 @@ public class MongoUserRepository implements UserRepository {
     private UpdateOperations<User> getDirtyUpdateOperations(User user) {
         MongoUser updateUser = (MongoUser) user;
 
-        ensureNoImmutablePropertyToUpdate(updateUser);
-
         final UpdateOperations<User> operations = datastore.createUpdateOperations(User.class)
                 .disableValidation();
 
@@ -107,17 +114,5 @@ public class MongoUserRepository implements UserRepository {
         updateUser.dirtyProperties.clear();
 
         return operations;
-    }
-
-    private void ensureNoImmutablePropertyToUpdate(MongoUser user) {
-        final UserDefinition userDefinition = userDefinitions.find(user.metadata);
-
-        user.dirtyProperties.values().forEach(property -> {
-            final UserDefinition.PropertyDefinition propertyDefinition = userDefinition.property(property.key());
-
-            if (propertyDefinition.definition().getOrDefault("immutable", false).equals(true)) {
-                throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.key(), "immutable")));
-            }
-        });
     }
 }

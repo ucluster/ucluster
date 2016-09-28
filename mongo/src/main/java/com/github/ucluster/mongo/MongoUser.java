@@ -1,7 +1,10 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.definition.UserDefinition;
+import com.github.ucluster.core.definition.ValidationResult;
 import com.github.ucluster.core.exception.UserAuthenticationException;
+import com.github.ucluster.core.exception.UserValidationException;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.security.Encryption;
 import org.bson.types.ObjectId;
@@ -33,6 +36,9 @@ public class MongoUser implements User {
 
     @Embedded
     protected Map<String, Property> properties = new HashMap<>();
+
+    @Transient
+    protected UserDefinition definition;
 
     MongoUser() {
     }
@@ -72,6 +78,7 @@ public class MongoUser implements User {
 
     @Override
     public void update(Property property) {
+        ensurePropertyMutable(property);
         dirty(property);
         properties.put(property.key(), property);
     }
@@ -86,5 +93,13 @@ public class MongoUser implements User {
 
     protected void dirty(Property property) {
         dirtyProperties.put(property.key(), property);
+    }
+
+    private void ensurePropertyMutable(Property property) {
+        final UserDefinition.PropertyDefinition propertyDefinition = definition.property(property.key());
+
+        if (propertyDefinition.definition().getOrDefault("immutable", false).equals(true)) {
+            throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.key(), "immutable")));
+        }
     }
 }
