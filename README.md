@@ -41,7 +41,20 @@ see http://guides.rubyonrails.org/active_record_basics.html#callbacks as a refer
 
 ### Property Processor
 
+
+#### identity 
+
+*(required by authentication: authentication need one property as identity and one property as password)*
+
+Example:
+
+    identity: true
+
+default `identity` is `false`. `identity` is a combination of `required` and `uniqueness`
+
 #### password
+
+*(required by authentication: authentication need one property as identity and one property as password)*
 
 if property is declared as `password`, then it will encrypted(BCrypt) before save to database, and this property cannot be searched
 
@@ -95,14 +108,6 @@ Example:
     email: true
     
 default `email` is `false`
-
-#### identity
-
-Example:
-
-    identity: true
-
-default `identity` is `false`. `identity` is a combination of `required` and `uniqueness`    
 
 email validator regex patterns: 
 positive pattern: 

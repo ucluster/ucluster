@@ -89,7 +89,7 @@ public class MongoUser implements User {
             throw new UserAuthenticationException();
         }
 
-        if (!Objects.equals(definition.property(property.path()).definition().get("password"), true)) {
+        if (!isPropertyPassword(definition.property(property.path()))) {
             throw new UserAuthenticationException();
         }
 
@@ -105,7 +105,7 @@ public class MongoUser implements User {
             throw new UserAuthenticationException();
         }
 
-        if (!Objects.equals(definition.property(property.path()).definition().get("identity"), true)) {
+        if (!isPropertyIdentity(definition.property(property.path()))) {
             throw new UserAuthenticationException();
         }
 
@@ -114,13 +114,12 @@ public class MongoUser implements User {
         }
     }
 
+    private boolean isPropertyPassword(UserDefinition.PropertyDefinition propertyDefinition) {
+        return Objects.equals(propertyDefinition.definition().get("password"), true);
+    }
 
-    private void ensurePropertyExist(Property... properties) {
-        for (Property property : properties) {
-            if (!property(property.path()).isPresent()) {
-                throw new UserAuthenticationException();
-            }
-        }
+    private boolean isPropertyIdentity(UserDefinition.PropertyDefinition propertyDefinition) {
+        return Objects.equals(propertyDefinition.definition().get("identity"), true);
     }
 
     @Override
