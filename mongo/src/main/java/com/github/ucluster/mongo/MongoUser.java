@@ -105,6 +105,10 @@ public class MongoUser implements User {
             throw new UserAuthenticationException();
         }
 
+        if (!Objects.equals(definition.property(property.path()).definition().get("identity"), true)) {
+            throw new UserAuthenticationException();
+        }
+
         if (!identityProperty.get().value().equals(property.value())) {
             throw new UserAuthenticationException();
         }
