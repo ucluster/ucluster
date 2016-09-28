@@ -24,19 +24,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UniquenessValidatorTest {
-    private PropertyValidator validator;
+    private PropertyValidator uniquenessValidator;
+    private PropertyValidator nonUniquenessValidator;
     private UserRepository users;
 
     @Before
     public void setUp() throws Exception {
-        validator = new UniquenessValidator("uniqueness", true);
+        uniquenessValidator = new UniquenessValidator("uniqueness", true);
+        nonUniquenessValidator = new UniquenessValidator("uniqueness", false);
 
         Injector injector = getInjector();
-        injector.injectMembers(validator);
+        injector.injectMembers(uniquenessValidator);
     }
 
     @Test
-    public void should_success_when_unique() {
+    public void should_success_when_unique_and_uniqueness_is_required() {
         when(users.find(argThat(new ArgumentMatcher<User.Property>() {
             @Override
             public boolean matches(Object argument) {
@@ -45,7 +47,7 @@ public class UniquenessValidatorTest {
             }
         }))).thenReturn(Optional.empty());
 
-        final ValidationResult result = validator.validate(
+        final ValidationResult result = uniquenessValidator.validate(
                 ImmutableMap.<String, Object>builder()
                         .put("username", "newusername")
                         .build(),
@@ -55,7 +57,7 @@ public class UniquenessValidatorTest {
     }
 
     @Test
-    public void should_failed_when_not_unique() {
+    public void should_failed_when_not_unique_and_uniqueness_is_required() {
         when(users.find(argThat(new ArgumentMatcher<User.Property>() {
             @Override
             public boolean matches(Object argument) {
@@ -64,13 +66,51 @@ public class UniquenessValidatorTest {
             }
         }))).thenReturn(Optional.of(mock(User.class)));
 
-        final ValidationResult result = validator.validate(
+        final ValidationResult result = uniquenessValidator.validate(
                 ImmutableMap.<String, Object>builder()
                         .put("username", "existusername")
                         .build(),
                 "username");
 
         assertThat(result.valid(), is(false));
+    }
+
+    @Test
+    public void should_success_when_unique_and_uniqueness_is_not_required() {
+        when(users.find(argThat(new ArgumentMatcher<User.Property>() {
+            @Override
+            public boolean matches(Object argument) {
+                final User.Property property = (User.Property) argument;
+                return property.key().equals("username") && property.value().equals("newusername");
+            }
+        }))).thenReturn(Optional.empty());
+
+        final ValidationResult result = nonUniquenessValidator.validate(
+                ImmutableMap.<String, Object>builder()
+                        .put("username", "newusername")
+                        .build(),
+                "username");
+
+        assertThat(result.valid(), is(true));
+    }
+
+    @Test
+    public void should_success_when_not_unique_and_uniqueness_is_not_required() {
+        when(users.find(argThat(new ArgumentMatcher<User.Property>() {
+            @Override
+            public boolean matches(Object argument) {
+                final User.Property property = (User.Property) argument;
+                return property.key().equals("username") && property.value().equals("existusername");
+            }
+        }))).thenReturn(Optional.of(mock(User.class)));
+
+        final ValidationResult result = nonUniquenessValidator.validate(
+                ImmutableMap.<String, Object>builder()
+                        .put("username", "existusername")
+                        .build(),
+                "username");
+
+        assertThat(result.valid(), is(true));
     }
 
     private Injector getInjector() {

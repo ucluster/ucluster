@@ -31,21 +31,25 @@ public class UniquenessValidator implements PropertyValidator {
 
     @Override
     public ValidationResult validate(Map<String, Object> request, String propertyPath) {
-        final Optional<User> user = users.find(new User.Property() {
-            @Override
-            public String key() {
-                return propertyPath;
-            }
+        if (isUnique) {
+            final Optional<User> user = users.find(new User.Property() {
+                @Override
+                public String key() {
+                    return propertyPath;
+                }
 
-            @Override
-            public String value() {
-                return (String) request.get(propertyPath);
-            }
-        });
+                @Override
+                public String value() {
+                    return (String) request.get(propertyPath);
+                }
+            });
 
-        return user.isPresent()
-                ? new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, type())))
-                : ValidationResult.SUCCESS;
+            return user.isPresent()
+                    ? new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, type())))
+                    : ValidationResult.SUCCESS;
+        }
+
+        return ValidationResult.SUCCESS;
     }
 
     @Override
