@@ -4,9 +4,7 @@ ext {
 
 dependencies {
     compile "com.google.inject:guice:$guice"
-
     compile "org.mongodb.morphia:morphia:$morphia"
 
-    compile files('libs/jbcrypt.jar')
     compile project(':common')
 }

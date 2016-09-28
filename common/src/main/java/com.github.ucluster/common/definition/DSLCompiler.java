@@ -1,6 +1,7 @@
 package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.definition.util.Json;
+import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.google.inject.Injector;
@@ -69,13 +70,17 @@ public class DSLCompiler {
             }
 
             private UserDefinition.PropertyDefinition load() {
-                return new DefaultPropertyDefinition(propertyPath, propertyValidators(), metadata());
+                return new DefaultPropertyDefinition(propertyPath, propertyValidators(), propertyProcessor());
             }
 
-            private Map<String, Object> metadata() {
+            private List<PropertyProcessor> propertyProcessor() {
                 return propertyJson.keySet().stream()
-                        .filter(key -> !isValidator(key))
-                        .collect(Collectors.toMap(key -> key, propertyJson::get));
+                        .filter(this::isProcessor)
+                        .map(key -> {
+                            final PropertyProcessor propertyProcessor = loadPropertyProcessor(key, propertyJson.get(key));
+                            injector.injectMembers(propertyProcessor);
+                            return propertyProcessor;
+                        }).collect(Collectors.toList());
             }
 
             private List<PropertyValidator> propertyValidators() {
@@ -96,6 +101,29 @@ public class DSLCompiler {
                     return true;
                 } catch (Exception e) {
                     return false;
+                }
+            }
+
+            private boolean isProcessor(String type) {
+                try {
+                    injector.getInstance(Key.get(new TypeLiteral<Class>() {
+                    }, Names.named("property." + type + ".processor")));
+
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+
+            private PropertyProcessor loadPropertyProcessor(String processorType, Object propertyProcessorConfiguration) {
+                try {
+                    final Class propertyProcessorClass = injector.getInstance(Key.get(new TypeLiteral<Class>() {
+                    }, Names.named("property." + processorType + ".processor")));
+
+                    final Constructor<PropertyProcessor> constructor = propertyProcessorClass.getConstructor(String.class, Object.class);
+                    return constructor.newInstance(processorType, propertyProcessorConfiguration);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
 

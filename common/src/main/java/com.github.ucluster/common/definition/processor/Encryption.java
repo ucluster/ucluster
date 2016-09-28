@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo.security;
+package com.github.ucluster.common.definition.processor;
 
 import org.mindrot.jbcrypt.BCrypt;
 

@@ -22,6 +22,15 @@ public interface User {
         String key();
 
         T value();
+
+        void value(T value);
+
+        interface Specification {
+
+            String type();
+
+            Object configuration();
+        }
     }
 
     interface Request {

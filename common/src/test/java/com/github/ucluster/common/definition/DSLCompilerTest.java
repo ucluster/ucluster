@@ -1,9 +1,12 @@
 package com.github.ucluster.common.definition;
 
+import com.github.ucluster.common.definition.processor.ImmutableProcessor;
+import com.github.ucluster.common.definition.processor.PasswordProcessor;
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
@@ -94,14 +97,22 @@ public class DSLCompilerTest {
                     protected void configure() {
                         bind(UserRepository.class).toInstance(users);
 
-                        registerValidator("property.format.validator", FormatValidator.class);
-                        registerValidator("property.required.validator", RequiredValidator.class);
-                        registerValidator("property.uniqueness.validator", UniquenessValidator.class);
+                        registerValidator("format", FormatValidator.class);
+                        registerValidator("required", RequiredValidator.class);
+                        registerValidator("uniqueness", UniquenessValidator.class);
+
+                        registerProcessor("password", PasswordProcessor.class);
+                        registerProcessor("immutable", ImmutableProcessor.class);
                     }
 
-                    private void registerValidator(String key, Class<? extends PropertyValidator> propertyValidatorClass) {
+                    private void registerValidator(String type, Class<? extends PropertyValidator> propertyValidatorClass) {
                         bind(new TypeLiteral<Class>() {
-                        }).annotatedWith(Names.named(key)).toInstance(propertyValidatorClass);
+                        }).annotatedWith(Names.named("property." + type + ".validator")).toInstance(propertyValidatorClass);
+                    }
+
+                    private void registerProcessor(String type, Class<? extends PropertyProcessor> propertyProcessorClass) {
+                        bind(new TypeLiteral<Class>() {
+                        }).annotatedWith(Names.named("property." + type + ".processor")).toInstance(propertyProcessorClass);
                     }
                 }}));
     }

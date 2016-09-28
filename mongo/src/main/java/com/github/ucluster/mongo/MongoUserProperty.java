@@ -31,6 +31,11 @@ public class MongoUserProperty<T> implements User.Property<T> {
         return value;
     }
 
+    @Override
+    public void value(T value) {
+        this.value = value;
+    }
+
     static String valueMongoField(User.Property property) {
         return mongoField(property) + ".value";
     }
