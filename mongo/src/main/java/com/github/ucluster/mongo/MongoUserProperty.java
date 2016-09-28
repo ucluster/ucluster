@@ -22,7 +22,7 @@ public class MongoUserProperty<T> implements User.Property<T> {
     }
 
     @Override
-    public String key() {
+    public String path() {
         return key;
     }
 
@@ -41,6 +41,6 @@ public class MongoUserProperty<T> implements User.Property<T> {
     }
 
     static String mongoField(User.Property property) {
-        return "properties." + property.key();
+        return "properties." + property.path();
     }
 }

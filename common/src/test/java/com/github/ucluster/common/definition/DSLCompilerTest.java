@@ -5,13 +5,13 @@ import com.github.ucluster.common.definition.processor.PasswordProcessor;
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -30,6 +30,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,32 +39,49 @@ public class DSLCompilerTest {
     private UserRepository users;
 
     private UserDefinition definition;
+    private User user;
 
     @Before
     public void setUp() throws Exception {
         Injector injector = getInjector();
 
         definition = DSLCompiler.load(injector, read("dsl.js"));
+
+        user = mock(User.class);
     }
 
     @Test
     public void should_verify_by_dsl() {
-        final ValidationResult result = definition.validate(ImmutableMap.<String, Object>builder()
-                .put("username", "kiwiwin")
-                .put("password", "password")
-                .build()
-        );
+        final User.Property usernameProperty = mock(User.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwiwin");
+
+        final User.Property passwordProperty = mock(User.Property.class);
+        when(passwordProperty.path()).thenReturn("password");
+        when(passwordProperty.value()).thenReturn("password");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+        when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(true));
     }
 
     @Test
     public void should_failed_verify_by_dsl() {
-        final ValidationResult result = definition.validate(ImmutableMap.<String, Object>builder()
-                .put("username", "kiwi")
-                .put("password", "password")
-                .build()
-        );
+        final User.Property usernameProperty = mock(User.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwi");
+
+        final User.Property passwordProperty = mock(User.Property.class);
+        when(passwordProperty.path()).thenReturn("password");
+        when(passwordProperty.value()).thenReturn("password");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+        when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(false));
 

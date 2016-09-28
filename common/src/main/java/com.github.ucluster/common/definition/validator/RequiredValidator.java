@@ -1,10 +1,11 @@
 package com.github.ucluster.common.definition.validator;
 
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Optional;
 
 public class RequiredValidator implements PropertyValidator {
     private String type;
@@ -24,12 +25,13 @@ public class RequiredValidator implements PropertyValidator {
     }
 
     @Override
-    public ValidationResult validate(Map<String, Object> request, String propertyPath) {
+    public ValidationResult validate(User user, String propertyPath) {
         if (!isRequired) {
             return ValidationResult.SUCCESS;
         }
 
-        if (request.get(propertyPath) != null) {
+        final Optional<User.Property> property = user.property(propertyPath);
+        if (property.isPresent()) {
             return ValidationResult.SUCCESS;
         }
 

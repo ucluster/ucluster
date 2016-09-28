@@ -1,20 +1,26 @@
 package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.definition.validator.FormatValidator;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DefaultUserDefinitionTest {
 
     private DefaultUserDefinition definition;
+    private User user;
 
     @Before
     public void setUp() throws Exception {
@@ -28,6 +34,9 @@ public class DefaultUserDefinitionTest {
                                 .put("pattern", "\\w{6,12}")
                                 .build())))
         ));
+
+        user = mock(User.class);
+
     }
 
     @Test
@@ -45,21 +54,36 @@ public class DefaultUserDefinitionTest {
 
     @Test
     public void should_success_validate_user() {
-        final ValidationResult result = definition.validate(ImmutableMap.<String, Object>builder()
-                .put("username", "kiwiwin")
-                .put("nickname", "kiwiwin")
-                .build());
+        final User.Property usernameProperty = mock(User.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwiwin");
+
+        final User.Property nicknameProperty = mock(User.Property.class);
+        when(nicknameProperty.path()).thenReturn("nickname");
+        when(nicknameProperty.value()).thenReturn("kiwiwin");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(true));
     }
 
     @Test
     public void should_failed_validate_user_has_exactly_one_error() {
-        final ValidationResult result = definition.validate(
-                ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwi")
-                        .put("nickname", "kiwiwin")
-                        .build());
+        final User.Property usernameProperty = mock(User.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwi");
+
+        final User.Property nicknameProperty = mock(User.Property.class);
+        when(nicknameProperty.path()).thenReturn("nickname");
+        when(nicknameProperty.value()).thenReturn("kiwiwin");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(false));
 
@@ -71,11 +95,18 @@ public class DefaultUserDefinitionTest {
 
     @Test
     public void should_failed_validate_user_has_more_than_one_error() {
-        final ValidationResult result = definition.validate(
-                ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwi")
-                        .put("nickname", "kiwi")
-                        .build());
+        final User.Property usernameProperty = mock(User.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwi");
+
+        final User.Property nicknameProperty = mock(User.Property.class);
+        when(nicknameProperty.path()).thenReturn("nickname");
+        when(nicknameProperty.value()).thenReturn("kiwi");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(false));
 

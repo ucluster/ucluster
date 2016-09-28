@@ -1,5 +1,6 @@
 package com.github.ucluster.common.definition;
 
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 
@@ -24,14 +25,14 @@ public class DefaultUserDefinition implements UserDefinition {
                 ));
     }
 
-    public ValidationResult validate(Map<String, Object> request) {
+    public ValidationResult validate(User user) {
         return propertyDefinitions.values().stream()
-                .map(fv -> fv.validate(request))
+                .map(propertyDefinition -> propertyDefinition.validate(user))
                 .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
     }
 
     @Override
-    public PropertyDefinition property(String key) {
-        return propertyDefinitions.get(key);
+    public PropertyDefinition property(String propertyPath) {
+        return propertyDefinitions.get(propertyPath);
     }
 }

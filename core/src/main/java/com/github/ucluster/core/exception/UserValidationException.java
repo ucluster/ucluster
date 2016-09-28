@@ -12,4 +12,11 @@ public class UserValidationException extends RuntimeException {
     public ValidationResult getValidationResult() {
         return validationResult;
     }
+
+    @Override
+    public String getMessage() {
+        return getValidationResult().errors().stream()
+                .map(error -> "path: " + error.getPropertyPath() + ", type: " + error.getType())
+                .reduce("user validation failed by:", (a, b) -> a + "\n" + b);
+    }
 }

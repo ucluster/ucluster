@@ -15,11 +15,11 @@ public interface User {
 
     void update(Property property);
 
-    Optional<Property> property(String key);
+    Optional<Property> property(String propertyPath);
 
     interface Property<T> {
 
-        String key();
+        String path();
 
         T value();
 

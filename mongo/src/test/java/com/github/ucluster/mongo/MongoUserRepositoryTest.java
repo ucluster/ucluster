@@ -99,6 +99,16 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
+    public void should_failed_to_update_user_if_definition_not_satisfied() {
+        thrown.expect(UserValidationException.class);
+
+        final User userBeforeUpdate = users.uuid(user.uuid()).get();
+
+        userBeforeUpdate.update(new MongoUserProperty<>("password", "a"));
+        users.update(userBeforeUpdate);
+    }
+
+    @Test
     public void should_success_update_password() {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
@@ -107,10 +117,7 @@ public class MongoUserRepositoryTest {
         users.update(userBeforeUpdate);
 
         final User userAfterUpdate = users.uuid(this.user.uuid()).get();
-
-        assertThat(userAfterUpdate.createdAt(), is(userBeforeUpdate.createdAt()));
-        assertThat(userAfterUpdate.property("username").get().value(), is("kiwiwin"));
-        assertThat(userAfterUpdate.property("password").get().value(), is(not("newpassword")));
+        userAfterUpdate.authenticate(new MongoUserProperty<>("username", "kiwiwin"), "newpassword");
     }
 
     @Test
@@ -119,13 +126,13 @@ public class MongoUserRepositoryTest {
         final User updateEmailUser = users.uuid(user.uuid()).get();
 
         updateNicknameUser.update(new MongoUserProperty<>("nickname", "newnickname"));
-        updateEmailUser.update(new MongoUserProperty<>("email", "kiwi.swhite.coder@gmail.com"));
+        updateEmailUser.update(new MongoUserProperty<>("email", "kiwiwin@gmail.com"));
 
         users.update(updateNicknameUser);
         users.update(updateEmailUser);
 
         final User updatedUser = users.uuid(user.uuid()).get();
         assertThat(updatedUser.property("nickname").get().value(), is("newnickname"));
-        assertThat(updatedUser.property("email").get().value(), is("kiwi.swhite.coder@gmail.com"));
+        assertThat(updatedUser.property("email").get().value(), is("kiwiwin@gmail.com"));
     }
 }

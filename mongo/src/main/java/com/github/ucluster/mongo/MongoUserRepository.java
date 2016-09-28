@@ -2,6 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.core.definition.ValidationResult;
@@ -21,10 +22,11 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public User create(User.Request request) {
-        final UserDefinition userDefinition = userDefinitions.find(request.metadata());
-        ensureRequestMatchUserDefinition(userDefinition, request);
+        final MongoUser user = constructUser(request);
 
-        final User user = constructUser(userDefinition, request);
+        ensureValid(user, PropertyProcessor.Type.BEFORE_CREATE);
+        user.process(PropertyProcessor.Type.BEFORE_CREATE);
+
         datastore.save(user);
         return user;
     }
@@ -46,8 +48,21 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public User update(User user) {
-        ((MongoUser) user).flush();
+        final MongoUser userToUpdate = (MongoUser) user;
+
+        ensureValid(userToUpdate, PropertyProcessor.Type.BEFORE_UPDATE);
+        userToUpdate.process(PropertyProcessor.Type.BEFORE_UPDATE);
+        userToUpdate.flush();
+
         return user;
+    }
+
+    private void ensureValid(User user, PropertyProcessor.Type processType) {
+        final ValidationResult validationResult = ((MongoUser) user).validate(processType);
+
+        if (!validationResult.valid()) {
+            throw new UserValidationException(validationResult);
+        }
     }
 
     private Optional<User> enhance(MongoUser user) {
@@ -60,17 +75,11 @@ public class MongoUserRepository implements UserRepository {
         return Optional.of(user);
     }
 
-    private User constructUser(UserDefinition userDefinition, User.Request request) {
+    private MongoUser constructUser(User.Request request) {
+        final UserDefinition userDefinition = userDefinitions.find(request.metadata());
         final MongoUser user = new MongoUser.Builder(userDefinition).create(request);
 
-        return enhance(user).get();
+        return (MongoUser) enhance(user).get();
     }
 
-    private void ensureRequestMatchUserDefinition(UserDefinition userDefinition, User.Request request) {
-        final ValidationResult validationResult = userDefinition.validate(request.properties());
-
-        if (!validationResult.valid()) {
-            throw new UserValidationException(validationResult);
-        }
-    }
 }

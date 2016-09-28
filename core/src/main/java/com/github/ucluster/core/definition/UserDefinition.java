@@ -8,9 +8,9 @@ public interface UserDefinition {
 
     Map<String, Object> definition();
 
-    ValidationResult validate(Map<String, Object> user);
+    ValidationResult validate(User user);
 
-    PropertyDefinition property(String key);
+    PropertyDefinition property(String propertyPath);
 
     interface PropertyDefinition {
 
@@ -18,7 +18,7 @@ public interface UserDefinition {
 
         Map<String, Object> definition();
 
-        ValidationResult validate(Map<String, Object> user);
+        ValidationResult validate(User user);
 
         <T> User.Property<T> process(PropertyProcessor.Type type, User.Property<T> property);
     }

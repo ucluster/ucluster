@@ -59,7 +59,7 @@ public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinit
     }
 
     @Override
-    public ValidationResult validate(Map<String, Object> user) {
+    public ValidationResult validate(User user) {
         return validators.entrySet().stream()
                 .map(entry -> entry.getValue().validate(user, propertyPath))
                 .reduce(ValidationResult.SUCCESS, ValidationResult::merge);

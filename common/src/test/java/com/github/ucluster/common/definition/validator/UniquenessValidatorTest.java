@@ -4,7 +4,6 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import org.junit.Before;
@@ -20,6 +19,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +27,8 @@ public class UniquenessValidatorTest {
     private PropertyValidator uniquenessValidator;
     private PropertyValidator nonUniquenessValidator;
     private UserRepository users;
+    private User user;
+    private User.Property property;
 
     @Before
     public void setUp() throws Exception {
@@ -35,6 +37,9 @@ public class UniquenessValidatorTest {
 
         Injector injector = getInjector();
         injector.injectMembers(uniquenessValidator);
+
+        user = mock(User.class);
+        property = mock(User.Property.class);
     }
 
     @Test
@@ -43,15 +48,16 @@ public class UniquenessValidatorTest {
             @Override
             public boolean matches(Object argument) {
                 final User.Property property = (User.Property) argument;
-                return property.key().equals("username") && property.value().equals("newusername");
+                return property.path().equals("username") && property.value().equals("newusername");
             }
         }))).thenReturn(Optional.empty());
 
-        final ValidationResult result = uniquenessValidator.validate(
-                ImmutableMap.<String, Object>builder()
-                        .put("username", "newusername")
-                        .build(),
-                "username");
+        when(property.path()).thenReturn("username");
+        when(property.value()).thenReturn("newusername");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(property));
+
+        final ValidationResult result = uniquenessValidator.validate(user, "username");
 
         assertThat(result.valid(), is(true));
     }
@@ -62,15 +68,16 @@ public class UniquenessValidatorTest {
             @Override
             public boolean matches(Object argument) {
                 final User.Property property = (User.Property) argument;
-                return property.key().equals("username") && property.value().equals("existusername");
+                return property.path().equals("username") && property.value().equals("existusername");
             }
-        }))).thenReturn(Optional.of(mock(User.class)));
+        }))).thenReturn(Optional.of(user));
 
-        final ValidationResult result = uniquenessValidator.validate(
-                ImmutableMap.<String, Object>builder()
-                        .put("username", "existusername")
-                        .build(),
-                "username");
+        when(property.path()).thenReturn("username");
+        when(property.value()).thenReturn("existusername");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(property));
+
+        final ValidationResult result = uniquenessValidator.validate(user, "username");
 
         assertThat(result.valid(), is(false));
     }
@@ -81,15 +88,16 @@ public class UniquenessValidatorTest {
             @Override
             public boolean matches(Object argument) {
                 final User.Property property = (User.Property) argument;
-                return property.key().equals("username") && property.value().equals("newusername");
+                return property.path().equals("username") && property.value().equals("newusername");
             }
         }))).thenReturn(Optional.empty());
 
-        final ValidationResult result = nonUniquenessValidator.validate(
-                ImmutableMap.<String, Object>builder()
-                        .put("username", "newusername")
-                        .build(),
-                "username");
+        when(property.path()).thenReturn("username");
+        when(property.value()).thenReturn("newusername");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(property));
+
+        final ValidationResult result = nonUniquenessValidator.validate(user, "username");
 
         assertThat(result.valid(), is(true));
     }
@@ -100,15 +108,16 @@ public class UniquenessValidatorTest {
             @Override
             public boolean matches(Object argument) {
                 final User.Property property = (User.Property) argument;
-                return property.key().equals("username") && property.value().equals("existusername");
+                return property.path().equals("username") && property.value().equals("existusername");
             }
-        }))).thenReturn(Optional.of(mock(User.class)));
+        }))).thenReturn(Optional.of(user));
 
-        final ValidationResult result = nonUniquenessValidator.validate(
-                ImmutableMap.<String, Object>builder()
-                        .put("username", "existusername")
-                        .build(),
-                "username");
+        when(property.path()).thenReturn("username");
+        when(property.value()).thenReturn("existusername");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(property));
+
+        final ValidationResult result = nonUniquenessValidator.validate(user, "username");
 
         assertThat(result.valid(), is(true));
     }

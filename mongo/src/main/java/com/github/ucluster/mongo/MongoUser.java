@@ -4,6 +4,7 @@ import com.github.ucluster.common.definition.processor.Encryption;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.UserDefinition;
+import com.github.ucluster.core.definition.ValidationResult;
 import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import org.bson.types.ObjectId;
@@ -17,9 +18,11 @@ import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity("users")
@@ -50,16 +53,16 @@ public class MongoUser implements User {
     MongoUser() {
     }
 
-    MongoUser(DateTime createdAt, Map<String, Object> metadata, List<Property> properties, UserDefinition definition) {
-        this.createdAt = createdAt;
+    MongoUser(Map<String, Object> metadata, List<Property> properties, UserDefinition definition) {
+        this.createdAt = new DateTime();
         this.metadata = metadata;
         this.definition = definition;
         this.properties = properties.stream()
                 .collect(
                         Collectors.toMap(
-                                Property::key,
-                                property -> process(property, PropertyProcessor.Type.BEFORE_CREATE)
-                        ));
+                                Property::path,
+                                property -> property)
+                );
     }
 
     @Override
@@ -74,7 +77,7 @@ public class MongoUser implements User {
 
     @Override
     public void authenticate(Property identityProperty, String password) {
-        final Optional<Property> property = property(identityProperty.key());
+        final Optional<Property> property = property(identityProperty.path());
 
         if (!property.isPresent()) {
             throw new UserAuthenticationException();
@@ -91,32 +94,56 @@ public class MongoUser implements User {
 
     @Override
     public void update(Property property) {
-        final Property propertyToUpdate = process(property, PropertyProcessor.Type.BEFORE_UPDATE);
-        dirtyTracker.dirty(propertyToUpdate);
-        properties.put(property.key(), propertyToUpdate);
+        dirtyTracker.dirty(property.path());
+        properties.put(property.path(), property);
     }
 
     @Override
-    public Optional<Property> property(String key) {
-        return Optional.ofNullable(properties.get(key));
-    }
-
-    protected Property process(Property property, PropertyProcessor.Type beforeCreate) {
-        return definition.property(property.key()).process(beforeCreate, property);
+    public Optional<Property> property(String propertyPath) {
+        return Optional.ofNullable(properties.get(propertyPath));
     }
 
     protected void flush() {
         dirtyTracker.flush();
     }
 
-    @Transient
-    protected Map<String, Property> dirtyProperties = new HashMap<>();
+    //TODO: hide the BEFORE_CREATE / BEFORE_UPDATE logic in MongUser
+    protected ValidationResult validate(PropertyProcessor.Type processType) {
+        if (processType == PropertyProcessor.Type.BEFORE_CREATE) {
+            return definition.validate(this);
+        } else if (processType == PropertyProcessor.Type.BEFORE_UPDATE) {
+            return properties.keySet().stream()
+                    .filter(propertyPath -> dirtyTracker.isDirty(propertyPath))
+                    .map(propertyPath -> definition.property(propertyPath))
+                    .map(propertyDefinition -> propertyDefinition.validate(this))
+                    .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
+        }
+
+        throw new RuntimeException("not supported process type");
+    }
+
+    //TODO: hide the BEFORE_CREATE / BEFORE_UPDATE logic in MongUser
+    protected void process(PropertyProcessor.Type processType) {
+        if (processType == PropertyProcessor.Type.BEFORE_CREATE) {
+            properties.keySet().forEach(propertyPath -> {
+                Property property = properties.get(propertyPath);
+                properties.put(propertyPath, definition.property(property.path()).process(processType, property));
+            });
+        } else if (processType == PropertyProcessor.Type.BEFORE_UPDATE) {
+            properties.keySet().stream()
+                    .filter(propertyPath -> dirtyTracker.isDirty(propertyPath))
+                    .forEach(propertyPath -> {
+                        Property property = properties.get(propertyPath);
+                        properties.put(propertyPath, definition.property(property.path()).process(processType, property));
+                    });
+        }
+    }
 
     private class DirtyTracker {
-        Map<String, Property> dirtyProperties = new HashMap<>();
+        Set<String> dirtyProperties = new HashSet<>();
 
-        void dirty(Property property) {
-            dirtyProperties.put(property.key(), property);
+        void dirty(String propertyPath) {
+            dirtyProperties.add(propertyPath);
         }
 
         void flush() {
@@ -127,13 +154,21 @@ public class MongoUser implements User {
             final UpdateOperations<User> operations = datastore.createUpdateOperations(User.class)
                     .disableValidation();
 
-            dirtyProperties.entrySet().stream().forEach(e ->
-                    operations.set(MongoUserProperty.mongoField(e.getValue()), e.getValue())
-            );
+            dirtyProperties.stream()
+                    .map(MongoUser.this::property)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .forEach(property ->
+                            operations.set(MongoUserProperty.mongoField(property), property)
+                    );
 
             dirtyProperties.clear();
 
             return operations;
+        }
+
+        boolean isDirty(String propertyPath) {
+            return dirtyProperties.contains(propertyPath);
         }
     }
 
@@ -149,7 +184,7 @@ public class MongoUser implements User {
                     .map(propertyKey -> new MongoUserProperty<>(definition.property(propertyKey).propertyPath(), request.properties().get(propertyKey)))
                     .collect(Collectors.toList());
 
-            return new MongoUser(new DateTime(), request.metadata(), properties, definition);
+            return new MongoUser(request.metadata(), properties, definition);
         }
     }
 }

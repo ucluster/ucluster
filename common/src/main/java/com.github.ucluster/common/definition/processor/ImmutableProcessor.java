@@ -28,16 +28,7 @@ public class ImmutableProcessor implements PropertyProcessor {
     @Override
     public User.Property process(User.Property property) {
         if (isImmutable) {
-            throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.key(), "immutable")));
-        }
-
-        return property;
-    }
-
-    @Override
-    public User.Property processUpdate(User.Property property) {
-        if (isImmutable) {
-            throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.key(), "immutable")));
+            throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.path(), "immutable")));
         }
 
         return property;

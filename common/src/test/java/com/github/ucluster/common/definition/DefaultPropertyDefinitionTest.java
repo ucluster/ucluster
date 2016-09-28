@@ -2,6 +2,7 @@ package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
@@ -9,14 +10,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DefaultPropertyDefinitionTest {
 
     private UserDefinition.PropertyDefinition definition;
+    private User user;
 
     @Before
     public void setUp() throws Exception {
@@ -28,6 +34,8 @@ public class DefaultPropertyDefinitionTest {
                         new RequiredValidator("required", true)
                 )
         );
+
+        user = mock(User.class);
     }
 
     @Test
@@ -40,15 +48,22 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_success_validate_property() {
-        final ValidationResult result = definition.validate(ImmutableMap.<String, Object>builder()
-                .put("username", "kiwiwin").build());
+        final User.Property usernameProperty = mock(User.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwiwin");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(true));
     }
 
     @Test
     public void should_failed_validate_property_if_one_of_the_validator_failed() {
-        final ValidationResult result = definition.validate(ImmutableMap.<String, Object>builder().build());
+        when(user.property(eq("username"))).thenReturn(Optional.empty());
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(false));
 
@@ -60,8 +75,13 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_failed_validate_property() {
-        final ValidationResult result = definition.validate(ImmutableMap.<String, Object>builder()
-                .put("username", "kiwi").build());
+        final User.Property usernameProperty = mock(User.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwi");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+
+        final ValidationResult result = definition.validate(user);
 
         assertThat(result.valid(), is(false));
 

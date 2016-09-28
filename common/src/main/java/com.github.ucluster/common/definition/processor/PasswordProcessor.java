@@ -27,11 +27,6 @@ public class PasswordProcessor implements PropertyProcessor {
         return encrypt(property);
     }
 
-    @Override
-    public User.Property processUpdate(User.Property property) {
-        return encrypt(property);
-    }
-
     private User.Property encrypt(User.Property property) {
         property.value(encrypt((String) property.value()));
         return property;

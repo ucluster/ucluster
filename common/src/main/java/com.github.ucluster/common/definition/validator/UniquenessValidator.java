@@ -7,7 +7,6 @@ import com.github.ucluster.core.definition.ValidationResult;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 
 public class UniquenessValidator implements PropertyValidator {
@@ -30,26 +29,17 @@ public class UniquenessValidator implements PropertyValidator {
     }
 
     @Override
-    public ValidationResult validate(Map<String, Object> request, String propertyPath) {
+    public ValidationResult validate(User user, String propertyPath) {
+        final Optional<User.Property> property = user.property(propertyPath);
+
+        if (!property.isPresent()) {
+            return ValidationResult.SUCCESS;
+        }
+
         if (isUnique) {
-            final Optional<User> user = users.find(new User.Property() {
-                @Override
-                public String key() {
-                    return propertyPath;
-                }
+            final Optional<User> existingUser = users.find(property.get());
 
-                @Override
-                public Object value() {
-                    return request.get(propertyPath);
-                }
-
-                @Override
-                public void value(Object value) {
-                    throw new RuntimeException("this method should not be used");
-                }
-            });
-
-            return user.isPresent()
+            return existingUser.isPresent()
                     ? new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, type())))
                     : ValidationResult.SUCCESS;
         }

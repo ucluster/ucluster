@@ -1,10 +1,12 @@
 package com.github.ucluster.common.definition.validator;
 
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class FormatValidator implements PropertyValidator {
@@ -25,12 +27,14 @@ public class FormatValidator implements PropertyValidator {
     }
 
     @Override
-    public ValidationResult validate(Map<String, Object> request, String propertyPath) {
-        if (path(request, propertyPath) == null) {
+    public ValidationResult validate(User user, String propertyPath) {
+        final Optional<User.Property> property = user.property(propertyPath);
+
+        if (!property.isPresent()) {
             return ValidationResult.SUCCESS;
         }
 
-        return pattern.matcher(String.valueOf(path(request, propertyPath))).matches()
+        return pattern.matcher(String.valueOf(property.get().value())).matches()
                 ? ValidationResult.SUCCESS
                 : new ValidationResult(Arrays.asList(new ValidationResult.ValidateFailure(propertyPath, type())));
     }
