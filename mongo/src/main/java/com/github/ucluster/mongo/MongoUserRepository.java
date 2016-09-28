@@ -10,6 +10,7 @@ import com.github.ucluster.mongo.security.Encryption;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -76,5 +77,26 @@ public class MongoUserRepository implements UserRepository {
                 .get();
 
         return Optional.ofNullable(user);
+    }
+
+    @Override
+    public User update(User user) {
+        datastore.update(user, getDirtyUpdateOperations(user));
+        return user;
+    }
+
+    private UpdateOperations<User> getDirtyUpdateOperations(User user) {
+        MongoUser updateUser = (MongoUser) user;
+
+        final UpdateOperations<User> operations = datastore.createUpdateOperations(User.class)
+                .disableValidation();
+
+        updateUser.dirtyProperties.entrySet().stream().forEach(e ->
+                operations.set("properties." + e.getKey(), e.getValue())
+        );
+
+        updateUser.dirtyProperties.clear();
+
+        return operations;
     }
 }

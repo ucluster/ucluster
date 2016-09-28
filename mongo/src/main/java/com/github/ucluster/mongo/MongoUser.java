@@ -10,6 +10,7 @@ import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Transient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,11 +68,19 @@ public class MongoUser implements User {
 
     @Override
     public void update(Property property) {
+        dirty(property);
         properties.put(property.key(), property);
     }
 
     @Override
     public Optional<Property> property(String key) {
         return Optional.ofNullable(properties.get(key));
+    }
+
+    @Transient
+    protected Map<String, Property> dirtyProperties = new HashMap<>();
+
+    protected void dirty(Property property) {
+        dirtyProperties.put(property.key(), property);
     }
 }

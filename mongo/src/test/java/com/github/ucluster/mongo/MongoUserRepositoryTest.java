@@ -68,4 +68,32 @@ public class MongoUserRepositoryTest {
 
         assertThat(userFound.isPresent(), is(true));
     }
+
+    @Test
+    public void should_update_user_property() {
+        final User userBeforeUpdate = users.uuid(user.uuid());
+
+        userBeforeUpdate.update(new MongoUserProperty<>("nickname", "kiwinick"));
+        users.update(userBeforeUpdate);
+
+        final User userAfterUpdate = users.uuid(user.uuid());
+
+        assertThat(userAfterUpdate.property("nickname").get().value(), is("kiwinick"));
+    }
+
+    @Test
+    public void should_handle_concurrent_update_user_property() {
+        final User updateNicknameUser = users.uuid(user.uuid());
+        final User updateEmailUser = users.uuid(user.uuid());
+
+        updateNicknameUser.update(new MongoUserProperty<>("nickname", "newnickname"));
+        updateEmailUser.update(new MongoUserProperty<>("email", "kiwi.swhite.coder@gmail.com"));
+
+        users.update(updateNicknameUser);
+        users.update(updateEmailUser);
+
+        final User updatedUser = users.uuid(user.uuid());
+        assertThat(updatedUser.property("nickname").get().value(), is("newnickname"));
+        assertThat(updatedUser.property("email").get().value(), is("kiwi.swhite.coder@gmail.com"));
+    }
 }

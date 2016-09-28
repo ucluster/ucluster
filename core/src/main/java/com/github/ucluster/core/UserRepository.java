@@ -10,4 +10,6 @@ public interface UserRepository {
     User uuid(String uuid);
 
     Optional<User> find(User.Property property);
+
+    User update(User user);
 }
