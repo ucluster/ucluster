@@ -9,11 +9,13 @@ import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.security.Encryption;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,9 @@ public class MongoUser implements User {
 
     @Transient
     protected UserDefinition definition;
+
+    @Transient
+    protected Datastore datastore;
 
     MongoUser() {
     }
@@ -95,11 +100,24 @@ public class MongoUser implements User {
         dirtyProperties.put(property.key(), property);
     }
 
-    private void ensurePropertyMutable(Property property) {
+    protected void ensurePropertyMutable(Property property) {
         final UserDefinition.PropertyDefinition propertyDefinition = definition.property(property.key());
 
         if (propertyDefinition.definition().getOrDefault("immutable", false).equals(true)) {
             throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.key(), "immutable")));
         }
+    }
+
+    protected UpdateOperations<User> generateDirtyUpdateOperations() {
+        final UpdateOperations<User> operations = datastore.createUpdateOperations(User.class)
+                .disableValidation();
+
+        dirtyProperties.entrySet().stream().forEach(e ->
+                operations.set("properties." + e.getKey(), e.getValue())
+        );
+
+        dirtyProperties.clear();
+
+        return operations;
     }
 }

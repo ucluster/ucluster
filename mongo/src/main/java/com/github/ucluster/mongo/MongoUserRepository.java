@@ -41,6 +41,7 @@ public class MongoUserRepository implements UserRepository {
     public User uuid(String uuid) {
         final MongoUser user = datastore.get(MongoUser.class, new ObjectId(uuid));
         user.definition = userDefinitions.find(user.metadata);
+        user.datastore = datastore;
         return user;
     }
 
@@ -56,12 +57,13 @@ public class MongoUserRepository implements UserRepository {
         }
 
         user.definition = userDefinitions.find(user.metadata);
+        user.datastore = datastore;
         return Optional.of(user);
     }
 
     @Override
     public User update(User user) {
-        datastore.update(user, getDirtyUpdateOperations(user));
+        datastore.update(user, ((MongoUser) user).generateDirtyUpdateOperations());
         return user;
     }
 
@@ -72,6 +74,7 @@ public class MongoUserRepository implements UserRepository {
 
         final MongoUser user = new MongoUser(new DateTime(), getMetadata(request), properties);
         user.definition = userDefinition;
+        user.datastore = datastore;
         return user;
     }
 
@@ -99,20 +102,5 @@ public class MongoUserRepository implements UserRepository {
         defaultMetadata.put("type", "default");
 
         return (Map<String, Object>) request.getOrDefault("metadata", defaultMetadata);
-    }
-
-    private UpdateOperations<User> getDirtyUpdateOperations(User user) {
-        MongoUser updateUser = (MongoUser) user;
-
-        final UpdateOperations<User> operations = datastore.createUpdateOperations(User.class)
-                .disableValidation();
-
-        updateUser.dirtyProperties.entrySet().stream().forEach(e ->
-                operations.set("properties." + e.getKey(), e.getValue())
-        );
-
-        updateUser.dirtyProperties.clear();
-
-        return operations;
     }
 }
