@@ -88,6 +88,23 @@ Example:
     uniqueness: true
     
 default `uniqueness` is `false`    
+
+#### email
+
+Example:
+    
+    email: true
+    
+default `email` is `false`
+
+email validator regex patterns: 
+positive pattern: 
+    
+    [a-z0-9!#$%&'*+"=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+"=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?
+
+negative pattern:
+
+    .*@10minutemail\.com|.*@dreggn\.com
     
 #### customize validator    
 

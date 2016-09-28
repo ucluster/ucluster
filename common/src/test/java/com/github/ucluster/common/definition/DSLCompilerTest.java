@@ -2,6 +2,7 @@ package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.definition.processor.ImmutableProcessor;
 import com.github.ucluster.common.definition.processor.PasswordProcessor;
+import com.github.ucluster.common.definition.validator.EmailValidator;
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
@@ -116,6 +117,7 @@ public class DSLCompilerTest {
                         bind(UserRepository.class).toInstance(users);
 
                         registerValidator("format", FormatValidator.class);
+                        registerValidator("email", EmailValidator.class);
                         registerValidator("required", RequiredValidator.class);
                         registerValidator("uniqueness", UniquenessValidator.class);
 

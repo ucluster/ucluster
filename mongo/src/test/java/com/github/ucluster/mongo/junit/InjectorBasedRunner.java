@@ -2,6 +2,7 @@ package com.github.ucluster.mongo.junit;
 
 import com.github.ucluster.common.definition.processor.ImmutableProcessor;
 import com.github.ucluster.common.definition.processor.PasswordProcessor;
+import com.github.ucluster.common.definition.validator.EmailValidator;
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
@@ -74,6 +75,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(UserDefinitionRepository.class).to(MongoUserDefinitionRepository.class);
 
                         registerValidator("format", FormatValidator.class);
+                        registerValidator("email", EmailValidator.class);
                         registerValidator("required", RequiredValidator.class);
                         registerValidator("uniqueness", UniquenessValidator.class);
 

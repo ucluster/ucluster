@@ -44,7 +44,4 @@ public class FormatValidator implements PropertyValidator {
         return configuration;
     }
 
-    private Object path(Map<String, Object> request, String path) {
-        return request.get(path);
-    }
 }
