@@ -10,7 +10,6 @@ import com.github.ucluster.mongo.security.Encryption;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -38,11 +37,8 @@ public class MongoUserRepository implements UserRepository {
     }
 
     @Override
-    public User uuid(String uuid) {
-        final MongoUser user = datastore.get(MongoUser.class, new ObjectId(uuid));
-        user.definition = userDefinitions.find(user.metadata);
-        user.datastore = datastore;
-        return user;
+    public Optional<User> uuid(String uuid) {
+        return enhance(datastore.get(MongoUser.class, new ObjectId(uuid)));
     }
 
     @Override
@@ -52,6 +48,10 @@ public class MongoUserRepository implements UserRepository {
                 .field("properties." + property.key() + ".value").equal(property.value())
                 .get();
 
+        return enhance(user);
+    }
+
+    private Optional<User> enhance(MongoUser user) {
         if (user == null) {
             return Optional.empty();
         }

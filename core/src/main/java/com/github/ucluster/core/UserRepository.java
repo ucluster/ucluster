@@ -7,7 +7,7 @@ public interface UserRepository {
 
     User create(Map<String, Object> request);
 
-    User uuid(String uuid);
+    Optional<User> uuid(String uuid);
 
     Optional<User> find(User.Property property);
 

@@ -55,7 +55,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_find_user_by_uuid() {
-        final User userFound = users.uuid(user.uuid());
+        final User userFound = users.uuid(user.uuid()).get();
 
         assertThat(userFound.createdAt(), is(notNullValue()));
         assertThat(userFound.property("username").get().value(), is("kiwiwin"));
@@ -71,12 +71,12 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_update_user_property() {
-        final User userBeforeUpdate = users.uuid(user.uuid());
+        final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
         userBeforeUpdate.update(new MongoUserProperty<>("nickname", "kiwinick"));
         users.update(userBeforeUpdate);
 
-        final User userAfterUpdate = users.uuid(user.uuid());
+        final User userAfterUpdate = users.uuid(user.uuid()).get();
 
         assertThat(userAfterUpdate.property("nickname").get().value(), is("kiwinick"));
     }
@@ -85,7 +85,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_update_immutable_property() {
         thrown.expect(UserValidationException.class);
 
-        final User userUpdateImmutableProperty = users.uuid(user.uuid());
+        final User userUpdateImmutableProperty = users.uuid(user.uuid()).get();
         userUpdateImmutableProperty.update(new MongoUserProperty<>("username", "anotherkiwi"));
 
         users.update(userUpdateImmutableProperty);
@@ -93,8 +93,8 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_handle_concurrent_update_user_property() {
-        final User updateNicknameUser = users.uuid(user.uuid());
-        final User updateEmailUser = users.uuid(user.uuid());
+        final User updateNicknameUser = users.uuid(user.uuid()).get();
+        final User updateEmailUser = users.uuid(user.uuid()).get();
 
         updateNicknameUser.update(new MongoUserProperty<>("nickname", "newnickname"));
         updateEmailUser.update(new MongoUserProperty<>("email", "kiwi.swhite.coder@gmail.com"));
@@ -102,7 +102,7 @@ public class MongoUserRepositoryTest {
         users.update(updateNicknameUser);
         users.update(updateEmailUser);
 
-        final User updatedUser = users.uuid(user.uuid());
+        final User updatedUser = users.uuid(user.uuid()).get();
         assertThat(updatedUser.property("nickname").get().value(), is("newnickname"));
         assertThat(updatedUser.property("email").get().value(), is("kiwi.swhite.coder@gmail.com"));
     }
