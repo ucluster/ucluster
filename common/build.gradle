@@ -2,6 +2,8 @@ dependencies {
     compile "com.google.inject:guice:$guice"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:$jackson_joda"
 
+    compile "cglib:cglib-nodep:3.2.4"
+
     compile files('libs/jbcrypt.jar')
     compile project(':core')
 }
