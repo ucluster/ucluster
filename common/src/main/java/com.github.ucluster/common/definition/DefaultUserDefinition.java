@@ -27,15 +27,15 @@ public class DefaultUserDefinition implements Definition<User> {
                 ));
     }
 
-    public ValidationResult validate(User user) {
-        return validate(user, propertyDefinitions.keySet().toArray(new String[propertyDefinitions.size()]));
+    public ValidationResult validate(User record) {
+        return validate(record, propertyDefinitions.keySet().toArray(new String[propertyDefinitions.size()]));
     }
 
     @Override
-    public ValidationResult validate(User user, String... propertyPaths) {
+    public ValidationResult validate(User record, String... propertyPaths) {
         return asList(propertyPaths).stream()
                 .map(propertyPath -> propertyDefinitions.get(propertyPath))
-                .map(propertyDefinition -> propertyDefinition.validate(user))
+                .map(propertyDefinition -> propertyDefinition.validate(record))
                 .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
     }
 

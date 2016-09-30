@@ -60,9 +60,9 @@ public class DefaultPropertyDefinition implements Definition.PropertyDefinition<
     }
 
     @Override
-    public ValidationResult validate(User user) {
+    public ValidationResult validate(User record) {
         return validators.entrySet().stream()
-                .map(entry -> entry.getValue().validate(user, propertyPath))
+                .map(entry -> entry.getValue().validate(record, propertyPath))
                 .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
     }
 

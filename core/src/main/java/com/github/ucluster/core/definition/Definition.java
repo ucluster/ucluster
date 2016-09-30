@@ -6,9 +6,9 @@ import java.util.Map;
 
 public interface Definition<D extends Record> {
 
-    ValidationResult validate(D user);
+    ValidationResult validate(D record);
 
-    ValidationResult validate(D user, String... propertyPaths);
+    ValidationResult validate(D record, String... propertyPaths);
 
     PropertyDefinition<D> property(String propertyPath);
 
@@ -20,7 +20,7 @@ public interface Definition<D extends Record> {
 
         Map<String, Object> definition();
 
-        ValidationResult validate(T user);
+        ValidationResult validate(T record);
 
         <P> Record.Property<P> process(PropertyProcessor.Type type, Record.Property<P> property);
     }
