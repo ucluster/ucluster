@@ -4,8 +4,8 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
+import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.definition.PropertyProcessor;
-import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.github.ucluster.core.exception.UserValidationException;
 import net.sf.cglib.proxy.Enhancer;
@@ -28,7 +28,7 @@ public class MongoUserRepository implements Repository<User> {
     protected Datastore datastore;
 
     @Inject
-    protected UserDefinitionRepository userDefinitions;
+    protected DefinitionRepository userDefinitions;
 
     @Override
     public User create(Record.Request request) {
