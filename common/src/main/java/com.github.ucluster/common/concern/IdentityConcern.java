@@ -10,12 +10,12 @@ import java.util.Collection;
 
 import static java.util.Arrays.asList;
 
-public class IdentityConcern<T extends Record> implements Record.Property.Concern<T> {
+public class IdentityConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
 
-    private RequiredConcern<T> requiredConcern;
-    private UniquenessConcern<T> uniquenessConcern;
+    private RequiredConcern requiredConcern;
+    private UniquenessConcern uniquenessConcern;
 
     @Inject
     Injector injector;
@@ -26,8 +26,8 @@ public class IdentityConcern<T extends Record> implements Record.Property.Concer
     public IdentityConcern(String type, Object configuration) {
         this.type = type;
         this.configuration = configuration;
-        this.requiredConcern = new RequiredConcern<>(type, configuration);
-        this.uniquenessConcern = new UniquenessConcern<>(type, configuration);
+        this.requiredConcern = new RequiredConcern(type, configuration);
+        this.uniquenessConcern = new UniquenessConcern(type, configuration);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class IdentityConcern<T extends Record> implements Record.Property.Concer
     }
 
     @Override
-    public void effect(T record, String propertyPath) {
+    public void effect(Record record, String propertyPath) {
         injector.injectMembers(requiredConcern);
         injector.injectMembers(uniquenessConcern);
 

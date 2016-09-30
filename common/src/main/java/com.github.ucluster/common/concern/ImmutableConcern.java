@@ -7,7 +7,7 @@ import com.github.ucluster.core.exception.ConcernEffectException;
 import java.util.Collection;
 import java.util.Collections;
 
-public class ImmutableConcern<T extends Record> implements Record.Property.Concern<T> {
+public class ImmutableConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
     private boolean enabled;
@@ -27,7 +27,7 @@ public class ImmutableConcern<T extends Record> implements Record.Property.Conce
     }
 
     @Override
-    public void effect(T record, String propertyPath) {
+    public void effect(Record record, String propertyPath) {
         if (enabled) {
             throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
         }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 
-public class PasswordConcern<T extends Record> implements Record.Property.Concern<T> {
+public class PasswordConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
     private boolean enabled;
@@ -27,7 +27,7 @@ public class PasswordConcern<T extends Record> implements Record.Property.Concer
     }
 
     @Override
-    public void effect(T record, String propertyPath) {
+    public void effect(Record record, String propertyPath) {
         if (enabled) {
             final Optional<Record.Property> property = record.property(propertyPath);
 

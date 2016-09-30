@@ -32,7 +32,7 @@ public class MongoUserRepository implements Repository<User> {
 
         final User monitored = lifecycleMonitor.monitor(user);
         request.properties().keySet().stream()
-                .forEach(propertyPath -> monitored.update(new MongoUserProperty<>(
+                .forEach(propertyPath -> monitored.update(new MongoProperty<>(
                         propertyPath,
                         request.properties().get(propertyPath))
                 ));
@@ -50,7 +50,7 @@ public class MongoUserRepository implements Repository<User> {
     public Optional<User> find(Record.Property property) {
         final MongoUser user = datastore.createQuery(MongoUser.class)
                 .disableValidation()
-                .field(MongoUserProperty.valueMongoField(property)).equal(property.value())
+                .field(MongoProperty.valueMongoField(property)).equal(property.value())
                 .get();
 
         return enhance(user);

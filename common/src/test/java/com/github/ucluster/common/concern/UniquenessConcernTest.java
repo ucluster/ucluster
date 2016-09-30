@@ -25,8 +25,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UniquenessConcernTest {
-    private Record.Property.Concern<User> uniquenessValidator;
-    private Record.Property.Concern<User> nonUniquenessValidator;
+    private Record.Property.Concern uniqueness;
+    private Record.Property.Concern nonUniqueness;
     private Repository<User> users;
     private User user;
     private Record.Property property;
@@ -36,11 +36,11 @@ public class UniquenessConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        uniquenessValidator = new UniquenessConcern<>("uniqueness", true);
-        nonUniquenessValidator = new UniquenessConcern<>("uniqueness", false);
+        uniqueness = new UniquenessConcern("uniqueness", true);
+        nonUniqueness = new UniquenessConcern("uniqueness", false);
 
         Injector injector = getInjector();
-        injector.injectMembers(uniquenessValidator);
+        injector.injectMembers(uniqueness);
 
         user = mock(User.class);
         property = mock(Record.Property.class);
@@ -61,7 +61,7 @@ public class UniquenessConcernTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        uniquenessValidator.effect(user, "username");
+        uniqueness.effect(user, "username");
     }
 
     @Test
@@ -81,7 +81,7 @@ public class UniquenessConcernTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        uniquenessValidator.effect(user, "username");
+        uniqueness.effect(user, "username");
     }
 
     @Test
@@ -99,7 +99,7 @@ public class UniquenessConcernTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        nonUniquenessValidator.effect(user, "username");
+        nonUniqueness.effect(user, "username");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class UniquenessConcernTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        nonUniquenessValidator.effect(user, "username");
+        nonUniqueness.effect(user, "username");
     }
 
     private Injector getInjector() {
@@ -131,7 +131,7 @@ public class UniquenessConcernTest {
                 new AbstractModule() {
                     @Override
                     protected void configure() {
-                        bind(new TypeLiteral<Repository<User>>() {
+                        bind(new TypeLiteral<Repository<? extends Record>>() {
                         }).toInstance(users);
                     }
                 }}));

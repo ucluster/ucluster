@@ -2,9 +2,11 @@ package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -12,9 +14,17 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 
-public class UniquenessConcern<T extends Record> implements Record.Property.Concern<T> {
+/**
+ * UniquenessConcern:
+ *
+ * needs database constraint support.
+ *
+ * TODO: enable different Record implementation exists at the same time
+ *
+ */
+public class UniquenessConcern implements Record.Property.Concern {
     @Inject
-    Repository<User> records;
+    Injector injector;
 
     private String type;
     private Object configuration;
@@ -35,16 +45,18 @@ public class UniquenessConcern<T extends Record> implements Record.Property.Conc
     }
 
     @Override
-    public void effect(T record, String propertyPath) {
+    public void effect(Record record, String propertyPath) {
         if (enabled) {
             record.property(propertyPath).ifPresent(prop -> {
-                final Optional<User> existingRecord = records.find(prop);
+                final Repository<? extends Record> records = injector.getInstance(Key.get(new TypeLiteral<Repository<? extends Record>>() {
+                }));
+
+                final Optional<? extends Record> existingRecord = records.find(prop);
 
                 existingRecord.ifPresent($ -> {
                     throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
                 });
             });
-
         }
     }
 

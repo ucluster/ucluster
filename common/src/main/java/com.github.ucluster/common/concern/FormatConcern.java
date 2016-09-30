@@ -11,13 +11,13 @@ import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 
-public class FormatConcern<T extends Record> implements Record.Property.Concern<T> {
+public class FormatConcern implements Record.Property.Concern {
 
     private String type;
     private Object configuration;
     private Pattern pattern;
 
-    public FormatConcern() {
+    FormatConcern() {
     }
 
     public FormatConcern(String type, Object configuration) {
@@ -32,7 +32,7 @@ public class FormatConcern<T extends Record> implements Record.Property.Concern<
     }
 
     @Override
-    public void effect(T record, String propertyPath) {
+    public void effect(Record record, String propertyPath) {
         record.property(propertyPath).ifPresent(prop -> {
             if (!pattern.matcher(String.valueOf(prop.value())).matches()) {
                 throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));

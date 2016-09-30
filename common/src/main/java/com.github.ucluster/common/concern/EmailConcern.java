@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class EmailConcern<T extends Record> implements Record.Property.Concern<T> {
+public class EmailConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
     private boolean enabled;
@@ -32,7 +32,7 @@ public class EmailConcern<T extends Record> implements Record.Property.Concern<T
     }
 
     @Override
-    public void effect(T record, String propertyPath) {
+    public void effect(Record record, String propertyPath) {
         if (enabled) {
             final Optional<Record.Property> property = record.property(propertyPath);
 

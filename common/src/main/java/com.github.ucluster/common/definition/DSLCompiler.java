@@ -75,18 +75,18 @@ public class DSLCompiler {
                 return new DefaultPropertyDefinition(propertyPath, propertyConcerns());
             }
 
-            private Collection<Record.Property.Concern<User>> propertyConcerns() {
+            private Collection<Record.Property.Concern> propertyConcerns() {
                 return propertyJson.keySet().stream()
                         .map(key -> {
-                            final Record.Property.Concern<User> propertyConcern = loadPropertyConcern(key, propertyJson.get(key));
+                            final Record.Property.Concern propertyConcern = loadPropertyConcern(key, propertyJson.get(key));
                             injector.injectMembers(propertyConcern);
                             return propertyConcern;
                         }).collect(Collectors.toList());
             }
 
-            private Record.Property.Concern<User> loadPropertyConcern(String concernType, Object propertyProcessorConfiguration) {
+            private Record.Property.Concern loadPropertyConcern(String concernType, Object propertyProcessorConfiguration) {
                 try {
-                    final Class<? extends Record.Property.Concern> propertyConcernClass = injector.getInstance(Key.get(new TypeLiteral<Record.Property.Concern<User>>() {
+                    final Class<? extends Record.Property.Concern> propertyConcernClass = injector.getInstance(Key.get(new TypeLiteral<Record.Property.Concern>() {
                     }, Names.named("property." + concernType + ".concern"))).getClass();
 
                     final Constructor<? extends Record.Property.Concern> constructor = propertyConcernClass.getConstructor(String.class, Object.class);

@@ -16,8 +16,8 @@ import static org.mockito.Mockito.when;
 
 public class RequiredConcernTest {
 
-    private Record.Property.Concern<User> required;
-    private Record.Property.Concern<User> optional;
+    private Record.Property.Concern required;
+    private Record.Property.Concern optional;
     private User user;
     private Record.Property property;
 
@@ -26,8 +26,8 @@ public class RequiredConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        required = new RequiredConcern<>("required", true);
-        optional = new RequiredConcern<>("required", false);
+        required = new RequiredConcern("required", true);
+        optional = new RequiredConcern("required", false);
 
         user = mock(User.class);
         property = mock(Record.Property.class);

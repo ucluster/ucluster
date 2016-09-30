@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 public class EmailConcernTest {
 
-    private Record.Property.Concern<User> concern;
+    private Record.Property.Concern concern;
     private User user;
     private Record.Property property;
 
@@ -27,7 +27,7 @@ public class EmailConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        concern = new EmailConcern<>("email", true);
+        concern = new EmailConcern("email", true);
 
         user = mock(User.class);
         property = mock(Record.Property.class);

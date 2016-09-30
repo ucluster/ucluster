@@ -9,7 +9,7 @@ import java.util.Collections;
 
 import static java.util.Arrays.asList;
 
-public class RequiredConcern<T extends Record> implements Record.Property.Concern<T> {
+public class RequiredConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
     private boolean enabled;
@@ -29,7 +29,7 @@ public class RequiredConcern<T extends Record> implements Record.Property.Concer
     }
 
     @Override
-    public void effect(T record, String propertyPath) {
+    public void effect(Record record, String propertyPath) {
         if (enabled) {
             record.property(propertyPath).orElseThrow(() ->
                     new ConcernEffectException(

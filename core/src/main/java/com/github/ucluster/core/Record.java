@@ -32,7 +32,7 @@ public interface Record {
 
         void value(T value);
 
-        interface Concern<R extends Record> {
+        interface Concern {
 
             String type();
 
@@ -42,7 +42,7 @@ public interface Record {
                 return about().contains(point);
             }
 
-            void effect(R record, String propertyPath);
+            void effect(Record record, String propertyPath);
 
             Object configuration();
 

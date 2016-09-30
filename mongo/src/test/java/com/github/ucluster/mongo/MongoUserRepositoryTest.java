@@ -71,7 +71,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_find_user_by_property() {
-        final Optional<User> userFound = users.find(new MongoUserProperty<>("username", "kiwiwin"));
+        final Optional<User> userFound = users.find(new MongoProperty<>("username", "kiwiwin"));
 
         assertThat(userFound.isPresent(), is(true));
     }
@@ -80,7 +80,7 @@ public class MongoUserRepositoryTest {
     public void should_update_user_property() {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
-        userBeforeUpdate.update(new MongoUserProperty<>("nickname", "kiwinick"));
+        userBeforeUpdate.update(new MongoProperty<>("nickname", "kiwinick"));
         userBeforeUpdate.update();
 
         final User userAfterUpdate = users.uuid(user.uuid()).get();
@@ -93,7 +93,7 @@ public class MongoUserRepositoryTest {
         thrown.expect(ConcernEffectException.class);
 
         final User userUpdateImmutableProperty = users.uuid(user.uuid()).get();
-        userUpdateImmutableProperty.update(new MongoUserProperty<>("username", "anotherkiwi"));
+        userUpdateImmutableProperty.update(new MongoProperty<>("username", "anotherkiwi"));
 
         userUpdateImmutableProperty.update();
     }
@@ -104,7 +104,7 @@ public class MongoUserRepositoryTest {
 
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
-        userBeforeUpdate.update(new MongoUserProperty<>("password", "a"));
+        userBeforeUpdate.update(new MongoProperty<>("password", "a"));
         userBeforeUpdate.update();
     }
 
@@ -112,13 +112,13 @@ public class MongoUserRepositoryTest {
     public void should_success_update_password() {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
-        userBeforeUpdate.update(new MongoUserProperty<>("password", "newpassword"));
+        userBeforeUpdate.update(new MongoProperty<>("password", "newpassword"));
         userBeforeUpdate.update();
 
         final User userAfterUpdate = users.uuid(this.user.uuid()).get();
         userAfterUpdate.authenticate(
-                new MongoUserProperty<>("username", "kiwiwin"),
-                new MongoUserProperty<>("password", "newpassword")
+                new MongoProperty<>("username", "kiwiwin"),
+                new MongoProperty<>("password", "newpassword")
         );
     }
 
@@ -127,8 +127,8 @@ public class MongoUserRepositoryTest {
         final User updateNicknameUser = users.uuid(user.uuid()).get();
         final User updateEmailUser = users.uuid(user.uuid()).get();
 
-        updateNicknameUser.update(new MongoUserProperty<>("nickname", "newnickname"));
-        updateEmailUser.update(new MongoUserProperty<>("email", "kiwiwin@gmail.com"));
+        updateNicknameUser.update(new MongoProperty<>("nickname", "newnickname"));
+        updateEmailUser.update(new MongoProperty<>("email", "kiwiwin@gmail.com"));
 
         updateNicknameUser.update();
         updateEmailUser.update();

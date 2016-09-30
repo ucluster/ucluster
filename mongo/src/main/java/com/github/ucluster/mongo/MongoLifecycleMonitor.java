@@ -87,7 +87,7 @@ public class MongoLifecycleMonitor<T extends Record> implements LifecycleMonitor
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .forEach(property ->
-                                operations.set(MongoUserProperty.mongoField(property), property)
+                                operations.set(MongoProperty.mongoField(property), property)
                         );
 
                 return operations;

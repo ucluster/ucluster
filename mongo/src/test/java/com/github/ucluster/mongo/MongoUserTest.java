@@ -39,20 +39,20 @@ public class MongoUserTest {
 
     @Test
     public void should_user_authenticate_success() {
-        user.authenticate(new MongoUserProperty<>("username", "kiwiwin"), new MongoUserProperty<>("password", "password"));
+        user.authenticate(new MongoProperty<>("username", "kiwiwin"), new MongoProperty<>("password", "password"));
     }
 
     @Test
     public void should_user_failed_authenticate() {
         thrown.expect(UserAuthenticationException.class);
 
-        user.authenticate(new MongoUserProperty<>("username", "kiwiwin"), new MongoUserProperty<>("password", "invalid_password"));
+        user.authenticate(new MongoProperty<>("username", "kiwiwin"), new MongoProperty<>("password", "invalid_password"));
     }
 
     @Test
     public void should_user_failed_authenticate_not_using_identity_field() {
         thrown.expect(UserAuthenticationException.class);
 
-        user.authenticate(new MongoUserProperty<>("nickname", "kiwinickname"), new MongoUserProperty<>("password", "password"));
+        user.authenticate(new MongoProperty<>("nickname", "kiwinickname"), new MongoProperty<>("password", "password"));
     }
 }

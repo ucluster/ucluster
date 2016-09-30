@@ -5,7 +5,7 @@ import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 
 @Embedded
-public class MongoUserProperty<T> implements Record.Property<T> {
+public class MongoProperty<T> implements Record.Property<T> {
 
     @Property
     private String key;
@@ -13,10 +13,10 @@ public class MongoUserProperty<T> implements Record.Property<T> {
     @Property
     private T value;
 
-    MongoUserProperty() {
+    MongoProperty() {
     }
 
-    MongoUserProperty(String key, T value) {
+    MongoProperty(String key, T value) {
         this.key = key;
         this.value = value;
     }

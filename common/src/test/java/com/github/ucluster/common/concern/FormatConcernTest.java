@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 public class FormatConcernTest {
 
-    private Record.Property.Concern<User> concern;
+    private Record.Property.Concern concern;
     private User user;
     private Record.Property property;
 
@@ -32,7 +32,7 @@ public class FormatConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        concern = new FormatConcern<>("format", ImmutableMap.<String, Object>builder()
+        concern = new FormatConcern("format", ImmutableMap.<String, Object>builder()
                 .put("pattern", "\\w{6,12}")
                 .build());
 

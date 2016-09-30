@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 public class DefaultPropertyDefinition implements Definition.PropertyDefinition<User> {
     private final String propertyPath;
-    private Map<String, Record.Property.Concern<User>> concerns = new HashMap<>();
+    private Map<String, Record.Property.Concern> concerns = new HashMap<>();
 
-    public DefaultPropertyDefinition(String propertyPath, Collection<Record.Property.Concern<User>> concerns) {
+    public DefaultPropertyDefinition(String propertyPath, Collection<Record.Property.Concern> concerns) {
         this.propertyPath = propertyPath;
         concerns.stream().forEach(concern -> this.concerns.put(concern.type(), concern));
     }
