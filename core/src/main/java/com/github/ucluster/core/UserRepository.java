@@ -9,6 +9,4 @@ public interface UserRepository {
     Optional<User> uuid(String uuid);
 
     Optional<User> find(ActiveRecord.Property property);
-
-    User update(User user);
 }

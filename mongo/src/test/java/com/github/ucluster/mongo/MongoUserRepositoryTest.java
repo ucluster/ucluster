@@ -81,7 +81,7 @@ public class MongoUserRepositoryTest {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
         userBeforeUpdate.update(new MongoUserProperty<>("nickname", "kiwinick"));
-        users.update(userBeforeUpdate);
+        userBeforeUpdate.update();
 
         final User userAfterUpdate = users.uuid(user.uuid()).get();
 
@@ -95,7 +95,7 @@ public class MongoUserRepositoryTest {
         final User userUpdateImmutableProperty = users.uuid(user.uuid()).get();
         userUpdateImmutableProperty.update(new MongoUserProperty<>("username", "anotherkiwi"));
 
-        users.update(userUpdateImmutableProperty);
+        userUpdateImmutableProperty.update();
     }
 
     @Test
@@ -105,7 +105,7 @@ public class MongoUserRepositoryTest {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
         userBeforeUpdate.update(new MongoUserProperty<>("password", "a"));
-        users.update(userBeforeUpdate);
+        userBeforeUpdate.update();
     }
 
     @Test
@@ -113,8 +113,7 @@ public class MongoUserRepositoryTest {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
         userBeforeUpdate.update(new MongoUserProperty<>("password", "newpassword"));
-
-        users.update(userBeforeUpdate);
+        userBeforeUpdate.update();
 
         final User userAfterUpdate = users.uuid(this.user.uuid()).get();
         userAfterUpdate.authenticate(
@@ -131,8 +130,8 @@ public class MongoUserRepositoryTest {
         updateNicknameUser.update(new MongoUserProperty<>("nickname", "newnickname"));
         updateEmailUser.update(new MongoUserProperty<>("email", "kiwiwin@gmail.com"));
 
-        users.update(updateNicknameUser);
-        users.update(updateEmailUser);
+        updateNicknameUser.update();
+        updateEmailUser.update();
 
         final User updatedUser = users.uuid(user.uuid()).get();
         assertThat(updatedUser.property("nickname").get().value(), is("newnickname"));

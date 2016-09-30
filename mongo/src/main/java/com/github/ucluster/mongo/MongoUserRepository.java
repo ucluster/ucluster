@@ -63,12 +63,6 @@ public class MongoUserRepository implements UserRepository {
         return enhance(user);
     }
 
-    @Override
-    public User update(User user) {
-        user.update();
-        return user;
-    }
-
     private Optional<User> enhance(MongoUser user) {
         if (user == null) {
             return Optional.empty();
