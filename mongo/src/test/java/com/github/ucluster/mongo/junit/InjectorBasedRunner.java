@@ -7,6 +7,7 @@ import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.IdentityValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
+import com.github.ucluster.core.LifecycleMonitor;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
@@ -14,6 +15,7 @@ import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.UserLifecycleMonitor;
 import com.github.ucluster.mongo.definition.UserDefinitionRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -79,6 +81,9 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
                         }).to(UserDefinitionRepository.class);
+
+                        bind(new TypeLiteral<LifecycleMonitor<User>>() {
+                        }).to(UserLifecycleMonitor.class);
 
                         registerValidator("format", FormatValidator.class);
                         registerValidator("email", EmailValidator.class);
