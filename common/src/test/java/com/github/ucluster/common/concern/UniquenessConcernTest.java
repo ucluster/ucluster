@@ -3,7 +3,7 @@ package com.github.ucluster.common.concern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -66,7 +66,7 @@ public class UniquenessConcernTest {
 
     @Test
     public void should_failed_when_not_unique_and_uniqueness_is_required() {
-        thrown.expect(RecordValidationException.class);
+        thrown.expect(ConcernEffectException.class);
 
         when(users.find(argThat(new ArgumentMatcher<Record.Property>() {
             @Override

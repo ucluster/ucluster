@@ -3,7 +3,7 @@ package com.github.ucluster.common.concern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
@@ -45,18 +45,18 @@ public class IdentityConcern implements Record.Property.Concern<User> {
 
         try {
             requiredConcern.effect(record, propertyPath);
-        } catch (RecordValidationException e) {
+        } catch (ConcernEffectException e) {
             result = result.merge(e.getEffectResult());
         }
 
         try {
             uniquenessConcern.effect(record, propertyPath);
-        } catch (RecordValidationException e) {
+        } catch (ConcernEffectException e) {
             result = result.merge(e.getEffectResult());
         }
 
         if (!result.valid()) {
-            throw new RecordValidationException(result);
+            throw new ConcernEffectException(result);
         }
     }
 

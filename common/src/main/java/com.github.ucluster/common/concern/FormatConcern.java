@@ -3,7 +3,7 @@ package com.github.ucluster.common.concern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class FormatConcern implements Record.Property.Concern<User> {
     public void effect(User record, String propertyPath) {
         record.property(propertyPath).ifPresent(prop -> {
             if (!pattern.matcher(String.valueOf(prop.value())).matches()) {
-                throw new RecordValidationException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
+                throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
             }
         });
     }

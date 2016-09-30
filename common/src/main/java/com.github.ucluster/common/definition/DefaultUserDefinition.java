@@ -4,7 +4,7 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +34,7 @@ public class DefaultUserDefinition implements Definition<User> {
                     try {
                         propertyDefinition.effect(point, record);
                         return null;
-                    } catch (RecordValidationException e) {
+                    } catch (ConcernEffectException e) {
                         return e.getEffectResult();
                     }
                 })
@@ -42,7 +42,7 @@ public class DefaultUserDefinition implements Definition<User> {
                 .reduce(EffectResult.SUCCESS, EffectResult::merge);
 
         if (!result.valid()) {
-            throw new RecordValidationException(result);
+            throw new ConcernEffectException(result);
         }
     }
 

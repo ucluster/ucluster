@@ -4,7 +4,7 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class DefaultPropertyDefinition implements Definition.PropertyDefinition<
                     try {
                         concern.effect(record, propertyPath);
                         return null;
-                    } catch (RecordValidationException e) {
+                    } catch (ConcernEffectException e) {
                         return e.getEffectResult();
                     }
                 })
@@ -36,7 +36,7 @@ public class DefaultPropertyDefinition implements Definition.PropertyDefinition<
                 .reduce(EffectResult.SUCCESS, EffectResult::merge);
 
         if (!result.valid()) {
-            throw new RecordValidationException(result);
+            throw new ConcernEffectException(result);
         }
     }
 

@@ -3,7 +3,7 @@ package com.github.ucluster.common.concern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,7 +30,7 @@ public class ImmutableConcern implements Record.Property.Concern<User> {
     @Override
     public void effect(User record, String propertyPath) {
         if (enabled) {
-            throw new RecordValidationException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
+            throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
         }
     }
 

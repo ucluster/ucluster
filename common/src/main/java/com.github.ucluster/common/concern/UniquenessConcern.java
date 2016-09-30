@@ -4,7 +4,7 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class UniquenessConcern implements Record.Property.Concern<User> {
                 final Optional<User> existingUser = users.find(prop);
 
                 existingUser.ifPresent($ -> {
-                    throw new RecordValidationException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
+                    throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
                 });
             });
 

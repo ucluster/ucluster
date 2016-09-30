@@ -3,7 +3,7 @@ package com.github.ucluster.common.concern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.common.collect.ImmutableMap;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -66,15 +66,15 @@ public class FormatConcernTest {
 
     @Test
     public void should_failed_to_validate_against_format() {
-        thrown.expect(RecordValidationException.class);
-        thrown.expect(new TypeSafeMatcher<RecordValidationException>() {
+        thrown.expect(ConcernEffectException.class);
+        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
             @Override
             public void describeTo(Description description) {
                 description.appendText("expects RecordValidationException");
             }
 
             @Override
-            protected boolean matchesSafely(RecordValidationException exception) {
+            protected boolean matchesSafely(ConcernEffectException exception) {
                 final EffectResult result = exception.getEffectResult();
                 if (result.valid() || result.errors().size() != 1) {
                     return false;

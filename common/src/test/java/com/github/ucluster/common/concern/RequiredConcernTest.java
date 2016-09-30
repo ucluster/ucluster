@@ -2,7 +2,7 @@ package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class RequiredConcernTest {
 
     @Test
     public void should_failed_required_but_value_absence() {
-        thrown.expect(RecordValidationException.class);
+        thrown.expect(ConcernEffectException.class);
 
         propertyAbsent();
 

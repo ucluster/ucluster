@@ -10,7 +10,7 @@ import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.RecordValidationException;
+import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
@@ -75,15 +75,15 @@ public class DSLCompilerTest {
 
     @Test
     public void should_failed_verify_by_dsl() {
-        thrown.expect(RecordValidationException.class);
-        thrown.expect(new TypeSafeMatcher<RecordValidationException>() {
+        thrown.expect(ConcernEffectException.class);
+        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
             @Override
             public void describeTo(Description description) {
                 description.appendText("expects RecordValidationException");
             }
 
             @Override
-            protected boolean matchesSafely(RecordValidationException exception) {
+            protected boolean matchesSafely(ConcernEffectException exception) {
                 return !exception.getEffectResult().valid();
             }
         });

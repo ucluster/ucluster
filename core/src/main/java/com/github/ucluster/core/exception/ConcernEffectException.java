@@ -2,10 +2,10 @@ package com.github.ucluster.core.exception;
 
 import com.github.ucluster.core.definition.EffectResult;
 
-public class RecordValidationException extends RuntimeException {
+public class ConcernEffectException extends RuntimeException {
     private final EffectResult effectResult;
 
-    public RecordValidationException(EffectResult effectResult) {
+    public ConcernEffectException(EffectResult effectResult) {
         this.effectResult = effectResult;
     }
 
