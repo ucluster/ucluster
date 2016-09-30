@@ -1,6 +1,6 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
@@ -31,7 +31,7 @@ public class MongoUserRepository implements Repository<User> {
     protected UserDefinitionRepository userDefinitions;
 
     @Override
-    public User create(ActiveRecord.Request request) {
+    public User create(Record.Request request) {
         final MongoUser user = new MongoUser();
         user.createdAt = new DateTime();
         user.metadata = request.metadata();
@@ -54,7 +54,7 @@ public class MongoUserRepository implements Repository<User> {
     }
 
     @Override
-    public Optional<User> find(ActiveRecord.Property property) {
+    public Optional<User> find(Record.Property property) {
         final MongoUser user = datastore.createQuery(MongoUser.class)
                 .disableValidation()
                 .field(MongoUserProperty.valueMongoField(property)).equal(property.value())
@@ -83,7 +83,7 @@ public class MongoUserRepository implements Repository<User> {
             @Override
             public Object intercept(Object instance, Method method, Object[] parameters, MethodProxy proxy) throws Throwable {
                 if (isPropertySetterMethod(method)) {
-                    recordDirtyProperty((ActiveRecord.Property) parameters[0]);
+                    recordDirtyProperty((Record.Property) parameters[0]);
                 }
 
                 if (isSaveMethod(method)) {
@@ -122,7 +122,7 @@ public class MongoUserRepository implements Repository<User> {
                 dirtyTracker.dirties().stream()
                         .filter(propertyPath -> dirtyTracker.isDirty(propertyPath))
                         .forEach(propertyPath -> {
-                            ActiveRecord.Property property = user.property(propertyPath).get();
+                            Record.Property property = user.property(propertyPath).get();
                             property.value(definition.property(property.path()).process(processType, property).value());
                         });
             }
@@ -179,14 +179,14 @@ public class MongoUserRepository implements Repository<User> {
             }
 
             private boolean isPropertySetterMethodParameterTypeMatched(Method method) {
-                return method.getParameterTypes().length == 1 && method.getParameterTypes()[0].equals(ActiveRecord.Property.class);
+                return method.getParameterTypes().length == 1 && method.getParameterTypes()[0].equals(Record.Property.class);
             }
 
             private boolean isPropertySetterMethodNameMatched(Method method) {
                 return "update".equals(method.getName());
             }
 
-            private void recordDirtyProperty(ActiveRecord.Property property) {
+            private void recordDirtyProperty(Record.Property property) {
                 dirtyTracker.dirty(property.path());
             }
         });

@@ -1,6 +1,6 @@
 package com.github.ucluster.common.definition.processor;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.github.ucluster.core.exception.UserValidationException;
@@ -26,7 +26,7 @@ public class ImmutableProcessor implements PropertyProcessor {
     }
 
     @Override
-    public ActiveRecord.Property process(ActiveRecord.Property property) {
+    public Record.Property process(Record.Property property) {
         //换一种实现方式
         if (isImmutable) {
             throw new UserValidationException(new ValidationResult(new ValidationResult.ValidateFailure(property.path(), "immutable")));

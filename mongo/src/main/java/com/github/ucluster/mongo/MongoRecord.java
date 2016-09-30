@@ -1,6 +1,6 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.annotations.Embedded;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MongoActiveRecord implements ActiveRecord {
+public class MongoRecord implements Record {
     @Id
     protected ObjectId uuid;
 

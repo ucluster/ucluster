@@ -6,7 +6,7 @@ public interface Repository<T> {
 
     Optional<T> uuid(String uuid);
 
-    Optional<T> find(ActiveRecord.Property property);
+    Optional<T> find(Record.Property property);
 
-    T create(ActiveRecord.Request request);
+    T create(Record.Request request);
 }

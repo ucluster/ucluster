@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 import java.util.Map;
 import java.util.Optional;
 
-public interface ActiveRecord {
+public interface Record {
 
     String uuid();
 

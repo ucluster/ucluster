@@ -1,12 +1,12 @@
 package com.github.ucluster.core.definition;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 
-public interface PropertyProcessor<T> extends ActiveRecord.Property.Specification {
+public interface PropertyProcessor<T> extends Record.Property.Specification {
 
     boolean isAppliable(Type type);
 
-    ActiveRecord.Property<T> process(ActiveRecord.Property<T> property);
+    Record.Property<T> process(Record.Property<T> property);
 
     enum Type {
         BEFORE_CREATE,

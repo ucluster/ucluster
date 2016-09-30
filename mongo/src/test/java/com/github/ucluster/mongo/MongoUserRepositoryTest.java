@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.common.request.RequestBuilder;
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.UserValidationException;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
@@ -36,7 +36,7 @@ public class MongoUserRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        final ActiveRecord.Request request = RequestBuilder.of("register")
+        final Record.Request request = RequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
@@ -50,7 +50,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_if_definition_not_satisfied() {
         thrown.expect(UserValidationException.class);
 
-        final ActiveRecord.Request request = RequestBuilder.of("register")
+        final Record.Request request = RequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")

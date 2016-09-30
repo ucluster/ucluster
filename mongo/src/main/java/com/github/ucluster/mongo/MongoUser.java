@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Entity("users")
 @Converters(JodaDateTimeConverter.class)
-public class MongoUser extends MongoActiveRecord implements User {
+public class MongoUser extends MongoRecord implements User {
 
     @org.mongodb.morphia.annotations.Property
     protected Map<String, Object> metadata;

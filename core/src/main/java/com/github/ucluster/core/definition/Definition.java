@@ -1,10 +1,10 @@
 package com.github.ucluster.core.definition;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 
 import java.util.Map;
 
-public interface Definition<T extends ActiveRecord> {
+public interface Definition<T extends Record> {
 
     ValidationResult validate(T user);
 
@@ -14,7 +14,7 @@ public interface Definition<T extends ActiveRecord> {
 
     Map<String, Object> definition();
 
-    interface PropertyDefinition<T extends ActiveRecord> {
+    interface PropertyDefinition<T extends Record> {
 
         String propertyPath();
 
@@ -22,6 +22,6 @@ public interface Definition<T extends ActiveRecord> {
 
         ValidationResult validate(T user);
 
-        <P> ActiveRecord.Property<P> process(PropertyProcessor.Type type, ActiveRecord.Property<P> property);
+        <P> Record.Property<P> process(PropertyProcessor.Type type, Record.Property<P> property);
     }
 }

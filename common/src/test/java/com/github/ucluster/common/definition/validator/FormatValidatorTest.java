@@ -1,6 +1,6 @@
 package com.github.ucluster.common.definition.validator;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
@@ -21,7 +21,7 @@ public class FormatValidatorTest {
 
     private PropertyValidator validator;
     private User user;
-    private ActiveRecord.Property property;
+    private Record.Property property;
 
     @Before
     public void setUp() throws Exception {
@@ -30,7 +30,7 @@ public class FormatValidatorTest {
                 .build());
 
         user = mock(User.class);
-        property = mock(ActiveRecord.Property.class);
+        property = mock(Record.Property.class);
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.github.ucluster.common.definition;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.PropertyProcessor;
@@ -67,8 +67,8 @@ public class DefaultPropertyDefinition implements Definition.PropertyDefinition<
     }
 
     @Override
-    public <T> ActiveRecord.Property<T> process(PropertyProcessor.Type type, ActiveRecord.Property<T> property) {
-        ActiveRecord.Property<T> result = property;
+    public <T> Record.Property<T> process(PropertyProcessor.Type type, Record.Property<T> property) {
+        Record.Property<T> result = property;
 
         for (PropertyProcessor processor : processors.values()) {
             if (processor.isAppliable(type)) {

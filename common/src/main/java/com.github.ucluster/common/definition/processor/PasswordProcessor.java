@@ -1,6 +1,6 @@
 package com.github.ucluster.common.definition.processor;
 
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.PropertyProcessor;
 
 public class PasswordProcessor implements PropertyProcessor {
@@ -23,11 +23,11 @@ public class PasswordProcessor implements PropertyProcessor {
     }
 
     @Override
-    public ActiveRecord.Property process(ActiveRecord.Property property) {
+    public Record.Property process(Record.Property property) {
         return encrypt(property);
     }
 
-    private ActiveRecord.Property encrypt(ActiveRecord.Property property) {
+    private Record.Property encrypt(Record.Property property) {
         property.value(encrypt((String) property.value()));
         return property;
     }

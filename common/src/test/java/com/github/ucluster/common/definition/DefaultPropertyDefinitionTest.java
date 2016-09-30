@@ -2,7 +2,7 @@ package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
-import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
@@ -48,7 +48,7 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_success_validate_property() {
-        final ActiveRecord.Property usernameProperty = mock(ActiveRecord.Property.class);
+        final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");
         when(usernameProperty.value()).thenReturn("kiwiwin");
 
@@ -75,7 +75,7 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_failed_validate_property() {
-        final ActiveRecord.Property usernameProperty = mock(ActiveRecord.Property.class);
+        final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");
         when(usernameProperty.value()).thenReturn("kiwi");
 
