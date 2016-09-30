@@ -38,7 +38,7 @@ public class UniquenessConcern implements Record.Property.Concern<User> {
                 final Optional<User> existingUser = users.find(prop);
 
                 existingUser.ifPresent($ -> {
-                    throw new RecordValidationException(new EffectResult(asList(new EffectResult.ValidateFailure(propertyPath, type()))));
+                    throw new RecordValidationException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
                 });
             });
 

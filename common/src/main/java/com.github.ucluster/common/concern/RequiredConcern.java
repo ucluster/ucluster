@@ -32,7 +32,7 @@ public class RequiredConcern implements Record.Property.Concern<User> {
             record.property(propertyPath).orElseThrow(() ->
                     new RecordValidationException(
                             new EffectResult(
-                                    asList(new EffectResult.ValidateFailure(propertyPath, type()))
+                                    asList(new EffectResult.Failure(propertyPath, type()))
                             )
                     )
             );

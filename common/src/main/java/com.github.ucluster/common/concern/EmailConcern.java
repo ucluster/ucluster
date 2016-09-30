@@ -41,7 +41,7 @@ public class EmailConcern implements Record.Property.Concern<User> {
                 final String propertyValue = String.valueOf(prop.value());
 
                 if (!positivePattern.matcher(propertyValue).matches() || negativePattern.matcher(propertyValue).matches()) {
-                    throw new RecordValidationException(new EffectResult(Arrays.asList(new EffectResult.ValidateFailure(propertyPath, type()))));
+                    throw new RecordValidationException(new EffectResult(Arrays.asList(new EffectResult.Failure(propertyPath, type()))));
                 }
             });
         }

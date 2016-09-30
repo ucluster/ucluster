@@ -8,13 +8,13 @@ import static java.util.Arrays.asList;
 public class EffectResult {
     public static final EffectResult SUCCESS = new EffectResult();
 
-    private List<ValidateFailure> errors = new ArrayList<>();
+    private List<Failure> errors = new ArrayList<>();
 
-    public EffectResult(List<ValidateFailure> errors) {
+    public EffectResult(List<Failure> errors) {
         this.errors = errors;
     }
 
-    public EffectResult(ValidateFailure errors) {
+    public EffectResult(Failure errors) {
         this.errors = asList(errors);
     }
 
@@ -23,13 +23,13 @@ public class EffectResult {
     }
 
     public EffectResult merge(EffectResult another) {
-        List<ValidateFailure> errors = new ArrayList<>();
+        List<Failure> errors = new ArrayList<>();
         errors.addAll(errors());
         errors.addAll(another.errors());
         return new EffectResult(errors);
     }
 
-    public List<ValidateFailure> errors() {
+    public List<Failure> errors() {
         return errors;
     }
 
@@ -37,11 +37,11 @@ public class EffectResult {
         return errors.isEmpty();
     }
 
-    public static class ValidateFailure {
+    public static class Failure {
         String propertyPath;
         String type;
 
-        public ValidateFailure(String propertyPath, String type) {
+        public Failure(String propertyPath, String type) {
             this.propertyPath = propertyPath;
             this.type = type;
         }

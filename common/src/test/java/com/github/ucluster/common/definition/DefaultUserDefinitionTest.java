@@ -94,7 +94,7 @@ public class DefaultUserDefinitionTest {
                     return false;
                 }
 
-                final EffectResult.ValidateFailure failure = result.errors().get(0);
+                final EffectResult.Failure failure = result.errors().get(0);
 
                 return failure.getPropertyPath().equals("username") && failure.getType().equals("format");
             }
@@ -131,8 +131,8 @@ public class DefaultUserDefinitionTest {
                     return false;
                 }
 
-                final EffectResult.ValidateFailure usernameFailure = result.errors().get(0);
-                final EffectResult.ValidateFailure nicknameFailure = result.errors().get(1);
+                final EffectResult.Failure usernameFailure = result.errors().get(0);
+                final EffectResult.Failure nicknameFailure = result.errors().get(1);
 
                 return nicknameFailure.getPropertyPath().equals("nickname") && nicknameFailure.getType().equals("format") &&
                         usernameFailure.getPropertyPath().equals("username") && usernameFailure.getType().equals("format");

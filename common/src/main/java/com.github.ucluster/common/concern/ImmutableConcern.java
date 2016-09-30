@@ -30,7 +30,7 @@ public class ImmutableConcern implements Record.Property.Concern<User> {
     @Override
     public void effect(User record, String propertyPath) {
         if (enabled) {
-            throw new RecordValidationException(new EffectResult(new EffectResult.ValidateFailure(propertyPath, type())));
+            throw new RecordValidationException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
         }
     }
 

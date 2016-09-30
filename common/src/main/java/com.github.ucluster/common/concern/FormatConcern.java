@@ -33,7 +33,7 @@ public class FormatConcern implements Record.Property.Concern<User> {
     public void effect(User record, String propertyPath) {
         record.property(propertyPath).ifPresent(prop -> {
             if (!pattern.matcher(String.valueOf(prop.value())).matches()) {
-                throw new RecordValidationException(new EffectResult(asList(new EffectResult.ValidateFailure(propertyPath, type()))));
+                throw new RecordValidationException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
             }
         });
     }

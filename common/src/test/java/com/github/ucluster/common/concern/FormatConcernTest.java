@@ -81,7 +81,7 @@ public class FormatConcernTest {
                 }
                 ;
 
-                final EffectResult.ValidateFailure failure = result.errors().get(0);
+                final EffectResult.Failure failure = result.errors().get(0);
 
                 return failure.getPropertyPath().equals("username") && failure.getType().equals("format");
             }
