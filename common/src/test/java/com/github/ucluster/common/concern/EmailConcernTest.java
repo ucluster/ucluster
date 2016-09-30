@@ -27,7 +27,7 @@ public class EmailConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        concern = new EmailConcern("email", true);
+        concern = new EmailConcern<>("email", true);
 
         user = mock(User.class);
         property = mock(Record.Property.class);

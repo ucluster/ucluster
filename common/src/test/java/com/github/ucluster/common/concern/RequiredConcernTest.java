@@ -26,8 +26,8 @@ public class RequiredConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        required = new RequiredConcern("required", true);
-        optional = new RequiredConcern("required", false);
+        required = new RequiredConcern<>("required", true);
+        optional = new RequiredConcern<>("required", false);
 
         user = mock(User.class);
         property = mock(Record.Property.class);

@@ -1,7 +1,6 @@
 package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.inject.Injector;
@@ -11,12 +10,12 @@ import java.util.Collection;
 
 import static java.util.Arrays.asList;
 
-public class IdentityConcern implements Record.Property.Concern<User> {
+public class IdentityConcern<T extends Record> implements Record.Property.Concern<T> {
     private String type;
     private Object configuration;
 
-    private RequiredConcern requiredConcern;
-    private UniquenessConcern uniquenessConcern;
+    private RequiredConcern<T> requiredConcern;
+    private UniquenessConcern<T> uniquenessConcern;
 
     @Inject
     Injector injector;
@@ -27,8 +26,8 @@ public class IdentityConcern implements Record.Property.Concern<User> {
     public IdentityConcern(String type, Object configuration) {
         this.type = type;
         this.configuration = configuration;
-        this.requiredConcern = new RequiredConcern(type, configuration);
-        this.uniquenessConcern = new UniquenessConcern(type, configuration);
+        this.requiredConcern = new RequiredConcern<>(type, configuration);
+        this.uniquenessConcern = new UniquenessConcern<>(type, configuration);
     }
 
     @Override
@@ -37,7 +36,7 @@ public class IdentityConcern implements Record.Property.Concern<User> {
     }
 
     @Override
-    public void effect(User record, String propertyPath) {
+    public void effect(T record, String propertyPath) {
         injector.injectMembers(requiredConcern);
         injector.injectMembers(uniquenessConcern);
 

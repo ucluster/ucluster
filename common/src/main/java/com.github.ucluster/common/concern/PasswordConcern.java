@@ -1,14 +1,13 @@
 package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 
-public class PasswordConcern implements Record.Property.Concern<User> {
+public class PasswordConcern<T extends Record> implements Record.Property.Concern<T> {
     private String type;
     private Object configuration;
     private boolean enabled;
@@ -28,7 +27,7 @@ public class PasswordConcern implements Record.Property.Concern<User> {
     }
 
     @Override
-    public void effect(User record, String propertyPath) {
+    public void effect(T record, String propertyPath) {
         if (enabled) {
             final Optional<Record.Property> property = record.property(propertyPath);
 

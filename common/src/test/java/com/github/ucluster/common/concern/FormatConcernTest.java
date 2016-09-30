@@ -32,7 +32,7 @@ public class FormatConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        concern = new FormatConcern("format", ImmutableMap.<String, Object>builder()
+        concern = new FormatConcern<>("format", ImmutableMap.<String, Object>builder()
                 .put("pattern", "\\w{6,12}")
                 .build());
 

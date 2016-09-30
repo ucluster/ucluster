@@ -19,6 +19,7 @@ import com.github.ucluster.mongo.definition.UserDefinitionRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
+import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.name.Names;
 import com.mongodb.MongoClient;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -85,19 +86,25 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(new TypeLiteral<MongoLifecycleMonitor<User>>() {
                         });
 
-                        registerConcern("format", FormatConcern.class);
-                        registerConcern("email", EmailConcern.class);
-                        registerConcern("required", RequiredConcern.class);
-                        registerConcern("uniqueness", UniquenessConcern.class);
-                        registerConcern("identity", IdentityConcern.class);
-
-                        registerConcern("password", PasswordConcern.class);
-                        registerConcern("immutable", ImmutableConcern.class);
+                        registerConcern("format").to(new TypeLiteral<FormatConcern<User>>() {
+                        });
+                        registerConcern("email").to(new TypeLiteral<EmailConcern<User>>() {
+                        });
+                        registerConcern("required").to(new TypeLiteral<RequiredConcern<User>>() {
+                        });
+                        registerConcern("uniqueness").to(new TypeLiteral<UniquenessConcern<User>>() {
+                        });
+                        registerConcern("identity").to(new TypeLiteral<IdentityConcern<User>>() {
+                        });
+                        registerConcern("password").to(new TypeLiteral<PasswordConcern<User>>() {
+                        });
+                        registerConcern("immutable").to(new TypeLiteral<ImmutableConcern<User>>() {
+                        });
                     }
 
-                    private void registerConcern(String type, Class<? extends Record.Property.Concern<User>> concernClass) {
-                        bind(new TypeLiteral<Class<? extends Record.Property.Concern<User>>>() {
-                        }).annotatedWith(Names.named("property." + type + ".concern")).toInstance(concernClass);
+                    private LinkedBindingBuilder<Record.Property.Concern<User>> registerConcern(String type) {
+                        return bind(new TypeLiteral<Record.Property.Concern<User>>() {
+                        }).annotatedWith(Names.named("property." + type + ".concern"));
                     }
                 }}));
     }

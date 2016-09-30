@@ -12,13 +12,16 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 
-public class UniquenessConcern implements Record.Property.Concern<User> {
+public class UniquenessConcern<T extends Record> implements Record.Property.Concern<T> {
     @Inject
-    Repository<User> users;
+    Repository<User> records;
 
     private String type;
-    private final Object configuration;
-    private final boolean enabled;
+    private Object configuration;
+    private boolean enabled;
+
+    UniquenessConcern() {
+    }
 
     public UniquenessConcern(String type, Object configuration) {
         this.type = type;
@@ -32,12 +35,12 @@ public class UniquenessConcern implements Record.Property.Concern<User> {
     }
 
     @Override
-    public void effect(User record, String propertyPath) {
+    public void effect(T record, String propertyPath) {
         if (enabled) {
             record.property(propertyPath).ifPresent(prop -> {
-                final Optional<User> existingUser = users.find(prop);
+                final Optional<User> existingRecord = records.find(prop);
 
-                existingUser.ifPresent($ -> {
+                existingRecord.ifPresent($ -> {
                     throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
                 });
             });

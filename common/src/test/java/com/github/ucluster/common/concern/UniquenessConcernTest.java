@@ -36,8 +36,8 @@ public class UniquenessConcernTest {
 
     @Before
     public void setUp() throws Exception {
-        uniquenessValidator = new UniquenessConcern("uniqueness", true);
-        nonUniquenessValidator = new UniquenessConcern("uniqueness", false);
+        uniquenessValidator = new UniquenessConcern<>("uniqueness", true);
+        nonUniquenessValidator = new UniquenessConcern<>("uniqueness", false);
 
         Injector injector = getInjector();
         injector.injectMembers(uniquenessValidator);

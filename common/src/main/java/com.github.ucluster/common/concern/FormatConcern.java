@@ -1,7 +1,6 @@
 package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
@@ -12,11 +11,14 @@ import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 
-public class FormatConcern implements Record.Property.Concern<User> {
+public class FormatConcern<T extends Record> implements Record.Property.Concern<T> {
 
-    private final String type;
-    private final Object configuration;
-    private final Pattern pattern;
+    private String type;
+    private Object configuration;
+    private Pattern pattern;
+
+    public FormatConcern() {
+    }
 
     public FormatConcern(String type, Object configuration) {
         this.type = type;
@@ -30,7 +32,7 @@ public class FormatConcern implements Record.Property.Concern<User> {
     }
 
     @Override
-    public void effect(User record, String propertyPath) {
+    public void effect(T record, String propertyPath) {
         record.property(propertyPath).ifPresent(prop -> {
             if (!pattern.matcher(String.valueOf(prop.value())).matches()) {
                 throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));

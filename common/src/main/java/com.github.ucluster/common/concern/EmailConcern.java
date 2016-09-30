@@ -1,7 +1,6 @@
 package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
@@ -11,7 +10,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class EmailConcern implements Record.Property.Concern<User> {
+public class EmailConcern<T extends Record> implements Record.Property.Concern<T> {
     private String type;
     private Object configuration;
     private boolean enabled;
@@ -33,7 +32,7 @@ public class EmailConcern implements Record.Property.Concern<User> {
     }
 
     @Override
-    public void effect(User record, String propertyPath) {
+    public void effect(T record, String propertyPath) {
         if (enabled) {
             final Optional<Record.Property> property = record.property(propertyPath);
 

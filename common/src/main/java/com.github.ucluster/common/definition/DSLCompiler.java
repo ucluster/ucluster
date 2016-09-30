@@ -86,11 +86,10 @@ public class DSLCompiler {
 
             private Record.Property.Concern<User> loadPropertyConcern(String concernType, Object propertyProcessorConfiguration) {
                 try {
-                    final Class<? extends Record.Property.Concern<User>> propertyConcernClass =
-                            injector.getInstance(Key.get(new TypeLiteral<Class<? extends Record.Property.Concern<User>>>() {
-                            }, Names.named("property." + concernType + ".concern")));
+                    final Class<? extends Record.Property.Concern> propertyConcernClass = injector.getInstance(Key.get(new TypeLiteral<Record.Property.Concern<User>>() {
+                    }, Names.named("property." + concernType + ".concern"))).getClass();
 
-                    final Constructor<? extends Record.Property.Concern<User>> constructor = propertyConcernClass.getConstructor(String.class, Object.class);
+                    final Constructor<? extends Record.Property.Concern> constructor = propertyConcernClass.getConstructor(String.class, Object.class);
                     return constructor.newInstance(concernType, propertyProcessorConfiguration);
                 } catch (Exception e) {
                     throw new RuntimeException(e);

@@ -1,14 +1,13 @@
 package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class ImmutableConcern implements Record.Property.Concern<User> {
+public class ImmutableConcern<T extends Record> implements Record.Property.Concern<T> {
     private String type;
     private Object configuration;
     private boolean enabled;
@@ -28,7 +27,7 @@ public class ImmutableConcern implements Record.Property.Concern<User> {
     }
 
     @Override
-    public void effect(User record, String propertyPath) {
+    public void effect(T record, String propertyPath) {
         if (enabled) {
             throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
         }
