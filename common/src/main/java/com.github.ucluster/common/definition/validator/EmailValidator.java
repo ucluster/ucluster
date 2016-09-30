@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class EmailValidator implements PropertyValidator {
+public class EmailValidator implements PropertyValidator<User> {
     private String type;
     private Object configuration;
     private boolean isEmail;

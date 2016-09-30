@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class UniquenessValidator implements PropertyValidator {
+public class UniquenessValidator implements PropertyValidator<User> {
     @Inject
     Repository<User> users;
 

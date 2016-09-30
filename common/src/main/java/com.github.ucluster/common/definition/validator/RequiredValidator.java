@@ -8,7 +8,7 @@ import com.github.ucluster.core.definition.ValidationResult;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class RequiredValidator implements PropertyValidator {
+public class RequiredValidator implements PropertyValidator<User> {
     private String type;
     private final Object configuration;
 

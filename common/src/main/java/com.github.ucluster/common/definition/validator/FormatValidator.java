@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-public class FormatValidator implements PropertyValidator {
+public class FormatValidator implements PropertyValidator<User> {
 
     private final String type;
     private final Object configuration;

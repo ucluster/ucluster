@@ -7,7 +7,7 @@ import com.google.inject.Injector;
 
 import javax.inject.Inject;
 
-public class IdentityValidator implements PropertyValidator {
+public class IdentityValidator implements PropertyValidator<User> {
     private String type;
     private Object configuration;
 

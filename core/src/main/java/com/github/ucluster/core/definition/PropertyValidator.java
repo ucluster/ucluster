@@ -1,9 +1,8 @@
 package com.github.ucluster.core.definition;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 
-public interface PropertyValidator extends Record.Property.Specification {
+public interface PropertyValidator<T extends Record> extends Record.Property.Specification {
 
-    ValidationResult validate(User user, String propertyPath);
+    ValidationResult validate(T record, String propertyPath);
 }
