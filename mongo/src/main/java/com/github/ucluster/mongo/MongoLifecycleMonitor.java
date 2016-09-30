@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class MongoRecordLifecycleMonitor<T extends Record> implements LifecycleMonitor<T> {
+public class MongoLifecycleMonitor<T extends Record> implements LifecycleMonitor<T> {
     @Inject
     protected Datastore datastore;
 

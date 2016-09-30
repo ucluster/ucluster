@@ -14,8 +14,8 @@ import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
+import com.github.ucluster.mongo.MongoLifecycleMonitor;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.UserLifecycleMonitor;
 import com.github.ucluster.mongo.definition.UserDefinitionRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -83,7 +83,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(UserDefinitionRepository.class);
 
                         bind(new TypeLiteral<LifecycleMonitor<User>>() {
-                        }).to(UserLifecycleMonitor.class);
+                        }).to(new TypeLiteral<MongoLifecycleMonitor<User>>() {
+                        });
 
                         registerValidator("format", FormatValidator.class);
                         registerValidator("email", EmailValidator.class);
