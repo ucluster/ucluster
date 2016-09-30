@@ -28,14 +28,14 @@ public class MongoUserRepository implements Repository<User> {
     protected Datastore datastore;
 
     @Inject
-    protected DefinitionRepository userDefinitions;
+    protected DefinitionRepository<Definition<User>> definitions;
 
     @Override
     public User create(Record.Request request) {
         final MongoUser user = new MongoUser();
         user.createdAt = new DateTime();
         user.metadata = request.metadata();
-        user.definition = userDefinitions.find(request.metadata());
+        user.definition = definitions.find(request.metadata());
 
         final User monitored = monitorLifecycle(user);
         request.properties().keySet().stream()
@@ -68,7 +68,7 @@ public class MongoUserRepository implements Repository<User> {
             return Optional.empty();
         }
 
-        user.definition = userDefinitions.find(user.metadata());
+        user.definition = definitions.find(user.metadata());
         return Optional.of(monitorLifecycle(user));
     }
 
@@ -109,7 +109,7 @@ public class MongoUserRepository implements Repository<User> {
             }
 
             private void validate(User user) {
-                final ValidationResult result = userDefinitions.find(((MongoUser) user).metadata).validate(user, dirtyTracker.asArray());
+                final ValidationResult result = definitions.find(((MongoUser) user).metadata).validate(user, dirtyTracker.asArray());
 
                 if (!result.valid()) {
                     throw new UserValidationException(result);
@@ -117,7 +117,7 @@ public class MongoUserRepository implements Repository<User> {
             }
 
             private void beforeSaveOn(User user, PropertyProcessor.Type processType) {
-                final Definition<User> definition = userDefinitions.find(((MongoUser) user).metadata);
+                final Definition<User> definition = definitions.find(((MongoUser) user).metadata);
 
                 dirtyTracker.dirties().stream()
                         .filter(propertyPath -> dirtyTracker.isDirty(propertyPath))
