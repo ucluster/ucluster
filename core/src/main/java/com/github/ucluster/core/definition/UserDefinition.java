@@ -1,5 +1,6 @@
 package com.github.ucluster.core.definition;
 
+import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
 
 import java.util.Map;
@@ -22,6 +23,6 @@ public interface UserDefinition {
 
         ValidationResult validate(User user);
 
-        <T> User.Property<T> process(PropertyProcessor.Type type, User.Property<T> property);
+        <T> ActiveRecord.Property<T> process(PropertyProcessor.Type type, ActiveRecord.Property<T> property);
     }
 }

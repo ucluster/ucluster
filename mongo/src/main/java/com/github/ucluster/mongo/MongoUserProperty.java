@@ -1,11 +1,11 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.User;
+import com.github.ucluster.core.ActiveRecord;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
 
 @Embedded
-public class MongoUserProperty<T> implements User.Property<T> {
+public class MongoUserProperty<T> implements ActiveRecord.Property<T> {
 
     @Property
     private String key;
@@ -36,11 +36,11 @@ public class MongoUserProperty<T> implements User.Property<T> {
         this.value = value;
     }
 
-    static String valueMongoField(User.Property property) {
+    static String valueMongoField(ActiveRecord.Property property) {
         return mongoField(property) + ".value";
     }
 
-    static String mongoField(User.Property property) {
+    static String mongoField(ActiveRecord.Property property) {
         return "properties." + property.path();
     }
 }

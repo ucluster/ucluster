@@ -1,5 +1,6 @@
 package com.github.ucluster.common.definition.validator;
 
+import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
@@ -28,7 +29,7 @@ public class UniquenessValidatorTest {
     private PropertyValidator nonUniquenessValidator;
     private UserRepository users;
     private User user;
-    private User.Property property;
+    private ActiveRecord.Property property;
 
     @Before
     public void setUp() throws Exception {
@@ -39,15 +40,15 @@ public class UniquenessValidatorTest {
         injector.injectMembers(uniquenessValidator);
 
         user = mock(User.class);
-        property = mock(User.Property.class);
+        property = mock(ActiveRecord.Property.class);
     }
 
     @Test
     public void should_success_when_unique_and_uniqueness_is_required() {
-        when(users.find(argThat(new ArgumentMatcher<User.Property>() {
+        when(users.find(argThat(new ArgumentMatcher<ActiveRecord.Property>() {
             @Override
             public boolean matches(Object argument) {
-                final User.Property property = (User.Property) argument;
+                final ActiveRecord.Property property = (ActiveRecord.Property) argument;
                 return property.path().equals("username") && property.value().equals("newusername");
             }
         }))).thenReturn(Optional.empty());
@@ -64,10 +65,10 @@ public class UniquenessValidatorTest {
 
     @Test
     public void should_failed_when_not_unique_and_uniqueness_is_required() {
-        when(users.find(argThat(new ArgumentMatcher<User.Property>() {
+        when(users.find(argThat(new ArgumentMatcher<ActiveRecord.Property>() {
             @Override
             public boolean matches(Object argument) {
-                final User.Property property = (User.Property) argument;
+                final ActiveRecord.Property property = (ActiveRecord.Property) argument;
                 return property.path().equals("username") && property.value().equals("existusername");
             }
         }))).thenReturn(Optional.of(user));
@@ -84,10 +85,10 @@ public class UniquenessValidatorTest {
 
     @Test
     public void should_success_when_unique_and_uniqueness_is_not_required() {
-        when(users.find(argThat(new ArgumentMatcher<User.Property>() {
+        when(users.find(argThat(new ArgumentMatcher<ActiveRecord.Property>() {
             @Override
             public boolean matches(Object argument) {
-                final User.Property property = (User.Property) argument;
+                final ActiveRecord.Property property = (ActiveRecord.Property) argument;
                 return property.path().equals("username") && property.value().equals("newusername");
             }
         }))).thenReturn(Optional.empty());
@@ -104,10 +105,10 @@ public class UniquenessValidatorTest {
 
     @Test
     public void should_success_when_not_unique_and_uniqueness_is_not_required() {
-        when(users.find(argThat(new ArgumentMatcher<User.Property>() {
+        when(users.find(argThat(new ArgumentMatcher<ActiveRecord.Property>() {
             @Override
             public boolean matches(Object argument) {
-                final User.Property property = (User.Property) argument;
+                final ActiveRecord.Property property = (ActiveRecord.Property) argument;
                 return property.path().equals("username") && property.value().equals("existusername");
             }
         }))).thenReturn(Optional.of(user));

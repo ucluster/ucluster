@@ -1,5 +1,6 @@
 package com.github.ucluster.common.definition.validator;
 
+import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
@@ -28,7 +29,7 @@ public class FormatValidator implements PropertyValidator {
 
     @Override
     public ValidationResult validate(User user, String propertyPath) {
-        final Optional<User.Property> property = user.property(propertyPath);
+        final Optional<ActiveRecord.Property> property = user.property(propertyPath);
 
         if (!property.isPresent()) {
             return ValidationResult.SUCCESS;

@@ -7,6 +7,7 @@ import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.IdentityValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
+import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyProcessor;
@@ -54,11 +55,11 @@ public class DSLCompilerTest {
 
     @Test
     public void should_verify_by_dsl() {
-        final User.Property usernameProperty = mock(User.Property.class);
+        final ActiveRecord.Property usernameProperty = mock(ActiveRecord.Property.class);
         when(usernameProperty.path()).thenReturn("username");
         when(usernameProperty.value()).thenReturn("kiwiwin");
 
-        final User.Property passwordProperty = mock(User.Property.class);
+        final ActiveRecord.Property passwordProperty = mock(ActiveRecord.Property.class);
         when(passwordProperty.path()).thenReturn("password");
         when(passwordProperty.value()).thenReturn("password");
 
@@ -72,11 +73,11 @@ public class DSLCompilerTest {
 
     @Test
     public void should_failed_verify_by_dsl() {
-        final User.Property usernameProperty = mock(User.Property.class);
+        final ActiveRecord.Property usernameProperty = mock(ActiveRecord.Property.class);
         when(usernameProperty.path()).thenReturn("username");
         when(usernameProperty.value()).thenReturn("kiwi");
 
-        final User.Property passwordProperty = mock(User.Property.class);
+        final ActiveRecord.Property passwordProperty = mock(ActiveRecord.Property.class);
         when(passwordProperty.path()).thenReturn("password");
         when(passwordProperty.value()).thenReturn("password");
 

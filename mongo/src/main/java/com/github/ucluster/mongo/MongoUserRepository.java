@@ -54,7 +54,7 @@ public class MongoUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> find(User.Property property) {
+    public Optional<User> find(ActiveRecord.Property property) {
         final MongoUser user = datastore.createQuery(MongoUser.class)
                 .disableValidation()
                 .field(MongoUserProperty.valueMongoField(property)).equal(property.value())

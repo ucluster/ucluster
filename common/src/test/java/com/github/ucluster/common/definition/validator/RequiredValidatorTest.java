@@ -1,5 +1,6 @@
 package com.github.ucluster.common.definition.validator;
 
+import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
@@ -19,7 +20,7 @@ public class RequiredValidatorTest {
     private PropertyValidator required;
     private PropertyValidator optional;
     private User user;
-    private User.Property property;
+    private ActiveRecord.Property property;
 
     @Before
     public void setUp() throws Exception {
@@ -27,7 +28,7 @@ public class RequiredValidatorTest {
         optional = new RequiredValidator("required", false);
 
         user = mock(User.class);
-        property = mock(User.Property.class);
+        property = mock(ActiveRecord.Property.class);
     }
 
     @Test

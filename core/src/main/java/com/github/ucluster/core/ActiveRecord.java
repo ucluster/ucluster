@@ -18,7 +18,6 @@ public interface ActiveRecord {
     }
 
     default void update() {
-
     }
 
     interface Property<T> {

@@ -1,5 +1,6 @@
 package com.github.ucluster.common.definition;
 
+import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
@@ -66,8 +67,8 @@ public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinit
     }
 
     @Override
-    public <T> User.Property<T> process(PropertyProcessor.Type type, User.Property<T> property) {
-        User.Property<T> result = property;
+    public <T> ActiveRecord.Property<T> process(PropertyProcessor.Type type, ActiveRecord.Property<T> property) {
+        ActiveRecord.Property<T> result = property;
 
         for (PropertyProcessor processor : processors.values()) {
             if (processor.isAppliable(type)) {
