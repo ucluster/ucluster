@@ -4,9 +4,6 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import static java.util.Arrays.asList;
 
 public class RequiredConcern implements Record.Property.Concern {
@@ -24,8 +21,8 @@ public class RequiredConcern implements Record.Property.Concern {
     }
 
     @Override
-    public Collection<Point> about() {
-        return Collections.singletonList(Point.VALIDATE);
+    public boolean isAbout(Record.Property.Point point) {
+        return Record.Property.Point.VALIDATE == point;
     }
 
     @Override

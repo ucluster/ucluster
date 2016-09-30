@@ -6,9 +6,6 @@ import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.inject.Injector;
 
 import javax.inject.Inject;
-import java.util.Collection;
-
-import static java.util.Arrays.asList;
 
 public class IdentityConcern implements Record.Property.Concern {
     private String type;
@@ -31,8 +28,8 @@ public class IdentityConcern implements Record.Property.Concern {
     }
 
     @Override
-    public Collection<Point> about() {
-        return asList(Point.BEFORE_CREATE, Point.BEFORE_UPDATE);
+    public boolean isAbout(Record.Property.Point point) {
+        return Record.Property.Point.BEFORE_CREATE == point || Record.Property.Point.BEFORE_UPDATE == point;
     }
 
     @Override

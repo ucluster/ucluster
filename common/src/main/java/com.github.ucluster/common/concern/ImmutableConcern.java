@@ -4,9 +4,6 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
-import java.util.Collection;
-import java.util.Collections;
-
 public class ImmutableConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
@@ -22,8 +19,8 @@ public class ImmutableConcern implements Record.Property.Concern {
     }
 
     @Override
-    public Collection<Point> about() {
-        return Collections.singletonList(Point.BEFORE_UPDATE);
+    public boolean isAbout(Record.Property.Point point) {
+        return Record.Property.Point.BEFORE_UPDATE == point;
     }
 
     @Override

@@ -2,10 +2,7 @@ package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
 
-import java.util.Collection;
 import java.util.Optional;
-
-import static java.util.Arrays.asList;
 
 public class PasswordConcern implements Record.Property.Concern {
     private String type;
@@ -22,8 +19,8 @@ public class PasswordConcern implements Record.Property.Concern {
     }
 
     @Override
-    public Collection<Point> about() {
-        return asList(Point.BEFORE_CREATE, Point.BEFORE_UPDATE);
+    public boolean isAbout(Record.Property.Point point) {
+        return Record.Property.Point.BEFORE_CREATE == point || Record.Property.Point.BEFORE_UPDATE == point;
     }
 
     @Override

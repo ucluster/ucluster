@@ -71,7 +71,7 @@ public class DSLCompilerTest {
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class DSLCompilerTest {
         when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));
         when(user.properties()).thenReturn(asList(usernameProperty, passwordProperty));
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 
     @Test

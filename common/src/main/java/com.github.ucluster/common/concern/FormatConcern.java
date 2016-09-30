@@ -4,8 +4,6 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -27,8 +25,8 @@ public class FormatConcern implements Record.Property.Concern {
     }
 
     @Override
-    public Collection<Point> about() {
-        return Collections.singletonList(Point.VALIDATE);
+    public boolean isAbout(Record.Property.Point point) {
+        return Record.Property.Point.VALIDATE == point;
     }
 
     @Override

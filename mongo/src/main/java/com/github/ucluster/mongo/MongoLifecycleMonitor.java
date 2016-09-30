@@ -40,14 +40,14 @@ public class MongoLifecycleMonitor<T extends Record> implements LifecycleMonitor
 
                 if (isSaveMethod(method)) {
                     validate(record);
-                    beforeSaveOn(record, Record.Property.Concern.Point.BEFORE_CREATE);
+                    beforeSaveOn(record, Record.Property.Point.BEFORE_CREATE);
                     save(record);
                     afterSave();
                 }
 
                 if (isUpdateMethod(method)) {
                     validate(record);
-                    beforeSaveOn(record, Record.Property.Concern.Point.BEFORE_UPDATE);
+                    beforeSaveOn(record, Record.Property.Point.BEFORE_UPDATE);
                     update(record);
                     afterSave();
                 }
@@ -61,10 +61,10 @@ public class MongoLifecycleMonitor<T extends Record> implements LifecycleMonitor
             }
 
             private void validate(T record) {
-                definitions.find(((MongoUser) record).metadata).effect(Record.Property.Concern.Point.VALIDATE, record, dirtyTracker.asArray());
+                definitions.find(((MongoUser) record).metadata).effect(Record.Property.Point.VALIDATE, record, dirtyTracker.asArray());
             }
 
-            private void beforeSaveOn(T record, Record.Property.Concern.Point point) {
+            private void beforeSaveOn(T record, Record.Property.Point point) {
                 final Definition<T> definition = definitions.find(((MongoUser) record).metadata);
 
                 definition.effect(point, record, dirtyTracker.asArray());

@@ -36,21 +36,17 @@ public interface Record {
 
             String type();
 
-            Collection<Point> about();
-
-            default boolean isAbout(Point point) {
-                return about().contains(point);
-            }
+            boolean isAbout(Point point);
 
             void effect(Record record, String propertyPath);
 
             Object configuration();
+        }
 
-            enum Point {
-                VALIDATE,
-                BEFORE_CREATE,
-                BEFORE_UPDATE
-            }
+        enum Point {
+            VALIDATE,
+            BEFORE_CREATE,
+            BEFORE_UPDATE
         }
     }
 

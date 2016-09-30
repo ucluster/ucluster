@@ -62,7 +62,7 @@ public class DefaultPropertyDefinitionTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class DefaultPropertyDefinitionTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.empty());
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 
     @Test
@@ -120,6 +120,6 @@ public class DefaultPropertyDefinitionTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 }

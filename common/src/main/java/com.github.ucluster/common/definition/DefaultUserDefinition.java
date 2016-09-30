@@ -22,12 +22,12 @@ public class DefaultUserDefinition implements Definition<User> {
     }
 
     @Override
-    public void effect(Record.Property.Concern.Point point, User record) {
+    public void effect(Record.Property.Point point, User record) {
         effect(point, record, allPaths(record));
     }
 
     @Override
-    public void effect(Record.Property.Concern.Point point, User record, String... propertyPaths) {
+    public void effect(Record.Property.Point point, User record, String... propertyPaths) {
         final EffectResult result = asList(propertyPaths).stream()
                 .map(propertyPath -> propertyDefinitions.get(propertyPath))
                 .map(propertyDefinition -> {

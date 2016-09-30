@@ -6,9 +6,9 @@ import java.util.Map;
 
 public interface Definition<D extends Record> {
 
-    void effect(Record.Property.Concern.Point point, D record);
+    void effect(Record.Property.Point point, D record);
 
-    void effect(Record.Property.Concern.Point point, D record, String... propertyPaths);
+    void effect(Record.Property.Point point, D record, String... propertyPaths);
 
     PropertyDefinition<D> property(String propertyPath);
 
@@ -20,6 +20,6 @@ public interface Definition<D extends Record> {
 
         Map<String, Object> definition();
 
-        void effect(Record.Property.Concern.Point point, T record);
+        void effect(Record.Property.Point point, T record);
     }
 }

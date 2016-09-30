@@ -21,7 +21,7 @@ public class DefaultPropertyDefinition implements Definition.PropertyDefinition<
     }
 
     @Override
-    public void effect(Record.Property.Concern.Point point, User record) {
+    public void effect(Record.Property.Point point, User record) {
         final EffectResult result = concerns.values().stream()
                 .filter(concern -> concern.isAbout(point))
                 .map(concern -> {

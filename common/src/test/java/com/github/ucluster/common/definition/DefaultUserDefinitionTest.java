@@ -75,7 +75,7 @@ public class DefaultUserDefinitionTest {
         when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
         when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class DefaultUserDefinitionTest {
         when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
         when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 
     @Test
@@ -151,6 +151,6 @@ public class DefaultUserDefinitionTest {
         when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
         when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
 
-        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, user);
     }
 }
