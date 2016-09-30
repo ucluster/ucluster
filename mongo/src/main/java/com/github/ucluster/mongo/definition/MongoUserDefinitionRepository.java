@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.common.definition.DSLCompiler;
-import com.github.ucluster.core.definition.UserDefinition;
+import com.github.ucluster.common.definition.DefaultUserDefinition;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
 import com.google.inject.Injector;
@@ -18,7 +18,7 @@ public class MongoUserDefinitionRepository implements UserDefinitionRepository {
     protected Datastore datastore;
 
     @Override
-    public UserDefinition find(Map<String, Object> metadata) {
+    public DefaultUserDefinition find(Map<String, Object> metadata) {
         final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
                 .field("type").equal(type(metadata))
                 .get();

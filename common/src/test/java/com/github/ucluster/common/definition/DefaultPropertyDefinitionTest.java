@@ -4,7 +4,6 @@ import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 public class DefaultPropertyDefinitionTest {
 
-    private UserDefinition.PropertyDefinition definition;
+    private DefaultUserDefinition.PropertyDefinition definition;
     private User user;
 
     @Before

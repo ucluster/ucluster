@@ -1,8 +1,9 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.common.definition.DefaultUserDefinition;
 import com.github.ucluster.common.definition.processor.Encryption;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.UserDefinition;
+import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import org.mongodb.morphia.annotations.Converters;
@@ -21,7 +22,7 @@ public class MongoUser extends MongoActiveRecord implements User {
     protected Map<String, Object> metadata;
 
     @Transient
-    protected UserDefinition definition;
+    protected Definition<User> definition;
 
     @Override
     public void authenticate(Property identityProperty, Property passwordProperty) {
@@ -61,11 +62,11 @@ public class MongoUser extends MongoActiveRecord implements User {
         }
     }
 
-    private boolean isPropertyPassword(UserDefinition.PropertyDefinition propertyDefinition) {
+    private boolean isPropertyPassword(DefaultUserDefinition.PropertyDefinition propertyDefinition) {
         return Objects.equals(propertyDefinition.definition().get("password"), true);
     }
 
-    private boolean isPropertyIdentity(UserDefinition.PropertyDefinition propertyDefinition) {
+    private boolean isPropertyIdentity(DefaultUserDefinition.PropertyDefinition propertyDefinition) {
         return Objects.equals(propertyDefinition.definition().get("identity"), true);
     }
 

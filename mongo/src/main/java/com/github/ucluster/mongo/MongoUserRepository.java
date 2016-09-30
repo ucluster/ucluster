@@ -3,8 +3,8 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.PropertyProcessor;
-import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.github.ucluster.core.exception.UserValidationException;
@@ -117,7 +117,7 @@ public class MongoUserRepository implements Repository<User> {
             }
 
             private void beforeSaveOn(User user, PropertyProcessor.Type processType) {
-                final UserDefinition definition = userDefinitions.find(((MongoUser) user).metadata);
+                final Definition<User> definition = userDefinitions.find(((MongoUser) user).metadata);
 
                 dirtyTracker.dirties().stream()
                         .filter(propertyPath -> dirtyTracker.isDirty(propertyPath))

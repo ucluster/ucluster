@@ -3,7 +3,6 @@ package com.github.ucluster.common.definition;
 import com.github.ucluster.common.definition.util.Json;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
-import com.github.ucluster.core.definition.UserDefinition;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -21,7 +20,7 @@ public class DSLCompiler {
     private static String DSL_COMPILER = "var user_definition = {};" +
             "var user = function (user) { user_definition = user; };";
 
-    public static UserDefinition load(Injector injector, String script) {
+    public static DefaultUserDefinition load(Injector injector, String script) {
         return new UserDSL(injector, loadUserJsonDefinition(script)).load();
     }
 
@@ -47,8 +46,8 @@ public class DSLCompiler {
             this.userJson = userJson;
         }
 
-        UserDefinition load() {
-            final List<UserDefinition.PropertyDefinition> propertyDefinitions = userJson.keySet().stream()
+        DefaultUserDefinition load() {
+            final List<DefaultUserDefinition.PropertyDefinition> propertyDefinitions = userJson.keySet().stream()
                     .map(propertyPath -> mapPropertyDSL(propertyPath).load())
                     .collect(Collectors.toList());
 
@@ -69,7 +68,7 @@ public class DSLCompiler {
                 this.propertyJson = propertyJson;
             }
 
-            private UserDefinition.PropertyDefinition load() {
+            private DefaultUserDefinition.PropertyDefinition load() {
                 return new DefaultPropertyDefinition(propertyPath, propertyValidators(), propertyProcessor());
             }
 

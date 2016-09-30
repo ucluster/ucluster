@@ -2,9 +2,9 @@ package com.github.ucluster.common.definition;
 
 import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
-import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.collect.Lists;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DefaultPropertyDefinition implements UserDefinition.PropertyDefinition {
+public class DefaultPropertyDefinition implements Definition.PropertyDefinition<User> {
     private Map<String, PropertyValidator> validators = new HashMap<>();
     private Map<String, PropertyProcessor> processors = new HashMap<>();
 

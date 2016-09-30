@@ -12,7 +12,6 @@ import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
-import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -41,7 +40,7 @@ public class DSLCompilerTest {
 
     private Repository<User> users;
 
-    private UserDefinition definition;
+    private DefaultUserDefinition definition;
     private User user;
 
     @Before
@@ -98,7 +97,7 @@ public class DSLCompilerTest {
 
     @Test
     public void should_get_definition() {
-        final UserDefinition.PropertyDefinition passwordDefinition = definition.property("password");
+        final DefaultUserDefinition.PropertyDefinition passwordDefinition = definition.property("password");
 
         assertThat(passwordDefinition.definition().get("password"), is(true));
     }

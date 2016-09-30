@@ -1,8 +1,10 @@
 package com.github.ucluster.core.definition;
 
+import com.github.ucluster.core.User;
+
 import java.util.Map;
 
 public interface UserDefinitionRepository {
 
-    UserDefinition find(Map<String, Object> metadata);
+    Definition<User> find(Map<String, Object> metadata);
 }
