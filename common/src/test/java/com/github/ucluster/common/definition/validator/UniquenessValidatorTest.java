@@ -1,12 +1,13 @@
 package com.github.ucluster.common.definition.validator;
 
 import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class UniquenessValidatorTest {
     private PropertyValidator uniquenessValidator;
     private PropertyValidator nonUniquenessValidator;
-    private UserRepository users;
+    private Repository<User> users;
     private User user;
     private ActiveRecord.Property property;
 
@@ -128,13 +129,14 @@ public class UniquenessValidatorTest {
     }
 
     private List<AbstractModule> getAbstractModules() {
-        users = mock(UserRepository.class);
+        users = mock(Repository.class);
 
         return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {
                     @Override
                     protected void configure() {
-                        bind(UserRepository.class).toInstance(users);
+                        bind(new TypeLiteral<Repository<User>>() {
+                        }).toInstance(users);
                     }
                 }}));
     }

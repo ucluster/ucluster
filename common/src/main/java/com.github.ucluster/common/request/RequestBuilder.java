@@ -1,6 +1,6 @@
 package com.github.ucluster.common.request;
 
-import com.github.ucluster.core.User;
+import com.github.ucluster.core.ActiveRecord;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class RequestBuilder {
         return this;
     }
 
-    public User.Request get() {
+    public ActiveRecord.Request get() {
         final Map<String, Object> request = new HashMap<>();
 
         metadata.put("type", type);

@@ -1,11 +1,11 @@
 package com.github.ucluster.common.request;
 
-import com.github.ucluster.core.User;
+import com.github.ucluster.core.ActiveRecord;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultRequest implements User.Request {
+public class DefaultRequest implements ActiveRecord.Request {
     private final Map<String, Object> request;
 
     DefaultRequest(Map<String, Object> request) {

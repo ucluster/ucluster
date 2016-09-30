@@ -7,7 +7,8 @@ import com.github.ucluster.common.definition.validator.FormatValidator;
 import com.github.ucluster.common.definition.validator.IdentityValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
-import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.Repository;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
@@ -71,7 +72,9 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                     protected void configure() {
                         bind(MongoClient.class).toInstance(mongoClient());
                         bind(Datastore.class).toInstance(datastore());
-                        bind(UserRepository.class).to(MongoUserRepository.class);
+
+                        bind(new TypeLiteral<Repository<User>>() {
+                        }).to(MongoUserRepository.class);
 
                         bind(UserDefinitionRepository.class).to(MongoUserDefinitionRepository.class);
 

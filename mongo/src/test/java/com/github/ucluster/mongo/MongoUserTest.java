@@ -1,8 +1,8 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.common.request.RequestBuilder;
+import com.github.ucluster.core.ActiveRecord;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
 import com.google.common.collect.ImmutableMap;
@@ -17,7 +17,7 @@ import javax.inject.Inject;
 @RunWith(MongoTestRunner.class)
 public class MongoUserTest {
     @Inject
-    UserRepository users;
+    MongoUserRepository users;
 
     private User user;
 
@@ -26,7 +26,7 @@ public class MongoUserTest {
 
     @Before
     public void setUp() throws Exception {
-        final User.Request request = RequestBuilder.of("register")
+        final ActiveRecord.Request request = RequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")

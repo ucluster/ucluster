@@ -1,8 +1,8 @@
 package com.github.ucluster.common.definition.validator;
 
 import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.ValidationResult;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class UniquenessValidator implements PropertyValidator {
     @Inject
-    UserRepository users;
+    Repository<User> users;
 
     private String type;
     private final Object configuration;

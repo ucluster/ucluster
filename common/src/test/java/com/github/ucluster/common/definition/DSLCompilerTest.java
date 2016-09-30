@@ -8,8 +8,8 @@ import com.github.ucluster.common.definition.validator.IdentityValidator;
 import com.github.ucluster.common.definition.validator.RequiredValidator;
 import com.github.ucluster.common.definition.validator.UniquenessValidator;
 import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.PropertyValidator;
 import com.github.ucluster.core.definition.UserDefinition;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 public class DSLCompilerTest {
 
-    private UserRepository users;
+    private Repository<User> users;
 
     private UserDefinition definition;
     private User user;
@@ -108,7 +108,7 @@ public class DSLCompilerTest {
     }
 
     private List<AbstractModule> getAbstractModules() {
-        users = mock(UserRepository.class);
+        users = mock(Repository.class);
 
         when(users.find(any())).thenReturn(Optional.empty());
 
@@ -116,7 +116,8 @@ public class DSLCompilerTest {
                 new AbstractModule() {
                     @Override
                     protected void configure() {
-                        bind(UserRepository.class).toInstance(users);
+                        bind(new TypeLiteral<Repository<User>>() {
+                        }).toInstance(users);
 
                         registerValidator("format", FormatValidator.class);
                         registerValidator("email", EmailValidator.class);

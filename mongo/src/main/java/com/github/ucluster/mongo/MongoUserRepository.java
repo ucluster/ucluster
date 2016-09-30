@@ -1,8 +1,8 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.ActiveRecord;
+import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.PropertyProcessor;
 import com.github.ucluster.core.definition.UserDefinition;
 import com.github.ucluster.core.definition.UserDefinitionRepository;
@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class MongoUserRepository implements UserRepository {
+public class MongoUserRepository implements Repository<User> {
     @Inject
     protected Datastore datastore;
 
@@ -31,7 +31,7 @@ public class MongoUserRepository implements UserRepository {
     protected UserDefinitionRepository userDefinitions;
 
     @Override
-    public User create(User.Request request) {
+    public User create(ActiveRecord.Request request) {
         final MongoUser user = new MongoUser();
         user.createdAt = new DateTime();
         user.metadata = request.metadata();
