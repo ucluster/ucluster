@@ -3,7 +3,7 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.common.request.RequestBuilder;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.UserValidationException;
+import com.github.ucluster.core.exception.RecordValidationException;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -48,7 +48,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_failed_to_create_user_if_definition_not_satisfied() {
-        thrown.expect(UserValidationException.class);
+        thrown.expect(RecordValidationException.class);
 
         final Record.Request request = RequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
@@ -90,7 +90,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_failed_to_update_immutable_property() {
-        thrown.expect(UserValidationException.class);
+        thrown.expect(RecordValidationException.class);
 
         final User userUpdateImmutableProperty = users.uuid(user.uuid()).get();
         userUpdateImmutableProperty.update(new MongoUserProperty<>("username", "anotherkiwi"));
@@ -100,7 +100,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_failed_to_update_user_if_definition_not_satisfied() {
-        thrown.expect(UserValidationException.class);
+        thrown.expect(RecordValidationException.class);
 
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 

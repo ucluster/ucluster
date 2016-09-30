@@ -2,6 +2,7 @@ package com.github.ucluster.core;
 
 import org.joda.time.DateTime;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
@@ -14,6 +15,8 @@ public interface Record {
     void update(Property property);
 
     Optional<Property> property(String propertyPath);
+
+    Collection<Property> properties();
 
     default void save() {
     }
@@ -29,11 +32,25 @@ public interface Record {
 
         void value(T value);
 
-        interface Specification {
+        interface Concern<R extends Record> {
 
             String type();
 
+            Collection<Point> about();
+
+            default boolean isAbout(Point point) {
+                return about().contains(point);
+            }
+
+            void effect(R record, String propertyPath);
+
             Object configuration();
+
+            enum Point {
+                VALIDATE,
+                BEFORE_CREATE,
+                BEFORE_UPDATE
+            }
         }
     }
 

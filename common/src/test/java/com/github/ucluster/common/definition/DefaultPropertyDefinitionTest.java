@@ -1,13 +1,18 @@
 package com.github.ucluster.common.definition;
 
-import com.github.ucluster.common.definition.validator.FormatValidator;
-import com.github.ucluster.common.definition.validator.RequiredValidator;
+import com.github.ucluster.common.concern.FormatConcern;
+import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.ValidationResult;
+import com.github.ucluster.core.definition.EffectResult;
+import com.github.ucluster.core.exception.RecordValidationException;
 import com.google.common.collect.ImmutableMap;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 import java.util.Optional;
@@ -21,17 +26,20 @@ import static org.mockito.Mockito.when;
 
 public class DefaultPropertyDefinitionTest {
 
-    private DefaultUserDefinition.PropertyDefinition definition;
+    private DefaultUserDefinition.PropertyDefinition<User> definition;
     private User user;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
         definition = new DefaultPropertyDefinition("username",
                 asList(
-                        new FormatValidator("format", ImmutableMap.<String, Object>builder()
+                        new FormatConcern("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
                                 .build()),
-                        new RequiredValidator("required", true)
+                        new RequiredConcern("required", true)
                 )
         );
 
@@ -54,40 +62,64 @@ public class DefaultPropertyDefinitionTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
 
-        final ValidationResult result = definition.validate(user);
-
-        assertThat(result.valid(), is(true));
+        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
     }
 
     @Test
     public void should_failed_validate_property_if_one_of_the_validator_failed() {
+        thrown.expect(RecordValidationException.class);
+        thrown.expect(new TypeSafeMatcher<RecordValidationException>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("expects RecordValidationException");
+            }
+
+            @Override
+            protected boolean matchesSafely(RecordValidationException exception) {
+                final EffectResult result = exception.getEffectResult();
+                if (result.valid() || result.errors().size() != 1) {
+                    return false;
+                }
+
+                final EffectResult.ValidateFailure failure = result.errors().get(0);
+
+                return failure.getPropertyPath().equals("username") && failure.getType().equals("required");
+            }
+        });
+
         when(user.property(eq("username"))).thenReturn(Optional.empty());
 
-        final ValidationResult result = definition.validate(user);
-
-        assertThat(result.valid(), is(false));
-
-        assertThat(result.errors().size(), is(1));
-        final ValidationResult.ValidateFailure failure = result.errors().get(0);
-        assertThat(failure.getPropertyPath(), is("username"));
-        assertThat(failure.getType(), is("required"));
+        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
     }
 
     @Test
     public void should_failed_validate_property() {
+        thrown.expect(RecordValidationException.class);
+        thrown.expect(new TypeSafeMatcher<RecordValidationException>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("expects RecordValidationException");
+            }
+
+            @Override
+            protected boolean matchesSafely(RecordValidationException exception) {
+                final EffectResult result = exception.getEffectResult();
+                if (result.valid() || result.errors().size() != 1) {
+                    return false;
+                }
+
+                final EffectResult.ValidateFailure failure = result.errors().get(0);
+
+                return failure.getPropertyPath().equals("username") && failure.getType().equals("format");
+            }
+        });
+
         final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");
         when(usernameProperty.value()).thenReturn("kiwi");
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
 
-        final ValidationResult result = definition.validate(user);
-
-        assertThat(result.valid(), is(false));
-
-        assertThat(result.errors().size(), is(1));
-        final ValidationResult.ValidateFailure failure = result.errors().get(0);
-        assertThat(failure.getPropertyPath(), is("username"));
-        assertThat(failure.getType(), is("format"));
+        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
     }
 }

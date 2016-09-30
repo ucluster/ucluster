@@ -3,30 +3,41 @@ package com.github.ucluster.common.definition;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
-import com.github.ucluster.core.definition.PropertyProcessor;
-import com.github.ucluster.core.definition.PropertyValidator;
-import com.github.ucluster.core.definition.ValidationResult;
-import com.google.common.collect.Lists;
+import com.github.ucluster.core.definition.EffectResult;
+import com.github.ucluster.core.exception.RecordValidationException;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DefaultPropertyDefinition implements Definition.PropertyDefinition<User> {
-    private Map<String, PropertyValidator> validators = new HashMap<>();
-    private Map<String, PropertyProcessor> processors = new HashMap<>();
-
     private final String propertyPath;
+    private Map<String, Record.Property.Concern<User>> concerns = new HashMap<>();
 
-    public DefaultPropertyDefinition(String propertyPath, List<PropertyValidator> validators) {
-        this(propertyPath, validators, Lists.newArrayList());
+    public DefaultPropertyDefinition(String propertyPath, Collection<Record.Property.Concern<User>> concerns) {
+        this.propertyPath = propertyPath;
+        concerns.stream().forEach(concern -> this.concerns.put(concern.type(), concern));
     }
 
-    public DefaultPropertyDefinition(String propertyPath, List<PropertyValidator> validators, List<PropertyProcessor> processors) {
-        this.propertyPath = propertyPath;
-        processors.stream().forEach(propertyProcessor -> this.processors.put(propertyProcessor.type(), propertyProcessor));
-        validators.stream().forEach(propertyValidator -> this.validators.put(propertyValidator.type(), propertyValidator));
+    @Override
+    public void effect(Record.Property.Concern.Point point, User record) {
+        final EffectResult result = concerns.values().stream()
+                .filter(concern -> concern.isAbout(point))
+                .map(concern -> {
+                    try {
+                        concern.effect(record, propertyPath);
+                        return null;
+                    } catch (RecordValidationException e) {
+                        return e.getEffectResult();
+                    }
+                })
+                .filter(e -> e != null)
+                .reduce(EffectResult.SUCCESS, EffectResult::merge);
+
+        if (!result.valid()) {
+            throw new RecordValidationException(result);
+        }
     }
 
     @Override
@@ -36,47 +47,10 @@ public class DefaultPropertyDefinition implements Definition.PropertyDefinition<
 
     @Override
     public Map<String, Object> definition() {
-        final Map<String, Object> definition = validatorDefinitions();
-
-        definition.putAll(processorDefinitions());
-
-        return definition;
-    }
-
-    private Map<String, Object> validatorDefinitions() {
-        return validators.entrySet().stream()
+        return concerns.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         e -> e.getValue().configuration()
                 ));
     }
-
-    private Map<String, Object> processorDefinitions() {
-        return processors.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> e.getValue().configuration()
-                ));
-    }
-
-    @Override
-    public ValidationResult validate(User record) {
-        return validators.entrySet().stream()
-                .map(entry -> entry.getValue().validate(record, propertyPath))
-                .reduce(ValidationResult.SUCCESS, ValidationResult::merge);
-    }
-
-    @Override
-    public <T> Record.Property<T> process(PropertyProcessor.Type type, Record.Property<T> property) {
-        Record.Property<T> result = property;
-
-        for (PropertyProcessor processor : processors.values()) {
-            if (processor.isAppliable(type)) {
-                result = processor.process(property);
-            }
-        }
-
-        return result;
-    }
-
 }

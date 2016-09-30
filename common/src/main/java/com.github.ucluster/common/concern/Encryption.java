@@ -1,4 +1,4 @@
-package com.github.ucluster.common.definition.processor;
+package com.github.ucluster.common.concern;
 
 import org.mindrot.jbcrypt.BCrypt;
 

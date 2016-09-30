@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.common.concern.Encryption;
 import com.github.ucluster.common.definition.DefaultUserDefinition;
-import com.github.ucluster.common.definition.processor.Encryption;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.exception.UserAuthenticationException;

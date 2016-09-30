@@ -1,12 +1,17 @@
 package com.github.ucluster.common.definition;
 
-import com.github.ucluster.common.definition.validator.FormatValidator;
+import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.ValidationResult;
+import com.github.ucluster.core.definition.EffectResult;
+import com.github.ucluster.core.exception.RecordValidationException;
 import com.google.common.collect.ImmutableMap;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 import java.util.Optional;
@@ -23,15 +28,18 @@ public class DefaultUserDefinitionTest {
     private DefaultUserDefinition definition;
     private User user;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() throws Exception {
         definition = new DefaultUserDefinition(asList(
                 new DefaultPropertyDefinition("username",
-                        asList(new FormatValidator("format", ImmutableMap.<String, Object>builder()
+                        asList(new FormatConcern("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
                                 .build()))),
                 new DefaultPropertyDefinition("nickname",
-                        asList(new FormatValidator("format", ImmutableMap.<String, Object>builder()
+                        asList(new FormatConcern("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
                                 .build())))
         ));
@@ -65,14 +73,33 @@ public class DefaultUserDefinitionTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
+        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
 
-        final ValidationResult result = definition.validate(user);
-
-        assertThat(result.valid(), is(true));
+        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
     }
 
     @Test
     public void should_failed_validate_user_has_exactly_one_error() {
+        thrown.expect(RecordValidationException.class);
+        thrown.expect(new TypeSafeMatcher<RecordValidationException>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("expects RecordValidationException");
+            }
+
+            @Override
+            protected boolean matchesSafely(RecordValidationException exception) {
+                final EffectResult result = exception.getEffectResult();
+                if (result.valid() || result.errors().size() != 1) {
+                    return false;
+                }
+
+                final EffectResult.ValidateFailure failure = result.errors().get(0);
+
+                return failure.getPropertyPath().equals("username") && failure.getType().equals("format");
+            }
+        });
+
         final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");
         when(usernameProperty.value()).thenReturn("kiwi");
@@ -83,19 +110,35 @@ public class DefaultUserDefinitionTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
+        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
 
-        final ValidationResult result = definition.validate(user);
-
-        assertThat(result.valid(), is(false));
-
-        assertThat(result.errors().size(), is(1));
-        final ValidationResult.ValidateFailure failure = result.errors().get(0);
-        assertThat(failure.getPropertyPath(), is("username"));
-        assertThat(failure.getType(), is("format"));
+        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
     }
 
     @Test
     public void should_failed_validate_user_has_more_than_one_error() {
+        thrown.expect(RecordValidationException.class);
+        thrown.expect(new TypeSafeMatcher<RecordValidationException>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("expects RecordValidationException");
+            }
+
+            @Override
+            protected boolean matchesSafely(RecordValidationException exception) {
+                final EffectResult result = exception.getEffectResult();
+                if (result.valid() || result.errors().size() != 2) {
+                    return false;
+                }
+
+                final EffectResult.ValidateFailure usernameFailure = result.errors().get(0);
+                final EffectResult.ValidateFailure nicknameFailure = result.errors().get(1);
+
+                return nicknameFailure.getPropertyPath().equals("nickname") && nicknameFailure.getType().equals("format") &&
+                        usernameFailure.getPropertyPath().equals("username") && usernameFailure.getType().equals("format");
+            }
+        });
+
         final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");
         when(usernameProperty.value()).thenReturn("kiwi");
@@ -106,18 +149,8 @@ public class DefaultUserDefinitionTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
+        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
 
-        final ValidationResult result = definition.validate(user);
-
-        assertThat(result.valid(), is(false));
-
-        assertThat(result.errors().size(), is(2));
-        final ValidationResult.ValidateFailure usernameFailure = result.errors().get(0);
-        assertThat(usernameFailure.getPropertyPath(), is("nickname"));
-        assertThat(usernameFailure.getType(), is("format"));
-
-        final ValidationResult.ValidateFailure nicknameFailure = result.errors().get(1);
-        assertThat(nicknameFailure.getPropertyPath(), is("username"));
-        assertThat(nicknameFailure.getType(), is("format"));
+        definition.effect(Record.Property.Concern.Point.VALIDATE, user);
     }
 }

@@ -2,7 +2,7 @@ package com.github.ucluster.core.definition;
 
 import com.github.ucluster.core.Record;
 
-public interface PropertyValidator<T extends Record> extends Record.Property.Specification {
+public interface PropertyValidator<T extends Record> extends Record.Property.Concern {
 
-    ValidationResult validate(T record, String propertyPath);
+    EffectResult validate(T record, String propertyPath);
 }

@@ -1,15 +1,16 @@
-package com.github.ucluster.common.definition.validator;
+package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.PropertyValidator;
-import com.github.ucluster.core.definition.ValidationResult;
+import com.github.ucluster.core.exception.RecordValidationException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentMatcher;
 
 import java.util.ArrayList;
@@ -18,24 +19,25 @@ import java.util.Optional;
 
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UniquenessValidatorTest {
-    private PropertyValidator uniquenessValidator;
-    private PropertyValidator nonUniquenessValidator;
+public class UniquenessConcernTest {
+    private Record.Property.Concern<User> uniquenessValidator;
+    private Record.Property.Concern<User> nonUniquenessValidator;
     private Repository<User> users;
     private User user;
     private Record.Property property;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() throws Exception {
-        uniquenessValidator = new UniquenessValidator("uniqueness", true);
-        nonUniquenessValidator = new UniquenessValidator("uniqueness", false);
+        uniquenessValidator = new UniquenessConcern("uniqueness", true);
+        nonUniquenessValidator = new UniquenessConcern("uniqueness", false);
 
         Injector injector = getInjector();
         injector.injectMembers(uniquenessValidator);
@@ -59,13 +61,13 @@ public class UniquenessValidatorTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        final ValidationResult result = uniquenessValidator.validate(user, "username");
-
-        assertThat(result.valid(), is(true));
+        uniquenessValidator.effect(user, "username");
     }
 
     @Test
     public void should_failed_when_not_unique_and_uniqueness_is_required() {
+        thrown.expect(RecordValidationException.class);
+
         when(users.find(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
@@ -79,9 +81,7 @@ public class UniquenessValidatorTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        final ValidationResult result = uniquenessValidator.validate(user, "username");
-
-        assertThat(result.valid(), is(false));
+        uniquenessValidator.effect(user, "username");
     }
 
     @Test
@@ -99,9 +99,7 @@ public class UniquenessValidatorTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        final ValidationResult result = nonUniquenessValidator.validate(user, "username");
-
-        assertThat(result.valid(), is(true));
+        nonUniquenessValidator.effect(user, "username");
     }
 
     @Test
@@ -119,9 +117,7 @@ public class UniquenessValidatorTest {
 
         when(user.property(eq("username"))).thenReturn(Optional.of(property));
 
-        final ValidationResult result = nonUniquenessValidator.validate(user, "username");
-
-        assertThat(result.valid(), is(true));
+        nonUniquenessValidator.effect(user, "username");
     }
 
     private Injector getInjector() {

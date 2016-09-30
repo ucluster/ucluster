@@ -4,9 +4,6 @@ import com.github.ucluster.core.LifecycleMonitor;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
-import com.github.ucluster.core.definition.PropertyProcessor;
-import com.github.ucluster.core.definition.ValidationResult;
-import com.github.ucluster.core.exception.UserValidationException;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -43,14 +40,14 @@ public class MongoLifecycleMonitor<T extends Record> implements LifecycleMonitor
 
                 if (isSaveMethod(method)) {
                     validate(record);
-                    beforeSaveOn(record, PropertyProcessor.Type.BEFORE_CREATE);
+                    beforeSaveOn(record, Record.Property.Concern.Point.BEFORE_CREATE);
                     save(record);
                     afterSave();
                 }
 
                 if (isUpdateMethod(method)) {
                     validate(record);
-                    beforeSaveOn(record, PropertyProcessor.Type.BEFORE_UPDATE);
+                    beforeSaveOn(record, Record.Property.Concern.Point.BEFORE_UPDATE);
                     update(record);
                     afterSave();
                 }
@@ -64,22 +61,13 @@ public class MongoLifecycleMonitor<T extends Record> implements LifecycleMonitor
             }
 
             private void validate(T record) {
-                final ValidationResult result = definitions.find(((MongoUser) record).metadata).validate(record, dirtyTracker.asArray());
-
-                if (!result.valid()) {
-                    throw new UserValidationException(result);
-                }
+                definitions.find(((MongoUser) record).metadata).effect(Record.Property.Concern.Point.VALIDATE, record, dirtyTracker.asArray());
             }
 
-            private void beforeSaveOn(T record, PropertyProcessor.Type processType) {
+            private void beforeSaveOn(T record, Record.Property.Concern.Point point) {
                 final Definition<T> definition = definitions.find(((MongoUser) record).metadata);
 
-                dirtyTracker.dirties().stream()
-                        .filter(propertyPath -> dirtyTracker.isDirty(propertyPath))
-                        .forEach(propertyPath -> {
-                            Record.Property property = record.property(propertyPath).get();
-                            property.value(definition.property(property.path()).process(processType, property).value());
-                        });
+                definition.effect(point, record, dirtyTracker.asArray());
             }
 
             private void save(T record) {

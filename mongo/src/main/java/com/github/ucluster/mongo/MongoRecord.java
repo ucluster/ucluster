@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -38,5 +39,10 @@ public class MongoRecord implements Record {
     @Override
     public Optional<Property> property(String propertyPath) {
         return Optional.ofNullable(properties.get(propertyPath));
+    }
+
+    @Override
+    public Collection<Property> properties() {
+        return properties.values();
     }
 }

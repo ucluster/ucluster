@@ -5,28 +5,28 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class ValidationResult {
-    public static final ValidationResult SUCCESS = new ValidationResult();
+public class EffectResult {
+    public static final EffectResult SUCCESS = new EffectResult();
 
     private List<ValidateFailure> errors = new ArrayList<>();
 
-    public ValidationResult(List<ValidateFailure> errors) {
+    public EffectResult(List<ValidateFailure> errors) {
         this.errors = errors;
     }
 
-    public ValidationResult(ValidateFailure errors) {
+    public EffectResult(ValidateFailure errors) {
         this.errors = asList(errors);
     }
 
-    ValidationResult() {
+    EffectResult() {
         errors = new ArrayList<>();
     }
 
-    public ValidationResult merge(ValidationResult another) {
+    public EffectResult merge(EffectResult another) {
         List<ValidateFailure> errors = new ArrayList<>();
         errors.addAll(errors());
         errors.addAll(another.errors());
-        return new ValidationResult(errors);
+        return new EffectResult(errors);
     }
 
     public List<ValidateFailure> errors() {

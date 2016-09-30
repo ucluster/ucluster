@@ -1,31 +1,33 @@
-package com.github.ucluster.common.definition.validator;
+package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.PropertyValidator;
-import com.github.ucluster.core.definition.ValidationResult;
+import com.github.ucluster.core.exception.RecordValidationException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RequiredValidatorTest {
+public class RequiredConcernTest {
 
-    private PropertyValidator required;
-    private PropertyValidator optional;
+    private Record.Property.Concern<User> required;
+    private Record.Property.Concern<User> optional;
     private User user;
     private Record.Property property;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() throws Exception {
-        required = new RequiredValidator("required", true);
-        optional = new RequiredValidator("required", false);
+        required = new RequiredConcern("required", true);
+        optional = new RequiredConcern("required", false);
 
         user = mock(User.class);
         property = mock(Record.Property.class);
@@ -35,36 +37,30 @@ public class RequiredValidatorTest {
     public void should_success_required_when_value_presence() {
         propertyPresent();
 
-        final ValidationResult result = required.validate(user, "username");
-
-        assertThat(result.valid(), is(true));
+        required.effect(user, "username");
     }
 
     @Test
     public void should_failed_required_but_value_absence() {
+        thrown.expect(RecordValidationException.class);
+
         propertyAbsent();
 
-        final ValidationResult result = required.validate(user, "username");
-
-        assertThat(result.valid(), is(false));
+        required.effect(user, "username");
     }
 
     @Test
     public void should_success_optional_when_value_presence() {
         propertyPresent();
 
-        final ValidationResult result = optional.validate(user, "username");
-
-        assertThat(result.valid(), is(true));
+        optional.effect(user, "username");
     }
 
     @Test
     public void should_success_optional_but_value_absence() {
         propertyAbsent();
 
-        final ValidationResult result = optional.validate(user, "username");
-
-        assertThat(result.valid(), is(true));
+        optional.effect(user, "username");
     }
 
     private void propertyPresent() {

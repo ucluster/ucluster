@@ -1,4 +1,4 @@
-package com.github.ucluster.common.definition.util;
+package com.github.ucluster.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

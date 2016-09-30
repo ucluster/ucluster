@@ -1,8 +1,9 @@
 package com.github.ucluster.common.definition;
 
-import com.github.ucluster.common.definition.util.Json;
-import com.github.ucluster.core.definition.PropertyProcessor;
-import com.github.ucluster.core.definition.PropertyValidator;
+import com.github.ucluster.common.util.Json;
+import com.github.ucluster.core.Record;
+import com.github.ucluster.core.User;
+import com.github.ucluster.core.definition.Definition;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -12,6 +13,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.lang.reflect.Constructor;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,9 +49,10 @@ public class DSLCompiler {
         }
 
         DefaultUserDefinition load() {
-            final List<DefaultUserDefinition.PropertyDefinition> propertyDefinitions = userJson.keySet().stream()
-                    .map(propertyPath -> mapPropertyDSL(propertyPath).load())
-                    .collect(Collectors.toList());
+            final List<Definition.PropertyDefinition<User>> propertyDefinitions =
+                    userJson.keySet().stream()
+                            .map(propertyPath -> mapPropertyDSL(propertyPath).load())
+                            .collect(Collectors.toList());
 
             return new DefaultUserDefinition(propertyDefinitions);
         }
@@ -68,77 +71,31 @@ public class DSLCompiler {
                 this.propertyJson = propertyJson;
             }
 
-            private DefaultUserDefinition.PropertyDefinition load() {
-                return new DefaultPropertyDefinition(propertyPath, propertyValidators(), propertyProcessor());
+            private DefaultUserDefinition.PropertyDefinition<User> load() {
+                return new DefaultPropertyDefinition(propertyPath, propertyConcerns());
             }
 
-            private List<PropertyProcessor> propertyProcessor() {
+            private Collection<Record.Property.Concern<User>> propertyConcerns() {
                 return propertyJson.keySet().stream()
-                        .filter(this::isProcessor)
                         .map(key -> {
-                            final PropertyProcessor propertyProcessor = loadPropertyProcessor(key, propertyJson.get(key));
-                            injector.injectMembers(propertyProcessor);
-                            return propertyProcessor;
+                            final Record.Property.Concern<User> propertyConcern = loadPropertyConcern(key, propertyJson.get(key));
+                            injector.injectMembers(propertyConcern);
+                            return propertyConcern;
                         }).collect(Collectors.toList());
             }
 
-            private List<PropertyValidator> propertyValidators() {
-                return propertyJson.keySet().stream()
-                        .filter(this::isValidator)
-                        .map(key -> {
-                            final PropertyValidator propertyValidator = loadPropertyValidator(key, propertyJson.get(key));
-                            injector.injectMembers(propertyValidator);
-                            return propertyValidator;
-                        }).collect(Collectors.toList());
-            }
-
-            private boolean isValidator(String type) {
+            private Record.Property.Concern<User> loadPropertyConcern(String concernType, Object propertyProcessorConfiguration) {
                 try {
-                    injector.getInstance(Key.get(new TypeLiteral<Class>() {
-                    }, Names.named("property." + type + ".validator")));
+                    final Class<? extends Record.Property.Concern<User>> propertyConcernClass =
+                            injector.getInstance(Key.get(new TypeLiteral<Class<? extends Record.Property.Concern<User>>>() {
+                            }, Names.named("property." + concernType + ".concern")));
 
-                    return true;
-                } catch (Exception e) {
-                    return false;
-                }
-            }
-
-            private boolean isProcessor(String type) {
-                try {
-                    injector.getInstance(Key.get(new TypeLiteral<Class>() {
-                    }, Names.named("property." + type + ".processor")));
-
-                    return true;
-                } catch (Exception e) {
-                    return false;
-                }
-            }
-
-            private PropertyProcessor loadPropertyProcessor(String processorType, Object propertyProcessorConfiguration) {
-                try {
-                    final Class propertyProcessorClass = injector.getInstance(Key.get(new TypeLiteral<Class>() {
-                    }, Names.named("property." + processorType + ".processor")));
-
-                    final Constructor<PropertyProcessor> constructor = propertyProcessorClass.getConstructor(String.class, Object.class);
-                    return constructor.newInstance(processorType, propertyProcessorConfiguration);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            private PropertyValidator loadPropertyValidator(String validatorType, Object propertyValidatorConfiguration) {
-                try {
-                    final Class propertyValidatorClass = injector.getInstance(Key.get(new TypeLiteral<Class>() {
-                    }, Names.named("property." + validatorType + ".validator")));
-
-                    final Constructor<PropertyValidator> constructor = propertyValidatorClass.getConstructor(String.class, Object.class);
-                    return constructor.newInstance(validatorType, propertyValidatorConfiguration);
+                    final Constructor<? extends Record.Property.Concern<User>> constructor = propertyConcernClass.getConstructor(String.class, Object.class);
+                    return constructor.newInstance(concernType, propertyProcessorConfiguration);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
         }
     }
-
-
 }
