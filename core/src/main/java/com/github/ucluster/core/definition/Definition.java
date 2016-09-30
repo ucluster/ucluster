@@ -4,13 +4,13 @@ import com.github.ucluster.core.Record;
 
 import java.util.Map;
 
-public interface Definition<T extends Record> {
+public interface Definition<D extends Record> {
 
-    ValidationResult validate(T user);
+    ValidationResult validate(D user);
 
-    ValidationResult validate(T user, String... propertyPaths);
+    ValidationResult validate(D user, String... propertyPaths);
 
-    PropertyDefinition<T> property(String propertyPath);
+    PropertyDefinition<D> property(String propertyPath);
 
     Map<String, Object> definition();
 
