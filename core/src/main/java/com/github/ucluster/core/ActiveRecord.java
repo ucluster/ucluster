@@ -2,6 +2,7 @@ package com.github.ucluster.core;
 
 import org.joda.time.DateTime;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface ActiveRecord {
@@ -34,5 +35,16 @@ public interface ActiveRecord {
 
             Object configuration();
         }
+    }
+
+    interface Request {
+
+        String type();
+
+        Map<String, Object> metadata();
+
+        Map<String, Object> properties();
+
+        Map<String, Object> request();
     }
 }
