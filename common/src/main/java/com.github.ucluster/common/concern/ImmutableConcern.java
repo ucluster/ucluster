@@ -5,11 +5,9 @@ import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
 /**
- *
  * ImmutableConcern:
- *
+ * <p>
  * only accept in create, cannot be updated, cannot be inserted later
- *
  */
 public class ImmutableConcern implements Record.Property.Concern {
     private String type;

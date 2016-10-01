@@ -1,26 +1,59 @@
 package com.github.ucluster.common.concern;
 
+import com.github.ucluster.common.ValidationMatcher;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.exception.ConcernEffectException;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Map;
+
 import static com.github.ucluster.common.SimpleRecord.builder;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class EmailConcernTest {
 
-    private Record.Property.Concern concern;
+    private Record.Property.Concern email;
+    private Record.Property.Concern nonEmail;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
-        concern = new EmailConcern("email", true);
+        email = new EmailConcern("email", true);
+        nonEmail = new EmailConcern("email", false);
+    }
+
+    @Test
+    public void should_password_care_about_before_create_and_before_update() {
+        final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
+                .put(Record.Property.Point.VALIDATE, true)
+                .put(Record.Property.Point.BEFORE_CREATE, false)
+                .put(Record.Property.Point.BEFORE_UPDATE, false)
+                .build();
+
+        expected.entrySet().stream()
+                .forEach(entry ->
+                        assertThat(email.isAbout(entry.getKey()), is(entry.getValue()))
+                );
+    }
+
+    @Test
+    public void should_non_password_care_about_nothing() {
+        final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
+                .put(Record.Property.Point.VALIDATE, false)
+                .put(Record.Property.Point.BEFORE_CREATE, false)
+                .put(Record.Property.Point.BEFORE_UPDATE, false)
+                .build();
+
+        expected.entrySet().stream()
+                .forEach(entry ->
+                        assertThat(nonEmail.isAbout(entry.getKey()), is(entry.getValue()))
+                );
     }
 
     @Test
@@ -29,28 +62,22 @@ public class EmailConcernTest {
                 .path("email").value("kiwi.swhite.coder@gmail.com")
                 .get();
 
-        concern.effect(record, "email");
+        email.effect(record, "email");
     }
 
     @Test
     public void should_failed_validate_invalid_email() {
-        thrown.expect(ConcernEffectException.class);
-        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("expects RecordValidationException");
-            }
-
-            @Override
-            protected boolean matchesSafely(ConcernEffectException exception) {
-                return !exception.getEffectResult().valid();
-            }
-        });
+        ValidationMatcher.of(thrown).is(e ->
+                !e.getEffectResult().valid()
+                        && e.getEffectResult().errors().size() == 1
+                        && e.getEffectResult().errors().get(0).getPropertyPath().equals("email")
+                        && e.getEffectResult().errors().get(0).getType().equals("email")
+        );
 
         final Record record = builder()
                 .path("email").value("invalid.email")
                 .get();
 
-        concern.effect(record, "email");
+        email.effect(record, "email");
     }
 }

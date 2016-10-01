@@ -26,7 +26,7 @@ public class EmailConcern implements Record.Property.Concern {
 
     @Override
     public boolean isAbout(Record.Property.Point point) {
-        return Record.Property.Point.VALIDATE == point;
+        return enabled && Record.Property.Point.VALIDATE == point;
     }
 
     @Override
