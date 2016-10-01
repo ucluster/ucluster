@@ -1,6 +1,5 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.ValidationMatcher;
 import com.github.ucluster.core.Record;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -11,6 +10,7 @@ import org.junit.rules.ExpectedException;
 import java.util.Map;
 
 import static com.github.ucluster.common.SimpleRecord.builder;
+import static com.github.ucluster.common.ValidationMatcher.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -57,8 +57,8 @@ public class ImmutableConcernTest {
 
     @Test
     public void should_failed_update_immutable_property() {
-        ValidationMatcher.of(thrown).is(e ->
-                !e.getEffectResult().valid()
+        of(thrown).errors(
+                (path, type) -> path.equals("email") && type.equals("immutable")
         );
 
         final Record record = builder()
