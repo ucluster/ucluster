@@ -1,6 +1,6 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.RecordMock;
+import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
@@ -40,7 +40,7 @@ public class FormatConcernTest {
 
     @Test
     public void should_success_if_property_is_null() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").none()
                 .get();
 
@@ -49,7 +49,7 @@ public class FormatConcernTest {
 
     @Test
     public void should_success_validate_against_format() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("kiwiwin")
                 .get();
 
@@ -79,7 +79,7 @@ public class FormatConcernTest {
             }
         });
 
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("kiwi")
                 .get();
 

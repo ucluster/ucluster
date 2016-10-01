@@ -20,7 +20,7 @@ public class PasswordConcern implements Record.Property.Concern {
 
     @Override
     public boolean isAbout(Record.Property.Point point) {
-        return Record.Property.Point.BEFORE_CREATE == point || Record.Property.Point.BEFORE_UPDATE == point;
+        return enabled && (Record.Property.Point.BEFORE_CREATE == point || Record.Property.Point.BEFORE_UPDATE == point);
     }
 
     @Override

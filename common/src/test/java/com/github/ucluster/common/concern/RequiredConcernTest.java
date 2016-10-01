@@ -1,6 +1,6 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.RecordMock;
+import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.exception.ConcernEffectException;
 import org.junit.Before;
@@ -24,7 +24,7 @@ public class RequiredConcernTest {
 
     @Test
     public void should_success_required_when_value_presence() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("kiwiwin")
                 .get();
 
@@ -35,7 +35,7 @@ public class RequiredConcernTest {
     public void should_failed_required_but_value_absence() {
         thrown.expect(ConcernEffectException.class);
 
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").none()
                 .get();
 
@@ -44,7 +44,7 @@ public class RequiredConcernTest {
 
     @Test
     public void should_success_optional_when_value_presence() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("kiwiwin")
                 .get();
 
@@ -53,7 +53,7 @@ public class RequiredConcernTest {
 
     @Test
     public void should_success_optional_but_value_absence() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").none()
                 .get();
 

@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static com.github.ucluster.common.RecordMock.builder;
+import static com.github.ucluster.common.SimpleRecord.builder;
 
 public class EmailConcernTest {
 

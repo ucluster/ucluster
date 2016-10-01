@@ -1,48 +1,43 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.ValidationMatcher;
 import com.github.ucluster.core.Record;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
 import static com.github.ucluster.common.SimpleRecord.builder;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
-public class ImmutableConcernTest {
-    private Record.Property.Concern immutable;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private ImmutableConcern mutable;
+public class PasswordConcernTest {
+    private Record.Property.Concern password;
+    private Record.Property.Concern nonPassword;
 
     @Before
     public void setUp() throws Exception {
-        immutable = new ImmutableConcern("immutable", true);
-        mutable = new ImmutableConcern("immutable", false);
+        password = new PasswordConcern("password", true);
+        nonPassword = new PasswordConcern("password", false);
     }
 
     @Test
-    public void should_immutable_care_about_before_update_only() {
+    public void should_password_care_about_before_create_and_before_update() {
         final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
                 .put(Record.Property.Point.VALIDATE, false)
-                .put(Record.Property.Point.BEFORE_CREATE, false)
+                .put(Record.Property.Point.BEFORE_CREATE, true)
                 .put(Record.Property.Point.BEFORE_UPDATE, true)
                 .build();
 
         expected.entrySet().stream()
                 .forEach(entry ->
-                        assertThat(immutable.isAbout(entry.getKey()), is(entry.getValue()))
+                        assertThat(password.isAbout(entry.getKey()), is(entry.getValue()))
                 );
     }
 
     @Test
-    public void should_mutable_care_about_nothing() {
+    public void should_non_password_care_about_nothing() {
         final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
                 .put(Record.Property.Point.VALIDATE, false)
                 .put(Record.Property.Point.BEFORE_CREATE, false)
@@ -51,20 +46,19 @@ public class ImmutableConcernTest {
 
         expected.entrySet().stream()
                 .forEach(entry ->
-                        assertThat(mutable.isAbout(entry.getKey()), is(entry.getValue()))
+                        assertThat(nonPassword.isAbout(entry.getKey()), is(entry.getValue()))
                 );
     }
 
     @Test
-    public void should_failed_update_immutable_property() {
-        ValidationMatcher.of(thrown).is(e ->
-                !e.getEffectResult().valid()
-        );
-
+    public void should_encrypt_password() {
         final Record record = builder()
-                .path("email").value("invalid.email")
+                .path("password").value("password")
                 .get();
 
-        immutable.effect(record, "email");
+        password.effect(record, "password");
+
+        final String encrypted = (String) record.property("password").get().value();
+        assertThat(encrypted, not("password"));
     }
 }

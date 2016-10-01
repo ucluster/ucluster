@@ -1,6 +1,6 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.RecordMock;
+import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.exception.ConcernEffectException;
@@ -42,7 +42,7 @@ public class UniquenessConcernTest {
 
     @Test
     public void should_success_when_unique_and_uniqueness_is_required() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("newusername")
                 .get();
 
@@ -59,7 +59,7 @@ public class UniquenessConcernTest {
 
     @Test
     public void should_failed_when_not_unique_and_uniqueness_is_required() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("existusername")
                 .get();
 
@@ -78,7 +78,7 @@ public class UniquenessConcernTest {
 
     @Test
     public void should_success_when_unique_and_uniqueness_is_not_required() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("newusername")
                 .get();
 
@@ -95,7 +95,7 @@ public class UniquenessConcernTest {
 
     @Test
     public void should_success_when_not_unique_and_uniqueness_is_not_required() {
-        final Record record = RecordMock.builder()
+        final Record record = SimpleRecord.builder()
                 .path("username").value("existusername")
                 .get();
 
