@@ -1,7 +1,6 @@
 package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.ConcernEffectException;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -10,17 +9,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Optional;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static com.github.ucluster.common.RecordMock.builder;
 
 public class EmailConcernTest {
 
     private Record.Property.Concern concern;
-    private User user;
-    private Record.Property property;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -28,19 +21,15 @@ public class EmailConcernTest {
     @Before
     public void setUp() throws Exception {
         concern = new EmailConcern("email", true);
-
-        user = mock(User.class);
-        property = mock(Record.Property.class);
     }
 
     @Test
     public void should_success_validate_valid_email() {
-        when(property.path()).thenReturn("email");
-        when(property.value()).thenReturn("kiwi.swhite.coder@gmail.com");
+        final Record record = builder()
+                .path("email").value("kiwi.swhite.coder@gmail.com")
+                .get();
 
-        when(user.property(eq("email"))).thenReturn(Optional.of(property));
-
-        concern.effect(user, "email");
+        concern.effect(record, "email");
     }
 
     @Test
@@ -58,11 +47,10 @@ public class EmailConcernTest {
             }
         });
 
-        when(property.path()).thenReturn("email");
-        when(property.value()).thenReturn("invalid.email");
+        final Record record = builder()
+                .path("email").value("invalid.email")
+                .get();
 
-        when(user.property(eq("email"))).thenReturn(Optional.of(property));
-
-        concern.effect(user, "email");
+        concern.effect(record, "email");
     }
 }
