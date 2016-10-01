@@ -1,7 +1,10 @@
 package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.common.collect.ImmutableMap;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,6 +12,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
+import static com.github.ucluster.common.RecordMock.builder;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -51,5 +55,27 @@ public class ImmutableConcernTest {
                 .forEach(entry ->
                         assertThat(mutable.isAbout(entry.getKey()), is(entry.getValue()))
                 );
+    }
+
+    @Test
+    public void should_failed_update_immutable_property() {
+        thrown.expect(ConcernEffectException.class);
+        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("expects RecordValidationException");
+            }
+
+            @Override
+            protected boolean matchesSafely(ConcernEffectException exception) {
+                return !exception.getEffectResult().valid();
+            }
+        });
+
+        final Record record = builder()
+                .path("email").value("invalid.email")
+                .get();
+
+        immutable.effect(record, "email");
     }
 }
