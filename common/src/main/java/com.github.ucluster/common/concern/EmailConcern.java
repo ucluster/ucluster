@@ -4,7 +4,6 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -38,7 +37,7 @@ public class EmailConcern implements Record.Property.Concern {
                 final String propertyValue = String.valueOf(prop.value());
 
                 if (!positivePattern.matcher(propertyValue).matches() || negativePattern.matcher(propertyValue).matches()) {
-                    throw new ConcernEffectException(new EffectResult(Arrays.asList(new EffectResult.Failure(propertyPath, type()))));
+                    throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
                 }
             });
         }

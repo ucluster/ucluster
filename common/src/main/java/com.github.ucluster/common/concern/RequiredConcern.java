@@ -4,8 +4,6 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
-import static java.util.Arrays.asList;
-
 public class RequiredConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
@@ -30,9 +28,7 @@ public class RequiredConcern implements Record.Property.Concern {
         if (enabled) {
             record.property(propertyPath).orElseThrow(() ->
                     new ConcernEffectException(
-                            new EffectResult(
-                                    asList(new EffectResult.Failure(propertyPath, type()))
-                            )
+                            new EffectResult(new EffectResult.Failure(propertyPath, type()))
                     )
             );
         }

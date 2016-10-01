@@ -11,8 +11,6 @@ import com.google.inject.TypeLiteral;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-
 /**
  * UniquenessConcern:
  * <p>
@@ -52,7 +50,7 @@ public class UniquenessConcern implements Record.Property.Concern {
                 final Optional<? extends Record> existingRecord = records.find(prop);
 
                 existingRecord.ifPresent($ -> {
-                    throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
+                    throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
                 });
             });
         }

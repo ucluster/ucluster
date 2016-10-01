@@ -10,12 +10,12 @@ public class EffectResult {
 
     private List<Failure> errors = new ArrayList<>();
 
-    public EffectResult(List<Failure> errors) {
-        this.errors = errors;
+    public EffectResult(Failure error) {
+        this(asList(error));
     }
 
-    public EffectResult(Failure errors) {
-        this.errors = asList(errors);
+    public EffectResult(List<Failure> errors) {
+        this.errors = errors;
     }
 
     EffectResult() {

@@ -7,8 +7,6 @@ import com.github.ucluster.core.exception.ConcernEffectException;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static java.util.Arrays.asList;
-
 public class FormatConcern implements Record.Property.Concern {
 
     private String type;
@@ -33,7 +31,7 @@ public class FormatConcern implements Record.Property.Concern {
     public void effect(Record record, String propertyPath) {
         record.property(propertyPath).ifPresent(prop -> {
             if (!pattern.matcher(String.valueOf(prop.value())).matches()) {
-                throw new ConcernEffectException(new EffectResult(asList(new EffectResult.Failure(propertyPath, type()))));
+                throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
             }
         });
     }
