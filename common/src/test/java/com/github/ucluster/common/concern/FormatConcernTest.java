@@ -1,7 +1,7 @@
 package com.github.ucluster.common.concern;
 
+import com.github.ucluster.common.RecordMock;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.common.collect.ImmutableMap;
@@ -13,19 +13,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class FormatConcernTest {
 
     private Record.Property.Concern concern;
-    private User user;
-    private Record.Property property;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -35,9 +29,6 @@ public class FormatConcernTest {
         concern = new FormatConcern("format", ImmutableMap.<String, Object>builder()
                 .put("pattern", "\\w{6,12}")
                 .build());
-
-        user = mock(User.class);
-        property = mock(Record.Property.class);
     }
 
     @Test
@@ -49,19 +40,20 @@ public class FormatConcernTest {
 
     @Test
     public void should_success_if_property_is_null() {
-        when(user.property(eq("username"))).thenReturn(Optional.empty());
+        final Record record = RecordMock.builder()
+                .path("username").none()
+                .get();
 
-        concern.effect(user, "username");
+        concern.effect(record, "username");
     }
 
     @Test
     public void should_success_validate_against_format() {
-        when(property.path()).thenReturn("username");
-        when(property.value()).thenReturn("kiwiwin");
+        final Record record = RecordMock.builder()
+                .path("username").value("kiwiwin")
+                .get();
 
-        when(user.property(eq("username"))).thenReturn(Optional.of(property));
-
-        concern.effect(user, "username");
+        concern.effect(record, "username");
     }
 
     @Test
@@ -87,11 +79,10 @@ public class FormatConcernTest {
             }
         });
 
-        when(property.path()).thenReturn("username");
-        when(property.value()).thenReturn("kiwi");
+        final Record record = RecordMock.builder()
+                .path("username").value("kiwi")
+                .get();
 
-        when(user.property(eq("username"))).thenReturn(Optional.of(property));
-
-        concern.effect(user, "username");
+        concern.effect(record, "username");
     }
 }
