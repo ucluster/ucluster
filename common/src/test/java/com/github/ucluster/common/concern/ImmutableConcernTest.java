@@ -1,5 +1,6 @@
 package com.github.ucluster.common.concern;
 
+import com.github.ucluster.common.ValidationMatcher;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.common.collect.ImmutableMap;
@@ -59,18 +60,9 @@ public class ImmutableConcernTest {
 
     @Test
     public void should_failed_update_immutable_property() {
-        thrown.expect(ConcernEffectException.class);
-        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("expects RecordValidationException");
-            }
-
-            @Override
-            protected boolean matchesSafely(ConcernEffectException exception) {
-                return !exception.getEffectResult().valid();
-            }
-        });
+        ValidationMatcher.of(thrown).is(e ->
+                !e.getEffectResult().valid()
+        );
 
         final Record record = builder()
                 .path("email").value("invalid.email")
