@@ -29,7 +29,7 @@ public class EmailConcernTest {
     }
 
     @Test
-    public void should_password_care_about_before_create_and_before_update() {
+    public void should_password_care_about_validate() {
         final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
                 .put(Record.Property.Point.VALIDATE, true)
                 .put(Record.Property.Point.BEFORE_CREATE, false)
