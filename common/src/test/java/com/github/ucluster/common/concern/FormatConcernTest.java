@@ -10,7 +10,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
-import static com.github.ucluster.common.ValidationMatcher.of;
+import static com.github.ucluster.common.ValidationMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -69,7 +69,7 @@ public class FormatConcernTest {
 
     @Test
     public void should_failed_to_validate_against_format() {
-        of(thrown).errors(
+        capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("format")
         );
 

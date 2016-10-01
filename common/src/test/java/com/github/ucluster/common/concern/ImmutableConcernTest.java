@@ -10,7 +10,7 @@ import org.junit.rules.ExpectedException;
 import java.util.Map;
 
 import static com.github.ucluster.common.SimpleRecord.builder;
-import static com.github.ucluster.common.ValidationMatcher.of;
+import static com.github.ucluster.common.ValidationMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -57,7 +57,7 @@ public class ImmutableConcernTest {
 
     @Test
     public void should_failed_update_immutable_property() {
-        of(thrown).errors(
+        capture(thrown).errors(
                 (path, type) -> path.equals("email") && type.equals("immutable")
         );
 

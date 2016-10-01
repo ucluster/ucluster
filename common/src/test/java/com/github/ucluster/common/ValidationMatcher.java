@@ -44,7 +44,7 @@ public class ValidationMatcher {
         });
     }
 
-    public static ValidationMatcher of(ExpectedException expected) {
+    public static ValidationMatcher capture(ExpectedException expected) {
         return new ValidationMatcher(expected);
     }
 

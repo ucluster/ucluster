@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static com.github.ucluster.common.ValidationMatcher.of;
+import static com.github.ucluster.common.ValidationMatcher.capture;
 
 public class RequiredConcernTest {
 
@@ -34,7 +34,7 @@ public class RequiredConcernTest {
 
     @Test
     public void should_failed_required_but_value_absence() {
-        of(thrown).errors(
+        capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("required")
         );
 

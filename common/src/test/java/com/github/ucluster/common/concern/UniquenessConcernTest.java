@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.ucluster.common.ValidationMatcher.of;
+import static com.github.ucluster.common.ValidationMatcher.capture;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.argThat;
@@ -59,7 +59,7 @@ public class UniquenessConcernTest {
 
     @Test
     public void should_failed_when_not_unique_and_uniqueness_is_required() {
-        of(thrown).errors(
+        capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("uniqueness")
         );
 
