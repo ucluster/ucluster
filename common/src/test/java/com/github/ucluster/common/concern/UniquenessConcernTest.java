@@ -3,7 +3,6 @@ package com.github.ucluster.common.concern;
 import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
-import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.github.ucluster.common.ValidationMatcher.of;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.argThat;
@@ -59,11 +59,13 @@ public class UniquenessConcernTest {
 
     @Test
     public void should_failed_when_not_unique_and_uniqueness_is_required() {
+        of(thrown).errors(
+                (path, type) -> path.equals("username") && type.equals("uniqueness")
+        );
+
         final Record record = SimpleRecord.builder()
                 .path("username").value("existusername")
                 .get();
-
-        thrown.expect(ConcernEffectException.class);
 
         when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
