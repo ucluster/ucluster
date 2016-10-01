@@ -2,11 +2,12 @@ package com.github.ucluster.common.concern;
 
 import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.exception.ConcernEffectException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static com.github.ucluster.common.ValidationMatcher.of;
 
 public class RequiredConcernTest {
 
@@ -33,7 +34,9 @@ public class RequiredConcernTest {
 
     @Test
     public void should_failed_required_but_value_absence() {
-        thrown.expect(ConcernEffectException.class);
+        of(thrown).errors(
+                (path, type) -> path.equals("username") && type.equals("required")
+        );
 
         final Record record = SimpleRecord.builder()
                 .path("username").none()
