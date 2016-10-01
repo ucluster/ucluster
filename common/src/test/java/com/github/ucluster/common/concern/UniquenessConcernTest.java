@@ -1,8 +1,8 @@
 package com.github.ucluster.common.concern;
 
+import com.github.ucluster.common.RecordMock;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -20,16 +20,13 @@ import java.util.Optional;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class UniquenessConcernTest {
     private Record.Property.Concern uniqueness;
     private Record.Property.Concern nonUniqueness;
-    private Repository<User> users;
-    private User user;
-    private Record.Property property;
+    private Repository<Record> records;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -41,14 +38,15 @@ public class UniquenessConcernTest {
 
         Injector injector = getInjector();
         injector.injectMembers(uniqueness);
-
-        user = mock(User.class);
-        property = mock(Record.Property.class);
     }
 
     @Test
     public void should_success_when_unique_and_uniqueness_is_required() {
-        when(users.find(argThat(new ArgumentMatcher<Record.Property>() {
+        final Record record = RecordMock.builder()
+                .path("username").value("newusername")
+                .get();
+
+        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;
@@ -56,37 +54,35 @@ public class UniquenessConcernTest {
             }
         }))).thenReturn(Optional.empty());
 
-        when(property.path()).thenReturn("username");
-        when(property.value()).thenReturn("newusername");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(property));
-
-        uniqueness.effect(user, "username");
+        uniqueness.effect(record, "username");
     }
 
     @Test
     public void should_failed_when_not_unique_and_uniqueness_is_required() {
+        final Record record = RecordMock.builder()
+                .path("username").value("existusername")
+                .get();
+
         thrown.expect(ConcernEffectException.class);
 
-        when(users.find(argThat(new ArgumentMatcher<Record.Property>() {
+        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;
                 return property.path().equals("username") && property.value().equals("existusername");
             }
-        }))).thenReturn(Optional.of(user));
+        }))).thenReturn(Optional.of(record));
 
-        when(property.path()).thenReturn("username");
-        when(property.value()).thenReturn("existusername");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(property));
-
-        uniqueness.effect(user, "username");
+        uniqueness.effect(record, "username");
     }
 
     @Test
     public void should_success_when_unique_and_uniqueness_is_not_required() {
-        when(users.find(argThat(new ArgumentMatcher<Record.Property>() {
+        final Record record = RecordMock.builder()
+                .path("username").value("newusername")
+                .get();
+
+        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;
@@ -94,30 +90,24 @@ public class UniquenessConcernTest {
             }
         }))).thenReturn(Optional.empty());
 
-        when(property.path()).thenReturn("username");
-        when(property.value()).thenReturn("newusername");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(property));
-
-        nonUniqueness.effect(user, "username");
+        nonUniqueness.effect(record, "username");
     }
 
     @Test
     public void should_success_when_not_unique_and_uniqueness_is_not_required() {
-        when(users.find(argThat(new ArgumentMatcher<Record.Property>() {
+        final Record record = RecordMock.builder()
+                .path("username").value("existusername")
+                .get();
+
+        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;
                 return property.path().equals("username") && property.value().equals("existusername");
             }
-        }))).thenReturn(Optional.of(user));
+        }))).thenReturn(Optional.of(record));
 
-        when(property.path()).thenReturn("username");
-        when(property.value()).thenReturn("existusername");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(property));
-
-        nonUniqueness.effect(user, "username");
+        nonUniqueness.effect(record, "username");
     }
 
     private Injector getInjector() {
@@ -125,14 +115,14 @@ public class UniquenessConcernTest {
     }
 
     private List<AbstractModule> getAbstractModules() {
-        users = mock(Repository.class);
+        records = mock(Repository.class);
 
         return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {
                     @Override
                     protected void configure() {
                         bind(new TypeLiteral<Repository<? extends Record>>() {
-                        }).toInstance(users);
+                        }).toInstance(records);
                     }
                 }}));
     }
