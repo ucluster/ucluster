@@ -164,3 +164,4 @@ convention is JSON being used
     2. user definition migration support 
     3. plugin-in supported
     4. provide common plugin
+    5. consider using compile-time instrumentation to encapsulate model, as well as generate models      
