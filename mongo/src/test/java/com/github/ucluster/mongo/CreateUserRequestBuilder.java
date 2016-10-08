@@ -3,22 +3,22 @@ package com.github.ucluster.mongo;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestBuilder {
+public class CreateUserRequestBuilder {
     private String type = "register";
     private Map<String, Object> metadata = new HashMap<>();
     private Map<String, Object> properties = new HashMap<>();
 
-    public RequestBuilder type(String type) {
+    public CreateUserRequestBuilder type(String type) {
         this.type = type;
         return this;
     }
 
-    public RequestBuilder metadata(Map<String, Object> metadata) {
+    public CreateUserRequestBuilder metadata(Map<String, Object> metadata) {
         this.metadata = metadata;
         return this;
     }
 
-    public RequestBuilder properties(Map<String, Object> properties) {
+    public CreateUserRequestBuilder properties(Map<String, Object> properties) {
         this.properties = properties;
         return this;
     }
@@ -26,16 +26,16 @@ public class RequestBuilder {
     public Map<String, Object> get() {
         final Map<String, Object> request = new HashMap<>();
 
-        metadata.put("type", type);
+        metadata.put("recordGroup", type);
         request.put("metadata", metadata);
         request.put("properties", properties);
 
         return request;
     }
 
-    public static RequestBuilder of(String type) {
-        final RequestBuilder requestBuilder = new RequestBuilder();
-        requestBuilder.type = type;
-        return requestBuilder;
+    public static CreateUserRequestBuilder of(String type) {
+        final CreateUserRequestBuilder createUserRequestBuilder = new CreateUserRequestBuilder();
+        createUserRequestBuilder.type = type;
+        return createUserRequestBuilder;
     }
 }

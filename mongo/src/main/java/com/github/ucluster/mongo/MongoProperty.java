@@ -16,7 +16,7 @@ public class MongoProperty<T> implements Record.Property<T> {
     MongoProperty() {
     }
 
-    MongoProperty(String key, T value) {
+    public MongoProperty(String key, T value) {
         this.key = key;
         this.value = value;
     }

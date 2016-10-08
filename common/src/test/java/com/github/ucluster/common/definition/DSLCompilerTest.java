@@ -43,7 +43,7 @@ public class DSLCompilerTest {
 
     private Repository<User> users;
 
-    private DefaultUserDefinition definition;
+    private DefaultRecordDefinition definition;
     private User user;
 
     @Rule
@@ -106,7 +106,7 @@ public class DSLCompilerTest {
 
     @Test
     public void should_get_definition() {
-        final DefaultUserDefinition.PropertyDefinition passwordDefinition = definition.property("password");
+        final DefaultRecordDefinition.PropertyDefinition passwordDefinition = definition.property("password");
 
         assertThat(passwordDefinition.definition().get("password"), is(true));
     }
@@ -145,7 +145,7 @@ public class DSLCompilerTest {
 
                     private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {
                         return bind(new TypeLiteral<Record.Property.Concern>() {
-                        }).annotatedWith(Names.named("property." + type + ".concern"));
+                        }).annotatedWith(Names.named("update." + type + ".concern"));
                     }
                 }}));
     }

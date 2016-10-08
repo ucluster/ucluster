@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class DefaultPropertyDefinitionTest {
 
-    private DefaultUserDefinition.PropertyDefinition<User> definition;
+    private DefaultRecordDefinition.PropertyDefinition<Record> definition;
     private User user;
 
     @Rule

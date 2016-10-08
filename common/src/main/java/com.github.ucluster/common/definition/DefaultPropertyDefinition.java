@@ -1,7 +1,6 @@
 package com.github.ucluster.common.definition;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DefaultPropertyDefinition implements Definition.PropertyDefinition<User> {
+public class DefaultPropertyDefinition<T extends Record> implements Definition.PropertyDefinition<T> {
     private final String propertyPath;
     private Map<String, Record.Property.Concern> concerns = new HashMap<>();
 
@@ -21,7 +20,7 @@ public class DefaultPropertyDefinition implements Definition.PropertyDefinition<
     }
 
     @Override
-    public void effect(Record.Property.Point point, User record) {
+    public void effect(Record.Property.Point point, T record) {
         final EffectResult result = concerns.values().stream()
                 .filter(concern -> concern.isAbout(point))
                 .map(concern -> {

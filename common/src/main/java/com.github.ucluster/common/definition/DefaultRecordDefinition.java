@@ -1,7 +1,6 @@
 package com.github.ucluster.common.definition;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
@@ -13,21 +12,21 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
-public class DefaultUserDefinition implements Definition<User> {
-    private Map<String, PropertyDefinition<User>> propertyDefinitions = new HashMap<>();
+public class DefaultRecordDefinition<T extends Record> implements Definition<T> {
+    private Map<String, PropertyDefinition<T>> propertyDefinitions = new HashMap<>();
 
-    public DefaultUserDefinition(List<PropertyDefinition<User>> propertyDefinitions) {
+    public DefaultRecordDefinition(List<PropertyDefinition<T>> propertyDefinitions) {
         propertyDefinitions.stream()
                 .forEach(propertyDefinition -> this.propertyDefinitions.put(propertyDefinition.propertyPath(), propertyDefinition));
     }
 
     @Override
-    public void effect(Record.Property.Point point, User record) {
+    public void effect(Record.Property.Point point, T record) {
         effect(point, record, allPaths(record));
     }
 
     @Override
-    public void effect(Record.Property.Point point, User record, String... propertyPaths) {
+    public void effect(Record.Property.Point point, T record, String... propertyPaths) {
         final EffectResult result = asList(propertyPaths).stream()
                 .map(propertyPath -> propertyDefinitions.get(propertyPath))
                 .map(propertyDefinition -> {
@@ -46,7 +45,7 @@ public class DefaultUserDefinition implements Definition<User> {
         }
     }
 
-    private String[] allPaths(User record) {
+    private String[] allPaths(T record) {
         final List<String> paths = record.properties().stream().map(Record.Property::path).collect(Collectors.toList());
 
         return paths.toArray(new String[paths.size()]);
@@ -62,7 +61,7 @@ public class DefaultUserDefinition implements Definition<User> {
     }
 
     @Override
-    public PropertyDefinition<User> property(String propertyPath) {
+    public PropertyDefinition<T> property(String propertyPath) {
         return propertyDefinitions.get(propertyPath);
     }
 }

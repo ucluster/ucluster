@@ -1,11 +1,11 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.LifecycleMonitor;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
@@ -23,7 +23,7 @@ public class MongoUserRepository implements Repository<User> {
     protected DefinitionRepository<Definition<User>> definitions;
 
     @Inject
-    protected LifecycleMonitor<User> lifecycleMonitor;
+    protected Injector injector;
 
     @Override
     public User create(Map<String, Object> request) {
@@ -32,17 +32,16 @@ public class MongoUserRepository implements Repository<User> {
         final MongoUser user = new MongoUser();
         user.createdAt = new DateTime();
         user.metadata = createUserRequest.metadata();
-        user.definition = definitions.find(createUserRequest.metadata());
 
-        final User monitored = lifecycleMonitor.monitor(user);
+        enhance(user);
         createUserRequest.properties().keySet().stream()
-                .forEach(propertyPath -> monitored.update(new MongoProperty<>(
+                .forEach(propertyPath -> user.property(new MongoProperty<>(
                         propertyPath,
                         createUserRequest.properties().get(propertyPath))
                 ));
 
-        monitored.save();
-        return monitored;
+        user.save();
+        return user;
     }
 
     @Override
@@ -66,7 +65,9 @@ public class MongoUserRepository implements Repository<User> {
         }
 
         user.definition = definitions.find(user.metadata());
-        return Optional.of(lifecycleMonitor.monitor(user));
+        injector.injectMembers(user);
+
+        return Optional.of(user);
     }
 
     private static class CreateUserRequest {

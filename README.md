@@ -119,7 +119,7 @@ Step 1: Inherit interface `Record.Property.Concern`
 
         interface Concern {
 
-            String type();
+            String recordGroup();
 
             boolean isAbout(Point point);
 
@@ -128,7 +128,7 @@ Step 1: Inherit interface `Record.Property.Concern`
             Object configuration();
         }
 
-Step 2: `String type()`: provide unique identifier of the validator
+Step 2: `String recordGroup()`: provide unique identifier of the validator
 
 Step 3: `boolean isAbout(Point point)`: checks which lifecycle step this concerns are cares about
 
@@ -142,7 +142,7 @@ Example:
         pattern: "\\w{6,16}"
     }
 
-    a) method `type` is fixed to return string `format`
+    a) method `recordGroup` is fixed to return string `format`
     b) method `validate` is using java regex pattern to verify does property in propertyPath of request has satisfied
     c) method `configuration` return map representation of 
 

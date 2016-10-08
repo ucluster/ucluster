@@ -75,8 +75,8 @@ https://github.com/rails/rails/blob/master/activesupport/lib/active_support/conc
       callbacks.each do |callback|
         define_callbacks(callback, options)
 
-        types.each do |type|
-          send("_define_#{type}_model_callback", self, callback)
+        types.each do |recordGroup|
+          send("_define_#{recordGroup}_model_callback", self, callback)
         end
       end
     end  

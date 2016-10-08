@@ -29,7 +29,7 @@ public class SimpleRecord implements Record {
     }
 
     @Override
-    public void update(Property property) {
+    public void property(Property property) {
 
     }
 

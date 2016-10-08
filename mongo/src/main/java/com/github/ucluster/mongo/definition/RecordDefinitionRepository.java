@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.common.definition.DSLCompiler;
-import com.github.ucluster.core.User;
+import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
@@ -11,7 +11,7 @@ import org.mongodb.morphia.Datastore;
 import javax.inject.Inject;
 import java.util.Map;
 
-public class UserDefinitionRepository implements DefinitionRepository<Definition<User>> {
+public class RecordDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
     @Inject
     Injector injector;
 
@@ -19,15 +19,24 @@ public class UserDefinitionRepository implements DefinitionRepository<Definition
     protected Datastore datastore;
 
     @Override
-    public Definition<User> find(Map<String, Object> metadata) {
+    public Definition<T> find(Map<String, Object> metadata) {
         final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
-                .field("type").equal(type(metadata))
+                .field("recordType").equal(recordType(metadata))
+                .field("recordGroup").equal(type(metadata))
                 .get();
+
+        if (dsl == null) {
+            throw new RuntimeException("dsl not found");
+        }
 
         return DSLCompiler.load(injector, dsl.script());
     }
 
+    private String recordType(Map<String, Object> metadata) {
+        return (String) metadata.getOrDefault("record_type", "user");
+    }
+
     private String type(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("user_type", "default");
+        return (String) metadata.getOrDefault("record_group", "default");
     }
 }

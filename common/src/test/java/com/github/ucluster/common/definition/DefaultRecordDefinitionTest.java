@@ -23,9 +23,9 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DefaultUserDefinitionTest {
+public class DefaultRecordDefinitionTest {
 
-    private DefaultUserDefinition definition;
+    private DefaultRecordDefinition definition;
     private User user;
 
     @Rule
@@ -33,7 +33,7 @@ public class DefaultUserDefinitionTest {
 
     @Before
     public void setUp() throws Exception {
-        definition = new DefaultUserDefinition(asList(
+        definition = new DefaultRecordDefinition(asList(
                 new DefaultPropertyDefinition("username",
                         asList(new FormatConcern("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")

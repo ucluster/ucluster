@@ -1,7 +1,6 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -12,6 +11,10 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(MongoTestRunner.class)
 public class MongoUserTest {
@@ -25,7 +28,7 @@ public class MongoUserTest {
 
     @Before
     public void setUp() throws Exception {
-        final Map<String, Object> request = RequestBuilder.of("register")
+        final Map<String, Object> request = CreateUserRequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")
@@ -37,21 +40,16 @@ public class MongoUserTest {
     }
 
     @Test
-    public void should_user_authenticate_success() {
-        user.authenticate(new MongoProperty<>("username", "kiwiwin"), new MongoProperty<>("password", "password"));
-    }
+    public void should_user_apply_update_info_request() {
+        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("nickname", "newnickname").build());
 
-    @Test
-    public void should_user_failed_authenticate() {
-        thrown.expect(UserAuthenticationException.class);
+        assertThat(request.status(), is(User.Request.Status.APPROVED));
 
-        user.authenticate(new MongoProperty<>("username", "kiwiwin"), new MongoProperty<>("password", "invalid_password"));
-    }
+        final Optional<User> userFound = users.uuid(user.uuid());
+        assertThat(userFound.get().property("nickname").get().value(), is("newnickname"));
 
-    @Test
-    public void should_user_failed_authenticate_not_using_identity_field() {
-        thrown.expect(UserAuthenticationException.class);
-
-        user.authenticate(new MongoProperty<>("nickname", "kiwinickname"), new MongoProperty<>("password", "password"));
+        final Optional<User.Request> requestFound = user.request(request.uuid());
+        assertThat(requestFound.get().status(), is(User.Request.Status.APPROVED));
     }
 }

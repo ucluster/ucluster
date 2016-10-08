@@ -2,7 +2,6 @@ package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.util.Json;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -19,49 +18,50 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DSLCompiler {
-    private static String DSL_COMPILER = "var user_definition = {};" +
-            "var user = function (user) { user_definition = user; };";
+    private static String DSL_COMPILER = "var definition = {};" +
+            "var user = function (user) { definition = user; };" +
+            "var request = function (request) { definition = request; }";
 
-    public static DefaultUserDefinition load(Injector injector, String script) {
-        return new UserDSL(injector, loadUserJsonDefinition(script)).load();
+    public static <T extends Record> DefaultRecordDefinition<T> load(Injector injector, String script) {
+        return new RecordDSL<T>(injector, loadRecordJsonDefinition(script)).load();
     }
 
-    private static Map<String, Object> loadUserJsonDefinition(String definition) {
+    private static Map<String, Object> loadRecordJsonDefinition(String definition) {
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
         try {
             engine.eval(DSL_COMPILER);
             engine.eval(definition);
-            String user_definition = (String) engine.eval("JSON.stringify(user_definition)");
-            return Json.fromJson(user_definition);
+            String recordDefinition = (String) engine.eval("JSON.stringify(definition)");
+            return Json.fromJson(recordDefinition);
         } catch (ScriptException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private static class UserDSL {
+    private static class RecordDSL<R extends Record> {
         private final Injector injector;
-        private final Map<String, Object> userJson;
+        private final Map<String, Object> recordJson;
 
-        UserDSL(Injector injector, Map<String, Object> userJson) {
+        RecordDSL(Injector injector, Map<String, Object> recordJson) {
             this.injector = injector;
-            this.userJson = userJson;
+            this.recordJson = recordJson;
         }
 
-        DefaultUserDefinition load() {
-            final List<Definition.PropertyDefinition<User>> propertyDefinitions =
-                    userJson.keySet().stream()
+        DefaultRecordDefinition<R> load() {
+            final List<Definition.PropertyDefinition<R>> propertyDefinitions =
+                    recordJson.keySet().stream()
                             .map(propertyPath -> mapPropertyDSL(propertyPath).load())
                             .collect(Collectors.toList());
 
-            return new DefaultUserDefinition(propertyDefinitions);
+            return new DefaultRecordDefinition<>(propertyDefinitions);
         }
 
-        private PropertyDSL mapPropertyDSL(String propertyPath) {
-            return new PropertyDSL(propertyPath, (Map<String, Object>) userJson.get(propertyPath));
+        private PropertyDSL<R> mapPropertyDSL(String propertyPath) {
+            return new PropertyDSL<>(propertyPath, (Map<String, Object>) recordJson.get(propertyPath));
         }
 
-        private class PropertyDSL {
+        private class PropertyDSL<P extends Record> {
 
             private final String propertyPath;
             private final Map<String, Object> propertyJson;
@@ -71,8 +71,8 @@ public class DSLCompiler {
                 this.propertyJson = propertyJson;
             }
 
-            private DefaultUserDefinition.PropertyDefinition<User> load() {
-                return new DefaultPropertyDefinition(propertyPath, propertyConcerns());
+            private DefaultRecordDefinition.PropertyDefinition<P> load() {
+                return new DefaultPropertyDefinition<>(propertyPath, propertyConcerns());
             }
 
             private Collection<Record.Property.Concern> propertyConcerns() {
@@ -87,7 +87,7 @@ public class DSLCompiler {
             private Record.Property.Concern loadPropertyConcern(String concernType, Object propertyProcessorConfiguration) {
                 try {
                     final Class<? extends Record.Property.Concern> propertyConcernClass = injector.getInstance(Key.get(new TypeLiteral<Record.Property.Concern>() {
-                    }, Names.named("property." + concernType + ".concern"))).getClass();
+                    }, Names.named("update." + concernType + ".concern"))).getClass();
 
                     final Constructor<? extends Record.Property.Concern> constructor = propertyConcernClass.getConstructor(String.class, Object.class);
                     return constructor.newInstance(concernType, propertyProcessorConfiguration);

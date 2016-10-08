@@ -7,15 +7,13 @@ import com.github.ucluster.common.concern.ImmutableConcern;
 import com.github.ucluster.common.concern.PasswordConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.common.concern.UniquenessConcern;
-import com.github.ucluster.core.LifecycleMonitor;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
-import com.github.ucluster.mongo.MongoLifecycleMonitor;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.definition.UserDefinitionRepository;
+import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -80,10 +78,11 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(MongoUserRepository.class);
 
                         bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
-                        }).to(UserDefinitionRepository.class);
+                        }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
+                        });
 
-                        bind(new TypeLiteral<LifecycleMonitor<User>>() {
-                        }).to(new TypeLiteral<MongoLifecycleMonitor<User>>() {
+                        bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
+                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
                         });
 
                         registerConcern("format").to(new TypeLiteral<FormatConcern>() {
@@ -104,7 +103,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                     private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {
                         return bind(new TypeLiteral<Record.Property.Concern>() {
-                        }).annotatedWith(Names.named("property." + type + ".concern"));
+                        }).annotatedWith(Names.named("update." + type + ".concern"));
                     }
                 }}));
     }

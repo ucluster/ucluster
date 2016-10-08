@@ -3,7 +3,6 @@ package com.github.ucluster.core;
 import org.joda.time.DateTime;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 
 public interface Record {
@@ -12,7 +11,7 @@ public interface Record {
 
     DateTime createdAt();
 
-    void update(Property property);
+    void property(Property property);
 
     Optional<Property> property(String propertyPath);
 
@@ -50,14 +49,4 @@ public interface Record {
         }
     }
 
-    interface Request {
-
-        String type();
-
-        Map<String, Object> metadata();
-
-        Map<String, Object> properties();
-
-        Map<String, Object> request();
-    }
 }

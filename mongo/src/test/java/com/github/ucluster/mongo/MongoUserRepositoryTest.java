@@ -35,7 +35,7 @@ public class MongoUserRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        final Map<String, Object> request = RequestBuilder.of("register")
+        final Map<String, Object> request = CreateUserRequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
@@ -49,7 +49,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_if_definition_not_satisfied() {
         thrown.expect(ConcernEffectException.class);
 
-        final Map<String, Object> request = RequestBuilder.of("register")
+        final Map<String, Object> request = CreateUserRequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")
@@ -79,7 +79,7 @@ public class MongoUserRepositoryTest {
     public void should_update_user_property() {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
-        userBeforeUpdate.update(new MongoProperty<>("nickname", "kiwinick"));
+        userBeforeUpdate.property(new MongoProperty<>("nickname", "kiwinick"));
         userBeforeUpdate.update();
 
         final User userAfterUpdate = users.uuid(user.uuid()).get();
@@ -92,7 +92,7 @@ public class MongoUserRepositoryTest {
         thrown.expect(ConcernEffectException.class);
 
         final User userUpdateImmutableProperty = users.uuid(user.uuid()).get();
-        userUpdateImmutableProperty.update(new MongoProperty<>("username", "anotherkiwi"));
+        userUpdateImmutableProperty.property(new MongoProperty<>("username", "anotherkiwi"));
 
         userUpdateImmutableProperty.update();
     }
@@ -103,22 +103,8 @@ public class MongoUserRepositoryTest {
 
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
-        userBeforeUpdate.update(new MongoProperty<>("password", "a"));
+        userBeforeUpdate.property(new MongoProperty<>("password", "a"));
         userBeforeUpdate.update();
-    }
-
-    @Test
-    public void should_success_update_password() {
-        final User userBeforeUpdate = users.uuid(user.uuid()).get();
-
-        userBeforeUpdate.update(new MongoProperty<>("password", "newpassword"));
-        userBeforeUpdate.update();
-
-        final User userAfterUpdate = users.uuid(this.user.uuid()).get();
-        userAfterUpdate.authenticate(
-                new MongoProperty<>("username", "kiwiwin"),
-                new MongoProperty<>("password", "newpassword")
-        );
     }
 
     @Test
@@ -126,8 +112,8 @@ public class MongoUserRepositoryTest {
         final User updateNicknameUser = users.uuid(user.uuid()).get();
         final User updateEmailUser = users.uuid(user.uuid()).get();
 
-        updateNicknameUser.update(new MongoProperty<>("nickname", "newnickname"));
-        updateEmailUser.update(new MongoProperty<>("email", "kiwiwin@gmail.com"));
+        updateNicknameUser.property(new MongoProperty<>("nickname", "newnickname"));
+        updateEmailUser.property(new MongoProperty<>("email", "kiwiwin@gmail.com"));
 
         updateNicknameUser.update();
         updateEmailUser.update();
