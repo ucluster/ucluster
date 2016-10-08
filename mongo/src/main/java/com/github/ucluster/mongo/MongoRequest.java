@@ -1,14 +1,14 @@
-package com.github.ucluster.common.request;
+package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Record;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultRequest implements Record.Request {
+public class MongoRequest implements Record.Request {
     private final Map<String, Object> request;
 
-    DefaultRequest(Map<String, Object> request) {
+    MongoRequest(Map<String, Object> request) {
         this.request = request;
     }
 

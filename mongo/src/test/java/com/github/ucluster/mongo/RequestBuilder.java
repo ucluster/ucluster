@@ -1,4 +1,4 @@
-package com.github.ucluster.common.request;
+package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Record;
 
@@ -32,7 +32,7 @@ public class RequestBuilder {
         request.put("metadata", metadata);
         request.put("properties", properties);
 
-        return new DefaultRequest(request);
+        return new MongoRequest(request);
     }
 
     public static RequestBuilder of(String type) {

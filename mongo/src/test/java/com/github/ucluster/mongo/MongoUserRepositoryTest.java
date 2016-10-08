@@ -1,6 +1,5 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.common.request.RequestBuilder;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.ConcernEffectException;
