@@ -17,6 +17,8 @@ public interface User extends Record {
 
         Status status();
 
+        boolean autoApprovable();
+
         void approve(Map<String, Object> detail);
 
         void reject(Map<String, Object> detail);

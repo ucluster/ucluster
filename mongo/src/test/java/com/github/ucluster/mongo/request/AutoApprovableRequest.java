@@ -7,13 +7,18 @@ import com.github.ucluster.mongo.MongoRequest;
 import java.util.Map;
 import java.util.Optional;
 
-public class SimpleRequest extends MongoRequest {
-    SimpleRequest() {
+public class AutoApprovableRequest extends MongoRequest {
+    AutoApprovableRequest() {
         super();
     }
 
-    public SimpleRequest(User user, Map<String, Object> request) {
+    public AutoApprovableRequest(User user, Map<String, Object> request) {
         super(user, request);
+    }
+
+    @Override
+    public boolean autoApprovable() {
+        return true;
     }
 
     @Override

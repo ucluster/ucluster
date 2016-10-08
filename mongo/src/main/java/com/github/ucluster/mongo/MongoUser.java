@@ -30,10 +30,12 @@ public class MongoUser extends MongoRecord<User> implements User {
 
         final MongoRequest createdRequest = datastore.get(MongoRequest.class, new ObjectId(req.uuid()));
         createdRequest.user = this;
-        createdRequest.approve(new HashMap<>());
 
-        datastore.update(createdRequest, datastore.createUpdateOperations(Record.class)
-                .disableValidation().set("status", createdRequest.status()));
+        if (req.autoApprovable()) {
+            createdRequest.approve(new HashMap<>());
+            datastore.update(createdRequest, datastore.createUpdateOperations(Record.class)
+                    .disableValidation().set("status", createdRequest.status()));
+        }
 
         return createdRequest;
     }

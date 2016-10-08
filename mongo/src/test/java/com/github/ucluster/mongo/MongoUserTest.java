@@ -40,9 +40,9 @@ public class MongoUserTest {
     }
 
     @Test
-    public void should_user_apply_update_info_request() {
+    public void should_user_apply_auto_approvable_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "simple")
+                .put("type", "auto_approvable")
                 .put("nickname", "newnickname").build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
@@ -52,5 +52,14 @@ public class MongoUserTest {
 
         final Optional<User.Request> requestFound = user.request(request.uuid());
         assertThat(requestFound.get().status(), is(User.Request.Status.APPROVED));
+    }
+
+    @Test
+    public void should_user_apply_non_auto_approvable_request() {
+        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("type", "non_auto_approvable")
+                .put("nickname", "newnickname").build());
+
+        assertThat(request.status(), is(User.Request.Status.PENDING));
     }
 }
