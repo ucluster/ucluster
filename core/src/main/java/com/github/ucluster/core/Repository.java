@@ -1,5 +1,6 @@
 package com.github.ucluster.core;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface Repository<T> {
@@ -8,5 +9,5 @@ public interface Repository<T> {
 
     Optional<T> find(Record.Property property);
 
-    T create(Record.Request request);
+    T create(Map<String, Object> request);
 }

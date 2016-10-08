@@ -1,6 +1,5 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.UserAuthenticationException;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
@@ -12,6 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 @RunWith(MongoTestRunner.class)
 public class MongoUserTest {
@@ -25,7 +25,7 @@ public class MongoUserTest {
 
     @Before
     public void setUp() throws Exception {
-        final Record.Request request = RequestBuilder.of("register")
+        final Map<String, Object> request = RequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")

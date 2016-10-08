@@ -1,6 +1,5 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.ConcernEffectException;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
@@ -13,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +35,7 @@ public class MongoUserRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        final Record.Request request = RequestBuilder.of("register")
+        final Map<String, Object> request = RequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
@@ -49,7 +49,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_if_definition_not_satisfied() {
         thrown.expect(ConcernEffectException.class);
 
-        final Record.Request request = RequestBuilder.of("register")
+        final Map<String, Object> request = RequestBuilder.of("register")
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")

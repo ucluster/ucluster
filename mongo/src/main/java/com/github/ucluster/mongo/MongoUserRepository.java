@@ -11,6 +11,8 @@ import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class MongoUserRepository implements Repository<User> {
@@ -24,17 +26,19 @@ public class MongoUserRepository implements Repository<User> {
     protected LifecycleMonitor<User> lifecycleMonitor;
 
     @Override
-    public User create(Record.Request request) {
+    public User create(Map<String, Object> request) {
+        final CreateUserRequest createUserRequest = new CreateUserRequest(request);
+
         final MongoUser user = new MongoUser();
         user.createdAt = new DateTime();
-        user.metadata = request.metadata();
-        user.definition = definitions.find(request.metadata());
+        user.metadata = createUserRequest.metadata();
+        user.definition = definitions.find(createUserRequest.metadata());
 
         final User monitored = lifecycleMonitor.monitor(user);
-        request.properties().keySet().stream()
+        createUserRequest.properties().keySet().stream()
                 .forEach(propertyPath -> monitored.update(new MongoProperty<>(
                         propertyPath,
-                        request.properties().get(propertyPath))
+                        createUserRequest.properties().get(propertyPath))
                 ));
 
         monitored.save();
@@ -63,5 +67,25 @@ public class MongoUserRepository implements Repository<User> {
 
         user.definition = definitions.find(user.metadata());
         return Optional.of(lifecycleMonitor.monitor(user));
+    }
+
+    private static class CreateUserRequest {
+
+        private final Map<String, Object> request;
+
+        CreateUserRequest(Map<String, Object> request) {
+            this.request = request;
+        }
+
+        Map<String, Object> metadata() {
+            final Map<String, Object> defaultMetadata = new HashMap<>();
+            defaultMetadata.put("user_type", "default");
+
+            return (Map<String, Object>) request.getOrDefault("metadata", defaultMetadata);
+        }
+
+        Map<String, Object> properties() {
+            return (Map<String, Object>) request.getOrDefault("properties", new HashMap<>());
+        }
     }
 }

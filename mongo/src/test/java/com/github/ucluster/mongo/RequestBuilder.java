@@ -1,7 +1,5 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.Record;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,14 +23,14 @@ public class RequestBuilder {
         return this;
     }
 
-    public Record.Request get() {
+    public Map<String, Object> get() {
         final Map<String, Object> request = new HashMap<>();
 
         metadata.put("type", type);
         request.put("metadata", metadata);
         request.put("properties", properties);
 
-        return new MongoRequest(request);
+        return request;
     }
 
     public static RequestBuilder of(String type) {
