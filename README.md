@@ -25,22 +25,21 @@ Example:
     
 ### Property Definition
     
-In above example, `username` and `password` are two user properties definition, currently property definition are composed by property validators, more metadata related definition will come later
+In above example, `username` and `password` are two user properties definition, currently property definition are composed by property concerns
 
 *NOTE: currently nested property are not supported yet.
 
 ### Property Lifecycle
 
-validation -> before_create
+validation -> before_create -> create
 
-validation -> before_update
+validation -> before_update -> update
 
 see http://guides.rubyonrails.org/active_record_basics.html#callbacks as a reference
 
-(TBD)
+### Property Concern
 
-### Property Processor
-
+Property concerns take care of part of property logic, such as validation, encryption, etc. 
 
 #### identity 
 
@@ -66,15 +65,11 @@ if property is declared as `immutable`, then it will cannot be updated, and exce
 
 default value is `false`
 
-### Property Validator
-
-In above example, `required`, `uniqueness`, `format` are property validators, which are used when you create new user or update user properties
-
 #### register validator
 
-    registerConcern("property.format.validator", FormatValidator.class);
+    registerConcern("format", FormatValidator.class);
     
-NOTE: in the example above `property.format.validator` is internally used as `@Named("property.format.validator")`, the convention is `property.<validator_type>.validator`.
+NOTE: in the example above `format` is internally used as `@Named("property.format.concern")`, the convention is `property.<validator_type>.concern`.
 After registration, you can use this validator as `<validator_type>: { ...<configuration_json>...}`
 
 #### required
@@ -118,24 +113,28 @@ negative pattern:
 
     .*@10minutemail\.com|.*@dreggn\.com
     
-#### customize validator    
+#### customize concern    
 
-Step 1: Inherit interface `PropertyValidator`
+Step 1: Inherit interface `Record.Property.Concern`
 
-        public interface PropertyValidator {
-        
+        interface Concern {
+
             String type();
-            
-            ValidationResult validate(Map<String, Object> request, String propertyPath);
-            
+
+            boolean isAbout(Point point);
+
+            void effect(Record record, String propertyPath);
+
             Object configuration();
         }
 
 Step 2: `String type()`: provide unique identifier of the validator
 
-Step 3: `ValidationResult validate(Map<String, Object> request, String propertyPath)`: validate against the request. You can use @Inject here to access UserRepository to validate against with existing user data
+Step 3: `boolean isAbout(Point point)`: checks which lifecycle step this concerns are cares about
 
-Step 4: `Object configuration();`: provide configuration of this validator
+Step 4: `void effect(Record record, String propertyPath)`: handle the logic when concern effects
+
+Step 5: `Object configuration();`: provide configuration of this validator
 
 Example: 
 
