@@ -15,7 +15,7 @@ import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.SimpleRequest;
+import com.github.ucluster.mongo.request.SimpleRequest;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;

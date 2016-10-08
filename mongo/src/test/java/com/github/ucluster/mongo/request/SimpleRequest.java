@@ -1,6 +1,8 @@
-package com.github.ucluster.mongo;
+package com.github.ucluster.mongo.request;
 
 import com.github.ucluster.core.User;
+import com.github.ucluster.mongo.MongoProperty;
+import com.github.ucluster.mongo.MongoRequest;
 
 import java.util.Map;
 import java.util.Optional;
