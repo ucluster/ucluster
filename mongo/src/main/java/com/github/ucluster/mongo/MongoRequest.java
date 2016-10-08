@@ -6,6 +6,7 @@ import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Entity("user_requests")
@@ -19,6 +20,14 @@ public abstract class MongoRequest extends MongoRecord<User.Request> implements 
 
     protected MongoRequest() {
         status(Status.PENDING);
+    }
+
+    public MongoRequest(User user, Map<String, Object> request) {
+        this.user = user;
+        request.entrySet().stream()
+                .forEach(e -> {
+                    property(new MongoProperty<>(e.getKey(), e.getValue()));
+                });
     }
 
     @Override

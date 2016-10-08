@@ -1,19 +1,17 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.core.User;
+
 import java.util.Map;
 import java.util.Optional;
 
-public class UserUpdateNicknameRequest extends MongoRequest {
-    UserUpdateNicknameRequest() {
+public class SimpleRequest extends MongoRequest {
+    SimpleRequest() {
         super();
     }
 
-    UserUpdateNicknameRequest(Map<String, Object> request) {
-        super();
-        request.entrySet().stream()
-                .forEach(e -> {
-                    property(new MongoProperty<>(e.getKey(), e.getValue()));
-                });
+    public SimpleRequest(User user, Map<String, Object> request) {
+        super(user, request);
     }
 
     @Override

@@ -87,7 +87,7 @@ public class DSLCompiler {
             private Record.Property.Concern loadPropertyConcern(String concernType, Object propertyProcessorConfiguration) {
                 try {
                     final Class<? extends Record.Property.Concern> propertyConcernClass = injector.getInstance(Key.get(new TypeLiteral<Record.Property.Concern>() {
-                    }, Names.named("update." + concernType + ".concern"))).getClass();
+                    }, Names.named("property." + concernType + ".concern"))).getClass();
 
                     final Constructor<? extends Record.Property.Concern> constructor = propertyConcernClass.getConstructor(String.class, Object.class);
                     return constructor.newInstance(concernType, propertyProcessorConfiguration);

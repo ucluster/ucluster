@@ -42,6 +42,7 @@ public class MongoUserTest {
     @Test
     public void should_user_apply_update_info_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("type", "simple")
                 .put("nickname", "newnickname").build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));

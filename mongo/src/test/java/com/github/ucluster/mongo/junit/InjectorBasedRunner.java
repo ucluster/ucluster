@@ -9,10 +9,13 @@ import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
+import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.SimpleRequest;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -77,6 +80,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(new TypeLiteral<Repository<? extends Record>>() {
                         }).to(MongoUserRepository.class);
 
+                        bind(RequestFactory.class).to(MongoRequestFactory.class);
+
                         bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
                         }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
                         });
@@ -99,11 +104,20 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
                         registerConcern("immutable").to(new TypeLiteral<ImmutableConcern>() {
                         });
+
+
+                        registerRequestFactory("simple").to(new TypeLiteral<SimpleRequest>() {
+                        });
                     }
 
                     private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {
                         return bind(new TypeLiteral<Record.Property.Concern>() {
-                        }).annotatedWith(Names.named("update." + type + ".concern"));
+                        }).annotatedWith(Names.named("property." + type + ".concern"));
+                    }
+
+                    private LinkedBindingBuilder<User.Request> registerRequestFactory(String type) {
+                        return bind(new TypeLiteral<User.Request>() {
+                        }).annotatedWith(Names.named("request." + type + ".factory"));
                     }
                 }}));
     }

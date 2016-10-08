@@ -25,7 +25,7 @@ public class MongoRecord<T extends Record> implements Record {
     @org.mongodb.morphia.annotations.Property
     protected DateTime createdAt;
 
-    @org.mongodb.morphia.annotations.Property
+    @Embedded
     protected Map<String, Object> metadata = new HashMap<>();
 
     @Embedded

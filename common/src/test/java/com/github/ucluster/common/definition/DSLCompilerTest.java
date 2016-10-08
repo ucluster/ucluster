@@ -43,7 +43,7 @@ public class DSLCompilerTest {
 
     private Repository<User> users;
 
-    private DefaultRecordDefinition definition;
+    private DefaultRecordDefinition<User> definition;
     private User user;
 
     @Rule
@@ -145,7 +145,7 @@ public class DSLCompilerTest {
 
                     private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {
                         return bind(new TypeLiteral<Record.Property.Concern>() {
-                        }).annotatedWith(Names.named("update." + type + ".concern"));
+                        }).annotatedWith(Names.named("property." + type + ".concern"));
                     }
                 }}));
     }
