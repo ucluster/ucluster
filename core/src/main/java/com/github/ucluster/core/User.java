@@ -1,5 +1,8 @@
 package com.github.ucluster.core;
 
+import com.github.ucluster.core.util.Criteria;
+import com.github.ucluster.core.util.PaginatedList;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -8,6 +11,8 @@ public interface User extends Record {
     User.Request apply(Map<String, Object> request);
 
     Optional<Request> request(String requestUuid);
+
+    PaginatedList<Request> requests(Criteria criteria);
 
     interface Request extends Record {
 

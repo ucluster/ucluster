@@ -2,6 +2,8 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.util.Criteria;
+import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
@@ -9,6 +11,7 @@ import org.joda.time.DateTime;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -57,6 +60,21 @@ public class MongoUser extends MongoRecord<User> implements User {
 
         enhance(request);
         return Optional.of(request);
+    }
+
+    @Override
+    public PaginatedList<Request> requests(Criteria criteria) {
+        final Query<MongoRequest> query = datastore.createQuery(MongoRequest.class).disableValidation();
+
+        criteria.params(e -> {
+            query.field(MongoProperty.valueMongoField(e.getKey())).in(e.getValue());
+        });
+
+        return new PaginatedList<>(query.countAll(),
+                (page, perPage) -> query
+                        .offset((page - 1) * perPage)
+                        .limit(perPage)
+                        .asList());
     }
 
     private void enhance(MongoRequest request) {

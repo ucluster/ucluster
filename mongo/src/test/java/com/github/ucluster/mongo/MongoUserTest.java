@@ -1,6 +1,8 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.util.Criteria;
+import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -103,5 +105,19 @@ public class MongoUserTest {
 
         final User userAfterRejected = users.uuid(user.uuid()).get();
         assertThat(userAfterRejected.property("nickname").get().value(), is("kiwinickname"));
+    }
+
+    @Test
+    public void should_get_all_requests() {
+        for (int count = 0; count < 11; count++) {
+            user.apply(ImmutableMap.<String, Object>builder()
+                    .put("type", "non_auto_approvable")
+                    .put("nickname", "newnickname").build());
+        }
+
+        final PaginatedList<User.Request> requests = user.requests(Criteria.empty());
+
+        assertThat(requests.toPage(1, 10).getTotalEntriesCount(), is(11L));
+        assertThat(requests.toPage(1, 10).getEntries().size(), is(10));
     }
 }
