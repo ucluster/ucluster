@@ -17,6 +17,7 @@ import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
+import com.github.ucluster.mongo.request.MongoAuthenticationRequest;
 import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -111,6 +112,9 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
 
                         registerRequestFactory("non_auto_approvable").to(new TypeLiteral<NonAutoApprovableRequest>() {
+                        });
+
+                        registerRequestFactory("authentication").to(new TypeLiteral<MongoAuthenticationRequest>() {
                         });
                     }
 
