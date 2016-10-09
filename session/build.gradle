@@ -1,0 +1,10 @@
+ext {
+    jedis = '2.8.1'
+}
+
+dependencies {
+    compile "redis.clients:jedis:$jedis"
+    compile "com.google.inject:guice:$guice"
+    compile "com.google.guava:guava:$guava"
+    compile "joda-time:joda-time:$joda_time"
+}
