@@ -7,6 +7,14 @@ import com.github.ucluster.core.exception.ConcernEffectException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ * EmailConcern
+ *
+ * Take cares of email property validation.
+ * For security, checks https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet#Email_Address_Validation
+ *
+ * For security concern, we have banned out the temporary email provider, like 10minutemail
+ */
 public class EmailConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
