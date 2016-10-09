@@ -2,7 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.ConcernEffectException;
-import com.github.ucluster.mongo.junit.MongoTestRunner;
+import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.IsNot.not;
 
-@RunWith(MongoTestRunner.class)
+@RunWith(UClusterTestRunner.class)
 public class MongoUserRepositoryTest {
     @Inject
     MongoUserRepository users;

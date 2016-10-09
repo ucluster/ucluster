@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
-import com.github.ucluster.mongo.junit.MongoTestRunner;
+import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-@RunWith(MongoTestRunner.class)
+@RunWith(UClusterTestRunner.class)
 public class MongoUserTest {
     @Inject
     MongoUserRepository users;

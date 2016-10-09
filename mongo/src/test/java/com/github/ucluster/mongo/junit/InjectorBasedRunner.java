@@ -19,6 +19,7 @@ import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
 import com.github.ucluster.mongo.request.MongoAuthenticationRequest;
 import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
+import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -29,6 +30,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
     protected static Injector injector;
     protected static Morphia morphia;
     protected static Datastore datastore;
+    protected static JedisPool jedisPool;
+    protected static Session session;
 
     InjectorBasedRunner(Class<?> klass) throws InitializationError {
         super(klass);
@@ -71,6 +75,14 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
         return datastore;
     }
 
+    protected static JedisPool jedisPool() {
+        if (jedisPool == null) {
+            jedisPool = new JedisPool("127.0.0.1", 46379);
+        }
+
+        return jedisPool;
+    }
+
     private List<AbstractModule> getAbstractModules() {
         return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {
@@ -78,6 +90,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                     protected void configure() {
                         bind(MongoClient.class).toInstance(mongoClient());
                         bind(Datastore.class).toInstance(datastore());
+                        bind(Session.class).toInstance(new Session(jedisPool()));
 
                         bind(new TypeLiteral<Repository<? extends Record>>() {
                         }).to(MongoUserRepository.class);

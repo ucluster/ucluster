@@ -7,4 +7,5 @@ dependencies {
     compile "org.mongodb.morphia:morphia:$morphia"
 
     compile project(':common')
+    compile project(':session')
 }

@@ -4,7 +4,7 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
 import com.github.ucluster.mongo.CreateUserRequestBuilder;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.junit.MongoTestRunner;
+import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,7 +18,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-@RunWith(MongoTestRunner.class)
+@RunWith(UClusterTestRunner.class)
 public class MongoAuthenticationRequestTest {
     @Inject
     MongoUserRepository users;
