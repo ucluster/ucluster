@@ -128,7 +128,7 @@ public class MongoRecord<T extends Record> implements Record {
         dirtyTracker.dirty(property.path());
     }
 
-    protected Definition<T> definition() {
+    public Definition<T> definition() {
         return definitions.find(metadata());
     }
 

@@ -1,5 +1,6 @@
 package com.github.ucluster.core;
 
+import com.github.ucluster.core.definition.Definition;
 import org.joda.time.DateTime;
 
 import java.util.Collection;
@@ -16,6 +17,8 @@ public interface Record {
     Optional<Property> property(String propertyPath);
 
     Collection<Property> properties();
+
+    Definition definition();
 
     default void save() {
     }

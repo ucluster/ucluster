@@ -49,7 +49,7 @@ Example:
 
     identity: true
 
-default `identity` is `false`. `identity` is a combination of `required` and `uniqueness`
+default `identity` is `false`.
 
 #### password
 

@@ -1,6 +1,7 @@
 package com.github.ucluster.common;
 
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.definition.Definition;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -49,6 +50,11 @@ public class SimpleRecord implements Record {
     @Override
     public Collection<Property> properties() {
         return properties;
+    }
+
+    @Override
+    public Definition definition() {
+        return null;
     }
 
     public class FieldBuilder {

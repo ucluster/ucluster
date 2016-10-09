@@ -11,7 +11,6 @@ public class IdentityConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
 
-    private RequiredConcern requiredConcern;
     private UniquenessConcern uniquenessConcern;
 
     @Inject
@@ -23,7 +22,6 @@ public class IdentityConcern implements Record.Property.Concern {
     public IdentityConcern(String type, Object configuration) {
         this.type = type;
         this.configuration = configuration;
-        this.requiredConcern = new RequiredConcern(type, configuration);
         this.uniquenessConcern = new UniquenessConcern(type, configuration);
     }
 
@@ -34,16 +32,9 @@ public class IdentityConcern implements Record.Property.Concern {
 
     @Override
     public void effect(Record record, String propertyPath) {
-        injector.injectMembers(requiredConcern);
         injector.injectMembers(uniquenessConcern);
 
         EffectResult result = EffectResult.SUCCESS;
-
-        try {
-            requiredConcern.effect(record, propertyPath);
-        } catch (ConcernEffectException e) {
-            result = result.merge(e.getEffectResult());
-        }
 
         try {
             uniquenessConcern.effect(record, propertyPath);

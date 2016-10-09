@@ -34,18 +34,40 @@ public class MongoAuthenticationRequest extends MongoRequest {
     private void ensurePasswordMatched(Map<String, Object> detail) {
         final Optional<Property> password = user.property("password");
         if (!Encryption.BCRYPT.check(String.valueOf(detail.get("password")), (String) password.get().value())) {
-            status(Status.REJECTED);
-            throw new RequestException();
+            failedAuthentication();
         }
     }
 
     private void ensureIdentityMatched(Map<String, Object> detail) {
-        final Optional<Property> username = user.property("username");
-        if (!Objects.equals(detail.getOrDefault("username", null), username.get().value())) {
-            status(Status.REJECTED);
-            throw new RequestException();
+        final Map<String, Object> identity = (Map<String, Object>) detail.get("identity");
+        if (identity == null) {
+            failedAuthentication();
+        }
+
+        final Optional<Property> identityProperty = user.property((String) identity.get("property"));
+        ensurePropertyIsIdentity(identityProperty);
+
+        if (!Objects.equals(identity.get("value"), identityProperty.get().value())) {
+            failedAuthentication();
         }
     }
+
+    private void ensurePropertyIsIdentity(Optional<Property> identityProperty) {
+        if (!identityProperty.isPresent()) {
+            failedAuthentication();
+        }
+
+        final Object identity = user.definition().property(identityProperty.get().path()).definition().get("identity");
+        if (!Objects.equals(true, identity)) {
+            failedAuthentication();
+        }
+    }
+
+    private void failedAuthentication() {
+        status(Status.REJECTED);
+        throw new RequestException();
+    }
+
 
     @Override
     public void reject(Map<String, Object> detail) {

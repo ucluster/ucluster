@@ -32,6 +32,7 @@ public class MongoAuthenticationRequestTest {
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")
+                        .put("email", "kiwi.swhite.coder@gmail.com")
                         .put("password", "password")
                         .build())
                 .get();
@@ -40,10 +41,13 @@ public class MongoAuthenticationRequestTest {
     }
 
     @Test
-    public void should_success_authenticate() {
+    public void should_success_authenticate_using_username() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("type", "authentication")
-                .put("username", "kiwiwin")
+                .put("identity", ImmutableMap.<String, Object>builder()
+                        .put("property", "username")
+                        .put("value", "kiwiwin")
+                        .build())
                 .put("password", "password")
                 .build());
 
@@ -51,13 +55,46 @@ public class MongoAuthenticationRequestTest {
     }
 
     @Test
-    public void should_failed_to_authenticate_using_wrong_password() {
+    public void should_failed_to_authenticate_using_username_with_wrong_password() {
         thrown.expect(RequestException.class);
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("type", "authentication")
-                .put("username", "kiwiwin")
+                .put("identity", ImmutableMap.<String, Object>builder()
+                        .put("property", "username")
+                        .put("value", "kiwiwin")
+                        .build())
                 .put("password", "wrong")
+                .build());
+
+        assertThat(request.status(), is(User.Request.Status.REJECTED));
+    }
+
+    @Test
+    public void should_success_to_authenticate_using_identity_field() {
+        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("type", "authentication")
+                .put("identity", ImmutableMap.<String, Object>builder()
+                        .put("property", "email")
+                        .put("value", "kiwi.swhite.coder@gmail.com")
+                        .build())
+                .put("password", "password")
+                .build());
+
+        assertThat(request.status(), is(User.Request.Status.APPROVED));
+    }
+
+    @Test
+    public void should_failed_to_authenticate_using_non_identity_field() {
+        thrown.expect(RequestException.class);
+
+        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("type", "authentication")
+                .put("identity", ImmutableMap.<String, Object>builder()
+                        .put("property", "nickname")
+                        .put("value", "kiwinickname")
+                        .build())
+                .put("password", "password")
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.REJECTED));

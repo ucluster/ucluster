@@ -14,7 +14,8 @@ user({
         }
     },
     email: {
-        email: true
+        email: true,
+        identity: true
     },
     nickname: {
         format: {
