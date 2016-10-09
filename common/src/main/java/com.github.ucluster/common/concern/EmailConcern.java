@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 /**
  * EmailConcern
- *
+ * <p>
  * Take cares of email property validation.
  * For security, checks https://www.owasp.org/index.php/Input_Validation_Cheat_Sheet#Email_Address_Validation
- *
+ * <p>
  * For security concern, we have banned out the temporary email provider, like 10minutemail
  */
 public class EmailConcern implements Record.Property.Concern {

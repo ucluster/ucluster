@@ -34,61 +34,55 @@ public class MongoAuthenticationRequest extends MongoRequest {
     private void ensurePasswordMatched(Map<String, Object> detail) {
         final Map<String, Object> credential = (Map<String, Object>) detail.get("credential");
         if (credential == null) {
-            failedAuthentication();
+            failed();
         }
 
         final Optional<Property> credentialProperty = user.property((String) credential.get("property"));
         ensurePropertyIsCredential(credentialProperty);
 
         if (!Encryption.BCRYPT.check(String.valueOf(credential.get("value")), String.valueOf(credentialProperty.get().value()))) {
-            failedAuthentication();
+            failed();
         }
     }
 
     private void ensurePropertyIsCredential(Optional<Property> credentialProperty) {
         if (!credentialProperty.isPresent()) {
-            failedAuthentication();
+            failed();
         }
 
         final Object identity = user.definition().property(credentialProperty.get().path()).definition().get("credential");
         if (!Objects.equals(true, identity)) {
-            failedAuthentication();
+            failed();
         }
     }
 
     private void ensureIdentityMatched(Map<String, Object> detail) {
         final Map<String, Object> identity = (Map<String, Object>) detail.get("identity");
         if (identity == null) {
-            failedAuthentication();
+            failed();
         }
 
         final Optional<Property> identityProperty = user.property((String) identity.get("property"));
         ensurePropertyIsIdentity(identityProperty);
 
         if (!Objects.equals(identity.get("value"), identityProperty.get().value())) {
-            failedAuthentication();
+            failed();
         }
     }
 
     private void ensurePropertyIsIdentity(Optional<Property> identityProperty) {
         if (!identityProperty.isPresent()) {
-            failedAuthentication();
+            failed();
         }
 
         final Object identity = user.definition().property(identityProperty.get().path()).definition().get("identity");
         if (!Objects.equals(true, identity)) {
-            failedAuthentication();
+            failed();
         }
     }
 
-    private void failedAuthentication() {
+    private void failed() {
         status(Status.REJECTED);
         throw new RequestException();
-    }
-
-
-    @Override
-    public void reject(Map<String, Object> detail) {
-        throw new RuntimeException("should not be called");
     }
 }
