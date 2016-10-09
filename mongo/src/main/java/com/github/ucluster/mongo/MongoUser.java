@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Entity("users")
-@Converters(JodaDateTimeConverter.class)
 public class MongoUser extends MongoRecord<User> implements User {
 
     @Inject

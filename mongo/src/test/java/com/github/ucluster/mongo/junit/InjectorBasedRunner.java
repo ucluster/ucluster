@@ -15,6 +15,7 @@ import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
 import com.github.ucluster.mongo.request.MongoAuthenticationRequest;
@@ -68,6 +69,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
         if (datastore == null) {
             morphia = new Morphia();
             morphia.mapPackage("com.github.ucluster.mongo");
+            morphia.getMapper().getConverters().addConverter(JodaDateTimeConverter.class);
 
             datastore = morphia.createDatastore(new MongoClient("127.0.0.1", 47017), "ucluster");
             datastore.ensureIndexes();

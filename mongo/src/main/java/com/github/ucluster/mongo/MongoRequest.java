@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Entity("user_requests")
-@Converters(JodaDateTimeConverter.class)
 public class MongoRequest extends MongoRecord<User.Request> implements User.Request {
     @Reference
     protected User user;
