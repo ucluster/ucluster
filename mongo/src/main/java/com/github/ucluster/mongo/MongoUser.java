@@ -1,9 +1,9 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.Record;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
+import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Entity;
@@ -22,19 +22,20 @@ public class MongoUser extends MongoRecord<User> implements User {
     @Transient
     RequestFactory requestFactory;
 
+    @Inject
+    @Transient
+    Injector injector;
+
     @Override
     public User.Request apply(Map<String, Object> request) {
         final Request req = requestFactory.create(this, request);
-
         datastore.save(req);
 
         final MongoRequest createdRequest = datastore.get(MongoRequest.class, new ObjectId(req.uuid()));
-        createdRequest.user = this;
+        enhance(createdRequest);
 
-        if (req.autoApprovable()) {
+        if (createdRequest.autoApprovable()) {
             createdRequest.approve(new HashMap<>());
-            datastore.update(createdRequest, datastore.createUpdateOperations(Record.class)
-                    .disableValidation().set("status", createdRequest.status()));
         }
 
         return createdRequest;
@@ -52,6 +53,12 @@ public class MongoUser extends MongoRecord<User> implements User {
             return Optional.empty();
         }
 
+        enhance(request);
         return Optional.of(request);
+    }
+
+    private void enhance(MongoRequest request) {
+        request.user = this;
+        injector.injectMembers(request);
     }
 }

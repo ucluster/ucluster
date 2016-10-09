@@ -2,6 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
+import com.github.ucluster.core.definition.DefinitionRepository;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
@@ -31,8 +32,9 @@ public class MongoRecord<T extends Record> implements Record {
     @Embedded
     protected Map<String, Property> properties = new HashMap<>();
 
+    @Inject
     @Transient
-    protected Definition<T> definition;
+    protected DefinitionRepository<Definition<T>> definitions;
 
     @Inject
     @Transient
@@ -85,11 +87,11 @@ public class MongoRecord<T extends Record> implements Record {
     }
 
     private void validate() {
-        definition.effect(Record.Property.Point.VALIDATE, (T) this, dirtyTracker.asArray());
+        definition().effect(Record.Property.Point.VALIDATE, (T) this, dirtyTracker.asArray());
     }
 
     private void beforeSaveOn(Record.Property.Point point) {
-        definition.effect(point, (T) this, dirtyTracker.asArray());
+        definition().effect(point, (T) this, dirtyTracker.asArray());
     }
 
     private void doSave() {
@@ -126,15 +128,15 @@ public class MongoRecord<T extends Record> implements Record {
         dirtyTracker.dirty(property.path());
     }
 
+    protected Definition<T> definition() {
+        return definitions.find(metadata());
+    }
+
     private static class DirtyTracker {
         Set<String> dirtyProperties = new HashSet<>();
 
         void dirty(String propertyPath) {
             dirtyProperties.add(propertyPath);
-        }
-
-        boolean isDirty(String propertyPath) {
-            return dirtyProperties.contains(propertyPath);
         }
 
         Collection<String> dirties() {

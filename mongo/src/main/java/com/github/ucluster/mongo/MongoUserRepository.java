@@ -64,9 +64,7 @@ public class MongoUserRepository implements Repository<User> {
             return Optional.empty();
         }
 
-        user.definition = definitions.find(user.metadata());
         injector.injectMembers(user);
-
         return Optional.of(user);
     }
 

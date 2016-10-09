@@ -10,6 +10,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -61,5 +62,46 @@ public class MongoUserTest {
                 .put("nickname", "newnickname").build());
 
         assertThat(request.status(), is(User.Request.Status.PENDING));
+
+        final User userFound = users.uuid(user.uuid()).get();
+        assertThat(userFound.property("nickname").get().value(), is("kiwinickname"));
+    }
+
+    @Test
+    public void should_user_apply_non_auto_approvable_request_and_approve_it_later() {
+        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("type", "non_auto_approvable")
+                .put("nickname", "newnickname").build());
+
+        final User userFound = users.uuid(user.uuid()).get();
+
+        final User.Request pendingRequest = userFound.request(request.uuid()).get();
+        pendingRequest.approve(new HashMap<>());
+        assertThat(pendingRequest.status(), is(User.Request.Status.APPROVED));
+
+        final User.Request approvedRequest = userFound.request(request.uuid()).get();
+        assertThat(approvedRequest.status(), is(User.Request.Status.APPROVED));
+
+        final User userAfterApproved = users.uuid(user.uuid()).get();
+        assertThat(userAfterApproved.property("nickname").get().value(), is("newnickname"));
+    }
+
+    @Test
+    public void should_user_apply_non_auto_approvable_request_and_reject_it_later() {
+        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("type", "non_auto_approvable")
+                .put("nickname", "newnickname").build());
+
+        final User userFound = users.uuid(user.uuid()).get();
+
+        final User.Request pendingRequest = userFound.request(request.uuid()).get();
+        pendingRequest.reject(new HashMap<>());
+        assertThat(pendingRequest.status(), is(User.Request.Status.REJECTED));
+
+        final User.Request rejectedRequest = userFound.request(request.uuid()).get();
+        assertThat(rejectedRequest.status(), is(User.Request.Status.REJECTED));
+
+        final User userAfterRejected = users.uuid(user.uuid()).get();
+        assertThat(userAfterRejected.property("nickname").get().value(), is("kiwinickname"));
     }
 }
