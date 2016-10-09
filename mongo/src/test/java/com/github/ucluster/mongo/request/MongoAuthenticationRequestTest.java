@@ -1,7 +1,9 @@
-package com.github.ucluster.mongo;
+package com.github.ucluster.mongo.request;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
+import com.github.ucluster.mongo.CreateUserRequestBuilder;
+import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.junit.MongoTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
