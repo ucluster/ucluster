@@ -25,6 +25,7 @@ public class AutoApprovableRequest extends MongoRequest {
     public void approve(Map<String, Object> detail) {
         final Optional<Property> value = property("nickname");
         status(Status.APPROVED);
+        update();
 
         user.property(new MongoProperty<>("nickname", value.get().value()));
         user.update();
@@ -34,5 +35,6 @@ public class AutoApprovableRequest extends MongoRequest {
     public void reject(Map<String, Object> detail) {
         //do nothing
         status(Status.REJECTED);
+        update();
     }
 }

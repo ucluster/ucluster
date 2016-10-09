@@ -5,6 +5,7 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Transient;
@@ -28,7 +29,9 @@ public class MongoUser extends MongoRecord<User> implements User {
 
     @Override
     public User.Request apply(Map<String, Object> request) {
-        final Request req = requestFactory.create(this, request);
+        final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
+        req.createdAt = new DateTime();
+        req.status(Request.Status.PENDING);
         datastore.save(req);
 
         final MongoRequest createdRequest = datastore.get(MongoRequest.class, new ObjectId(req.uuid()));

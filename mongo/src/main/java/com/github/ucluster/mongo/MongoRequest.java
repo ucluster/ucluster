@@ -1,12 +1,10 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import org.mongodb.morphia.annotations.Converters;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
-import org.mongodb.morphia.query.UpdateOperations;
 
 import java.util.Map;
 import java.util.Optional;
@@ -17,8 +15,8 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     @Reference
     protected User user;
 
-    @org.mongodb.morphia.annotations.Property
-    protected Status status = Status.PENDING;
+//    @org.mongodb.morphia.annotations.Property
+//    protected Status status = Status.PENDING;
 
     protected MongoRequest() {
     }
@@ -39,7 +37,8 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     @Override
     public Status status() {
-        return status;
+        final Optional<Property> status = property("status");
+        return Status.valueOf((String) status.get().value());
     }
 
     @Override
@@ -58,11 +57,6 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     protected void status(Status status) {
-        this.status = status;
-        final UpdateOperations<Record> operations = datastore.createUpdateOperations(Record.class)
-                .disableValidation();
-
-        operations.set("status", status);
-        datastore.update(this, operations);
+        property(new MongoProperty<>("status", status.toString()));
     }
 }

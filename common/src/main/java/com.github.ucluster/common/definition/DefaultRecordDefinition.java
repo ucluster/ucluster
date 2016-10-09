@@ -29,6 +29,7 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
     public void effect(Record.Property.Point point, T record, String... propertyPaths) {
         final EffectResult result = asList(propertyPaths).stream()
                 .map(propertyPath -> propertyDefinitions.get(propertyPath))
+                .filter(propertyPath -> propertyPath != null)
                 .map(propertyDefinition -> {
                     try {
                         propertyDefinition.effect(point, record);
