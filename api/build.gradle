@@ -1,0 +1,8 @@
+dependencies {
+    compile "com.google.inject:guice:$guice"
+
+    compile "javax.servlet:javax.servlet-api:$servlet_api"
+    compile "javax.ws.rs:javax.ws.rs-api:$jaxrs"
+
+    compile project(':core')
+}
