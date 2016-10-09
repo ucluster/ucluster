@@ -1,10 +1,10 @@
 package com.github.ucluster.common.definition;
 
+import com.github.ucluster.common.concern.CredentialConcern;
 import com.github.ucluster.common.concern.EmailConcern;
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.IdentityConcern;
 import com.github.ucluster.common.concern.ImmutableConcern;
-import com.github.ucluster.common.concern.PasswordConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.core.Record;
@@ -106,9 +106,9 @@ public class DSLCompilerTest {
 
     @Test
     public void should_get_definition() {
-        final DefaultRecordDefinition.PropertyDefinition passwordDefinition = definition.property("password");
+        final DefaultRecordDefinition.PropertyDefinition credentialDefinition = definition.property("password");
 
-        assertThat(passwordDefinition.definition().get("password"), is(true));
+        assertThat(credentialDefinition.definition().get("credential"), is(true));
     }
 
     private Injector getInjector() {
@@ -137,7 +137,7 @@ public class DSLCompilerTest {
                         });
                         registerConcern("identity").to(new TypeLiteral<IdentityConcern>() {
                         });
-                        registerConcern("password").to(new TypeLiteral<PasswordConcern>() {
+                        registerConcern("credential").to(new TypeLiteral<CredentialConcern>() {
                         });
                         registerConcern("immutable").to(new TypeLiteral<ImmutableConcern>() {
                         });

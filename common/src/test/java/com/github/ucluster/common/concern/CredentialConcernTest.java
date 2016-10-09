@@ -12,14 +12,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-public class PasswordConcernTest {
+public class CredentialConcernTest {
     private Record.Property.Concern password;
     private Record.Property.Concern nonPassword;
 
     @Before
     public void setUp() throws Exception {
-        password = new PasswordConcern("password", true);
-        nonPassword = new PasswordConcern("password", false);
+        password = new CredentialConcern("password", true);
+        nonPassword = new CredentialConcern("password", false);
     }
 
     @Test

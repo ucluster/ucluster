@@ -1,10 +1,10 @@
 package com.github.ucluster.mongo.junit;
 
+import com.github.ucluster.common.concern.CredentialConcern;
 import com.github.ucluster.common.concern.EmailConcern;
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.IdentityConcern;
 import com.github.ucluster.common.concern.ImmutableConcern;
-import com.github.ucluster.common.concern.PasswordConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.core.Record;
@@ -102,7 +102,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
                         registerConcern("identity").to(new TypeLiteral<IdentityConcern>() {
                         });
-                        registerConcern("password").to(new TypeLiteral<PasswordConcern>() {
+                        registerConcern("credential").to(new TypeLiteral<CredentialConcern>() {
                         });
                         registerConcern("immutable").to(new TypeLiteral<ImmutableConcern>() {
                         });

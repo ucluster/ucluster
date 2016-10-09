@@ -4,15 +4,15 @@ import com.github.ucluster.core.Record;
 
 import java.util.Optional;
 
-public class PasswordConcern implements Record.Property.Concern {
+public class CredentialConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
     private boolean enabled;
 
-    PasswordConcern() {
+    CredentialConcern() {
     }
 
-    public PasswordConcern(String type, Object configuration) {
+    public CredentialConcern(String type, Object configuration) {
         this.type = type;
         this.configuration = configuration;
         this.enabled = (boolean) configuration;

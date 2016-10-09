@@ -50,7 +50,10 @@ public class MongoAuthenticationRequestTest {
                         .put("property", "username")
                         .put("value", "kiwiwin")
                         .build())
-                .put("password", "password")
+                .put("credential", ImmutableMap.<String, Object>builder()
+                        .put("property", "password")
+                        .put("value", "password")
+                        .build())
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
@@ -66,7 +69,10 @@ public class MongoAuthenticationRequestTest {
                         .put("property", "username")
                         .put("value", "kiwiwin")
                         .build())
-                .put("password", "wrong")
+                .put("credential", ImmutableMap.<String, Object>builder()
+                        .put("property", "password")
+                        .put("value", "wrong")
+                        .build())
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.REJECTED));
@@ -80,7 +86,10 @@ public class MongoAuthenticationRequestTest {
                         .put("property", "email")
                         .put("value", "kiwi.swhite.coder@gmail.com")
                         .build())
-                .put("password", "password")
+                .put("credential", ImmutableMap.<String, Object>builder()
+                        .put("property", "password")
+                        .put("value", "password")
+                        .build())
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
@@ -96,7 +105,10 @@ public class MongoAuthenticationRequestTest {
                         .put("property", "nickname")
                         .put("value", "kiwinickname")
                         .build())
-                .put("password", "password")
+                .put("credential", ImmutableMap.<String, Object>builder()
+                        .put("property", "password")
+                        .put("value", "password")
+                        .build())
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.REJECTED));

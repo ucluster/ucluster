@@ -32,8 +32,26 @@ public class MongoAuthenticationRequest extends MongoRequest {
     }
 
     private void ensurePasswordMatched(Map<String, Object> detail) {
-        final Optional<Property> password = user.property("password");
-        if (!Encryption.BCRYPT.check(String.valueOf(detail.get("password")), (String) password.get().value())) {
+        final Map<String, Object> credential = (Map<String, Object>) detail.get("credential");
+        if (credential == null) {
+            failedAuthentication();
+        }
+
+        final Optional<Property> credentialProperty = user.property((String) credential.get("property"));
+        ensurePropertyIsCredential(credentialProperty);
+
+        if (!Encryption.BCRYPT.check(String.valueOf(credential.get("value")), String.valueOf(credentialProperty.get().value()))) {
+            failedAuthentication();
+        }
+    }
+
+    private void ensurePropertyIsCredential(Optional<Property> credentialProperty) {
+        if (!credentialProperty.isPresent()) {
+            failedAuthentication();
+        }
+
+        final Object identity = user.definition().property(credentialProperty.get().path()).definition().get("credential");
+        if (!Objects.equals(true, identity)) {
             failedAuthentication();
         }
     }
