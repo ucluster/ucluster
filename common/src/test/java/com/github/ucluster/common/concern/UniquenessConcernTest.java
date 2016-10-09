@@ -46,7 +46,7 @@ public class UniquenessConcernTest {
                 .path("username").value("newusername")
                 .get();
 
-        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
+        when(records.findBy(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;
@@ -67,7 +67,7 @@ public class UniquenessConcernTest {
                 .path("username").value("existusername")
                 .get();
 
-        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
+        when(records.findBy(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;
@@ -84,7 +84,7 @@ public class UniquenessConcernTest {
                 .path("username").value("newusername")
                 .get();
 
-        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
+        when(records.findBy(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;
@@ -101,7 +101,7 @@ public class UniquenessConcernTest {
                 .path("username").value("existusername")
                 .get();
 
-        when(records.find(argThat(new ArgumentMatcher<Record.Property>() {
+        when(records.findBy(argThat(new ArgumentMatcher<Record.Property>() {
             @Override
             public boolean matches(Object argument) {
                 final Record.Property property = (Record.Property) argument;

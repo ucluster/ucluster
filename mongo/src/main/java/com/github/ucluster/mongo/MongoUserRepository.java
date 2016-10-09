@@ -5,10 +5,13 @@ import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.github.ucluster.core.util.Criteria;
+import com.github.ucluster.core.util.PaginatedList;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -50,13 +53,28 @@ public class MongoUserRepository implements Repository<User> {
     }
 
     @Override
-    public Optional<User> find(Record.Property property) {
+    public Optional<User> findBy(Record.Property property) {
         final MongoUser user = datastore.createQuery(MongoUser.class)
                 .disableValidation()
                 .field(MongoProperty.valueMongoField(property)).equal(property.value())
                 .get();
 
         return enhance(user);
+    }
+
+    @Override
+    public PaginatedList<User> find(Criteria criteria) {
+        final Query<MongoUser> query = datastore.createQuery(MongoUser.class).disableValidation();
+
+        criteria.params(e -> {
+            query.field(MongoProperty.valueMongoField(e.getKey())).in(e.getValue());
+        });
+
+        return new PaginatedList<>(query.countAll(),
+                (page, perPage) -> query
+                        .offset((page - 1) * perPage)
+                        .limit(perPage)
+                        .asList());
     }
 
     private Optional<User> enhance(MongoUser user) {

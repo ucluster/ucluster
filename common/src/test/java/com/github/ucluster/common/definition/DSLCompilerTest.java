@@ -118,7 +118,7 @@ public class DSLCompilerTest {
     private List<AbstractModule> getAbstractModules() {
         users = mock(Repository.class);
 
-        when(users.find(any())).thenReturn(Optional.empty());
+        when(users.findBy(any())).thenReturn(Optional.empty());
 
         return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {

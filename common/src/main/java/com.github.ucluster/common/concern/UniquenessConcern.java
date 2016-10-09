@@ -47,7 +47,7 @@ public class UniquenessConcern implements Record.Property.Concern {
                 final Repository<? extends Record> records = injector.getInstance(Key.get(new TypeLiteral<Repository<? extends Record>>() {
                 }));
 
-                final Optional<? extends Record> existingRecord = records.find(prop);
+                final Optional<? extends Record> existingRecord = records.findBy(prop);
 
                 existingRecord.ifPresent($ -> {
                     throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));

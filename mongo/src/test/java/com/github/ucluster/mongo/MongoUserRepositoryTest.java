@@ -2,6 +2,8 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.ConcernEffectException;
+import com.github.ucluster.core.util.Criteria;
+import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -12,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -70,7 +73,7 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_find_user_by_property() {
-        final Optional<User> userFound = users.find(new MongoProperty<>("username", "kiwiwin"));
+        final Optional<User> userFound = users.findBy(new MongoProperty<>("username", "kiwiwin"));
 
         assertThat(userFound.isPresent(), is(true));
     }
@@ -121,5 +124,39 @@ public class MongoUserRepositoryTest {
         final User updatedUser = users.uuid(user.uuid()).get();
         assertThat(updatedUser.property("nickname").get().value(), is("newnickname"));
         assertThat(updatedUser.property("email").get().value(), is("kiwiwin@gmail.com"));
+    }
+
+    @Test
+    public void should_find_all_users() {
+        for (int count = 0; count < 10; count++) {
+            users.create(CreateUserRequestBuilder.of("register")
+                    .properties(ImmutableMap.<String, Object>builder()
+                            .put("username", "kiwiwin" + count)
+                            .put("password", "password" + count)
+                            .build())
+                    .get());
+        }
+
+        final List<? extends User> found = users.find(Criteria.empty()).page(1, 10);
+        assertThat(found.size(), is(10));
+    }
+
+    @Test
+    public void should_find_by_criteria() {
+        for (int count = 0; count < 10; count++) {
+            users.create(CreateUserRequestBuilder.of("register")
+                    .properties(ImmutableMap.<String, Object>builder()
+                            .put("username", "kiwiwin" + count)
+                            .put("password", "password" + count)
+                            .build())
+                    .get());
+        }
+
+        final PaginatedList<User> page = users.find(
+                Criteria.params().param("username", "kiwiwin0")
+        );
+
+        assertThat(page.toPage(1, 5).getTotalEntriesCount(), is(1L));
+        assertThat(page.page(1, 5).size(), is(1));
     }
 }

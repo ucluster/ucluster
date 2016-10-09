@@ -40,7 +40,15 @@ public class MongoProperty<T> implements Record.Property<T> {
         return mongoField(property) + ".value";
     }
 
+    static String valueMongoField(String path) {
+        return mongoField(path) + ".value";
+    }
+
     static String mongoField(Record.Property property) {
         return "properties." + property.path();
+    }
+
+    static String mongoField(String path) {
+        return "properties." + path;
     }
 }
