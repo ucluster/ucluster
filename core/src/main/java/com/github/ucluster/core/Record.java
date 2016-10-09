@@ -51,5 +51,4 @@ public interface Record {
             BEFORE_UPDATE
         }
     }
-
 }
