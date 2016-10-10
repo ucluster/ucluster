@@ -69,7 +69,8 @@ public class MongoUserRepository implements Repository<User> {
 
     @Override
     public PaginatedList<User> find(Criteria criteria) {
-        final Query<MongoUser> query = datastore.createQuery(MongoUser.class).disableValidation();
+        final Query<MongoUser> query = datastore.createQuery(MongoUser.class)
+                .disableValidation();
 
         criteria.params(e -> {
             query.field(MongoProperty.valueMongoField(e.getKey())).in(e.getValue());
@@ -77,6 +78,7 @@ public class MongoUserRepository implements Repository<User> {
 
         return new PaginatedList<>(query.countAll(),
                 (page, perPage) -> query
+                        .order("-createdAt")
                         .offset((page - 1) * perPage)
                         .limit(perPage)
                         .asList()

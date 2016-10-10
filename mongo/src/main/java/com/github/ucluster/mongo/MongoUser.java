@@ -76,6 +76,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
 
         return new PaginatedList<>(query.countAll(),
                 (page, perPage) -> query
+                        .order("-createdAt")
                         .offset((page - 1) * perPage)
                         .limit(perPage)
                         .asList());
