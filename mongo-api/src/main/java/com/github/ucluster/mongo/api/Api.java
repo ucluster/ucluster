@@ -79,6 +79,7 @@ public class Api extends ResourceConfig {
 
         property(ServerProperties.RESPONSE_SET_STATUS_OVER_SEND_ERROR, true);
         packages("com.github.ucluster.api");
+        packages("com.github.ucluster.mongo.api");
     }
 
     protected Module domainModule(ServiceLocator locator) {

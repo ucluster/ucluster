@@ -6,6 +6,7 @@ dependencies {
     compile "com.google.inject:guice:$guice"
     compile "org.mongodb.morphia:morphia:$morphia"
 
+    compile project(':api')
     compile project(':common')
     compile project(':session')
 }

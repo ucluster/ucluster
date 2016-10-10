@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.api.Routing;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.util.Criteria;
@@ -12,11 +13,13 @@ import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity("users")
-public class MongoUser extends MongoRecord<User> implements User {
+public class MongoUser extends MongoRecord<User> implements User, Model {
 
     @Inject
     @Transient
@@ -77,5 +80,24 @@ public class MongoUser extends MongoRecord<User> implements User {
     private void enhance(MongoRequest request) {
         request.user = this;
         injector.injectMembers(request);
+    }
+
+    @Override
+    public Map<String, Object> toJson() {
+        Map<String, Object> json = new HashMap<>();
+
+        json.put("id", uuid());
+        json.put("uri", Routing.user(this));
+        json.put("metadata", metadata());
+        json.put("properties", properties().stream()
+                .filter(prop -> !definition().property(prop.path()).definition().containsKey("credential"))
+                .collect(Collectors.toMap(Property::path, Property::value)));
+
+        return json;
+    }
+
+    @Override
+    public Map<String, Object> toReferenceJson() {
+        return toJson();
     }
 }

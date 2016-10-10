@@ -1,3 +1,7 @@
+ext {
+    json_path = '2.2.0'
+}
+
 dependencies {
     compile project(":api")
     compile project(":mongo")
@@ -13,6 +17,7 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:$jackson_joda"
     compile "org.apache.commons:commons-io:$commons_io"
 
+    testCompile "com.jayway.jsonpath:json-path:$json_path"
 
     testCompile "org.glassfish.jersey.test-framework:jersey-test-framework-core:$jersey"
     testCompile "org.glassfish.jersey.connectors:jersey-apache-connector:$jersey"
