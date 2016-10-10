@@ -1,14 +1,16 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.api.Routing;
 import com.github.ucluster.core.User;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 @Entity("user_requests")
-public class MongoRequest extends MongoRecord<User.Request> implements User.Request {
+public class MongoRequest extends MongoRecord<User.Request> implements User.Request, Model {
     @Reference
     protected User user;
 
@@ -52,5 +54,23 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     protected void status(Status status) {
         property(new MongoProperty<>("status", status.toString()));
+    }
+
+    @Override
+    public Map<String, Object> toJson() {
+        Map<String, Object> json = new HashMap<>();
+
+        json.put("id", uuid());
+        json.put("uri", Routing.request(user, this));
+        json.put("created_at", createdAt());
+        json.put("type", type());
+        json.put("status", status());
+
+        return json;
+    }
+
+    @Override
+    public Map<String, Object> toReferenceJson() {
+        return toJson();
     }
 }

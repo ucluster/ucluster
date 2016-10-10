@@ -1,13 +1,11 @@
 package com.github.ucluster.mongo.request;
 
-import com.github.ucluster.api.Routing;
 import com.github.ucluster.common.concern.Encryption;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
 import com.github.ucluster.mongo.Model;
 import com.github.ucluster.mongo.MongoRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,23 +85,5 @@ public class MongoAuthenticationRequest extends MongoRequest implements Model {
     private void failed() {
         status(Status.REJECTED);
         throw new RequestException();
-    }
-
-    @Override
-    public Map<String, Object> toJson() {
-        Map<String, Object> json = new HashMap<>();
-
-        json.put("id", uuid());
-        json.put("uri", Routing.request(user, this));
-        json.put("created_at", createdAt());
-        json.put("type", type());
-        json.put("status", status());
-
-        return json;
-    }
-
-    @Override
-    public Map<String, Object> toReferenceJson() {
-        return toJson();
     }
 }

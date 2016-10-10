@@ -2,6 +2,7 @@ package com.github.ucluster.mongo.request;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
+import com.github.ucluster.mongo.Model;
 import com.github.ucluster.mongo.MongoRequest;
 import com.github.ucluster.session.Session;
 import org.mongodb.morphia.annotations.Transient;
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MongoRecoveryRequest extends MongoRequest {
+public class MongoRecoveryRequest extends MongoRequest implements Model {
     @Inject
     @Transient
     Session session;
