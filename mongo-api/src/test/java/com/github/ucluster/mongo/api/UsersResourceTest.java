@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import static com.jayway.jsonpath.JsonPath.read;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 @RunWith(ApiTestRunner.class)
 public class UsersResourceTest extends ApiSupport {
@@ -47,11 +48,12 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(200));
 
-        final String json = response.readEntity(String.class);
+        final JsonContext json = json(response);
 
-        assertThat("/users/" + read(json, "$.id"), is(createdResponse.getLocation().getPath()));
-        assertThat(read(json, "$.properties.username"), is("kiwiwin"));
-        assertThat(read(json, "$.properties.nickname"), is("kiwinickname"));
-        assertThat(read(json, "$.properties.email"), is("kiwi.swhite.coder@gmail.com"));
+        assertThat("/users/" + json.path("$.id"), is(createdResponse.getLocation().getPath()));
+        assertThat(json.path("$.properties.username"), is("kiwiwin"));
+        assertThat(json.path("$.properties.nickname"), is("kiwinickname"));
+        assertThat(json.path("$.properties.email"), is("kiwi.swhite.coder@gmail.com"));
+        assertThat(json.path("$.properties.password"), is(nullValue()));
     }
 }
