@@ -61,6 +61,13 @@ public class UsersResourceTest extends ApiSupport {
     }
 
     @Test
+    public void should_not_found_user() {
+        final Response response = get("/users/not_exist");
+
+        assertThat(response.getStatus(), is(404));
+    }
+
+    @Test
     public void should_get_users() {
         final Response createdResponse = post("users",
                 CreateUserRequestBuilder.of()
