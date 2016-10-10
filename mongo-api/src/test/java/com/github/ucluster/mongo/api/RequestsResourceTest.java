@@ -80,6 +80,33 @@ public class RequestsResourceTest extends ApiSupport {
     }
 
     @Test
+    public void should_failed_to_approve_non_pending_request() {
+        final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
+                .put("type", "authentication")
+                .put("identity", ImmutableMap.<String, Object>builder()
+                        .put("property", "username")
+                        .put("value", "kiwiwin").build())
+                .put("credential", ImmutableMap.<String, Object>builder()
+                        .put("property", "password")
+                        .put("value", "password").build())
+                .build()
+        );
+
+        final Response response = put(createdResponse.getLocation().getPath() + "/approved", ImmutableMap.<String, Object>builder()
+                .put("type", "authentication")
+                .put("identity", ImmutableMap.<String, Object>builder()
+                        .put("property", "username")
+                        .put("value", "kiwiwin").build())
+                .put("credential", ImmutableMap.<String, Object>builder()
+                        .put("property", "password")
+                        .put("value", "password").build())
+                .build()
+        );
+
+        assertThat(response.getStatus(), is(400));
+    }
+
+    @Test
     public void should_get_requests() {
         final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("type", "authentication")

@@ -25,6 +25,7 @@ public class MongoAuthenticationRequest extends MongoRequest implements Model {
 
     @Override
     public void approve(Map<String, Object> detail) {
+        ensurePending();
         ensureIdentityMatched(detail);
         ensurePasswordMatched(detail);
 

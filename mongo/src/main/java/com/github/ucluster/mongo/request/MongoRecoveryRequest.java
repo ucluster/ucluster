@@ -31,6 +31,7 @@ public class MongoRecoveryRequest extends MongoRequest implements Model {
 
     @Override
     public void approve(Map<String, Object> detail) {
+        ensurePending();
         ensureOttMatched(detail);
 
         final Map<String, Object> credential = (Map<String, Object>) detail.get("credential");

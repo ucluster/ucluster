@@ -2,6 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.api.Routing;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.exception.RequestException;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
@@ -54,6 +55,12 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     protected void status(Status status) {
         property(new MongoProperty<>("status", status.toString()));
+    }
+
+    protected void ensurePending() {
+        if (status() != Status.PENDING) {
+            throw new RequestException();
+        }
     }
 
     @Override
