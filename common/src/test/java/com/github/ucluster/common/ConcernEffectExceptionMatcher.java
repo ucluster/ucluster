@@ -8,14 +8,13 @@ import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
-public class ValidationMatcher {
+public class ConcernEffectExceptionMatcher {
     private final ExpectedException expected;
 
-    private ValidationMatcher(ExpectedException expected) {
+    private ConcernEffectExceptionMatcher(ExpectedException expected) {
         this.expected = expected;
     }
 
-    @SafeVarargs
     public final void errors(ErrorMatcher... errorMatchers) {
         expected.expect(ConcernEffectException.class);
         expected.expect(new TypeSafeMatcher<ConcernEffectException>() {
@@ -44,8 +43,8 @@ public class ValidationMatcher {
         });
     }
 
-    public static ValidationMatcher capture(ExpectedException expected) {
-        return new ValidationMatcher(expected);
+    public static ConcernEffectExceptionMatcher capture(ExpectedException expected) {
+        return new ConcernEffectExceptionMatcher(expected);
     }
 
     public interface ErrorMatcher {

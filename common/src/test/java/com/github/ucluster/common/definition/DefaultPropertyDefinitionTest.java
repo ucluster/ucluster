@@ -1,14 +1,11 @@
 package com.github.ucluster.common.definition;
 
+import com.github.ucluster.common.ConcernEffectExceptionMatcher;
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.EffectResult;
-import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +14,7 @@ import org.junit.rules.ExpectedException;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.github.ucluster.common.ConcernEffectExceptionMatcher.capture;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -34,7 +32,7 @@ public class DefaultPropertyDefinitionTest {
 
     @Before
     public void setUp() throws Exception {
-        definition = new DefaultPropertyDefinition("username",
+        definition = new DefaultPropertyDefinition<>("username",
                 asList(
                         new FormatConcern("format", ImmutableMap.<String, Object>builder()
                                 .put("pattern", "\\w{6,12}")
@@ -67,25 +65,8 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_failed_validate_property_if_one_of_the_validator_failed() {
-        thrown.expect(ConcernEffectException.class);
-        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("expects RecordValidationException");
-            }
-
-            @Override
-            protected boolean matchesSafely(ConcernEffectException exception) {
-                final EffectResult result = exception.getEffectResult();
-                if (result.valid() || result.errors().size() != 1) {
-                    return false;
-                }
-
-                final EffectResult.Failure failure = result.errors().get(0);
-
-                return failure.getPropertyPath().equals("username") && failure.getType().equals("required");
-            }
-        });
+        capture(thrown).errors(
+                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("username") && type.equals("required")});
 
         when(user.property(eq("username"))).thenReturn(Optional.empty());
 
@@ -94,25 +75,8 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_failed_validate_property() {
-        thrown.expect(ConcernEffectException.class);
-        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("expects RecordValidationException");
-            }
-
-            @Override
-            protected boolean matchesSafely(ConcernEffectException exception) {
-                final EffectResult result = exception.getEffectResult();
-                if (result.valid() || result.errors().size() != 1) {
-                    return false;
-                }
-
-                final EffectResult.Failure failure = result.errors().get(0);
-
-                return failure.getPropertyPath().equals("username") && failure.getType().equals("format");
-            }
-        });
+        capture(thrown).errors(
+                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("username") && type.equals("format")});
 
         final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");

@@ -10,7 +10,6 @@ import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.ConcernEffectException;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.google.inject.AbstractModule;
@@ -18,8 +17,6 @@ import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.name.Names;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.github.ucluster.common.ConcernEffectExceptionMatcher.capture;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -76,18 +74,9 @@ public class DSLCompilerTest {
 
     @Test
     public void should_failed_verify_by_dsl() {
-        thrown.expect(ConcernEffectException.class);
-        thrown.expect(new TypeSafeMatcher<ConcernEffectException>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("expects RecordValidationException");
-            }
-
-            @Override
-            protected boolean matchesSafely(ConcernEffectException exception) {
-                return !exception.getEffectResult().valid();
-            }
-        });
+        capture(thrown).errors(
+                (path, type) -> path.equals("username") && type.equals("format")
+        );
 
         final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");

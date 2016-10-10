@@ -1,5 +1,6 @@
 package com.github.ucluster.common.concern;
 
+import com.github.ucluster.common.ConcernEffectExceptionMatcher;
 import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
 import com.google.common.collect.ImmutableMap;
@@ -10,7 +11,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
-import static com.github.ucluster.common.ValidationMatcher.capture;
+import static com.github.ucluster.common.ConcernEffectExceptionMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -70,8 +71,7 @@ public class FormatConcernTest {
     @Test
     public void should_failed_to_validate_against_format() {
         capture(thrown).errors(
-                (path, type) -> path.equals("username") && type.equals("format")
-        );
+                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("username") && type.equals("format")});
 
         final Record record = SimpleRecord.builder()
                 .path("username").value("kiwi")

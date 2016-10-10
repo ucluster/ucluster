@@ -1,5 +1,6 @@
 package com.github.ucluster.common.concern;
 
+import com.github.ucluster.common.ConcernEffectExceptionMatcher;
 import com.github.ucluster.core.Record;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -9,8 +10,8 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
+import static com.github.ucluster.common.ConcernEffectExceptionMatcher.capture;
 import static com.github.ucluster.common.SimpleRecord.builder;
-import static com.github.ucluster.common.ValidationMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -68,8 +69,7 @@ public class EmailConcernTest {
     @Test
     public void should_failed_validate_invalid_email() {
         capture(thrown).errors(
-                (path, type) -> path.equals("email") && type.equals("email")
-        );
+                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("email") && type.equals("email")});
 
         final Record record = builder()
                 .path("email").value("invalid.email")
