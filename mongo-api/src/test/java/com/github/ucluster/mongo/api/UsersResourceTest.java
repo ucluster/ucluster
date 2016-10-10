@@ -32,6 +32,58 @@ public class UsersResourceTest extends ApiSupport {
     }
 
     @Test
+    public void should_failed_to_create_user_with_duplicate_identity_property() {
+        post("users",
+                CreateUserRequestBuilder.of()
+                        .properties(ImmutableMap.<String, Object>builder()
+                                .put("username", "kiwiwin")
+                                .put("password", "password")
+                                .build())
+                        .get()
+        );
+
+        final Response response = post("users",
+                CreateUserRequestBuilder.of()
+                        .properties(ImmutableMap.<String, Object>builder()
+                                .put("username", "kiwiwin")
+                                .put("password", "password")
+                                .build())
+                        .get()
+        );
+
+        assertThat(response.getStatus(), is(400));
+
+        final JsonContext json = json(response);
+
+        assertThat(json.path("$.errors.length()"), is(1));
+        assertThat(json.path("$.errors[0].property"), is("username"));
+        assertThat(json.path("$.errors[0].cause"), is("identity"));
+    }
+
+    @Test
+    public void should_failed_to_create_user_with_illegal_property() {
+        final Response response = post("users",
+                CreateUserRequestBuilder.of()
+                        .properties(ImmutableMap.<String, Object>builder()
+                                .put("username", "k")
+                                .put("password", "k")
+                                .build())
+                        .get()
+        );
+
+        assertThat(response.getStatus(), is(400));
+
+        final JsonContext json = json(response);
+
+        assertThat(json.path("$.errors.length()"), is(2));
+        assertThat(json.path("$.errors[0].property"), is("password"));
+        assertThat(json.path("$.errors[0].cause"), is("format"));
+
+        assertThat(json.path("$.errors[1].property"), is("username"));
+        assertThat(json.path("$.errors[1].cause"), is("format"));
+    }
+
+    @Test
     public void should_get_user() {
         final Response createdResponse = post("users",
                 CreateUserRequestBuilder.of()
