@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 
 import javax.ws.rs.core.Response;
 
-import static com.jayway.jsonpath.JsonPath.read;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -18,7 +17,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_create_user() {
         final Response response = post("users",
-                CreateUserRequestBuilder.of("register")
+                CreateUserRequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("nickname", "kiwinickname")
@@ -34,7 +33,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_get_user() {
         final Response createdResponse = post("users",
-                CreateUserRequestBuilder.of("register")
+                CreateUserRequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("nickname", "kiwinickname")
@@ -51,6 +50,9 @@ public class UsersResourceTest extends ApiSupport {
         final JsonContext json = json(response);
 
         assertThat("/users/" + json.path("$.id"), is(createdResponse.getLocation().getPath()));
+        assertThat(json.path("$.metadata.model"), is("user"));
+        assertThat(json.path("$.metadata.type"), is("default"));
+
         assertThat(json.path("$.properties.username"), is("kiwiwin"));
         assertThat(json.path("$.properties.nickname"), is("kiwinickname"));
         assertThat(json.path("$.properties.email"), is("kiwi.swhite.coder@gmail.com"));

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CreateUserRequestBuilder {
-    private String type = "register";
+    private String type;
     private Map<String, Object> metadata = new HashMap<>();
     private Map<String, Object> properties = new HashMap<>();
 
@@ -26,7 +26,9 @@ public class CreateUserRequestBuilder {
     public Map<String, Object> get() {
         final Map<String, Object> request = new HashMap<>();
 
-        metadata.put("recordGroup", type);
+        if (type != null) {
+            metadata.put("type", type);
+        }
         request.put("metadata", metadata);
         request.put("properties", properties);
 
@@ -37,5 +39,9 @@ public class CreateUserRequestBuilder {
         final CreateUserRequestBuilder createUserRequestBuilder = new CreateUserRequestBuilder();
         createUserRequestBuilder.type = type;
         return createUserRequestBuilder;
+    }
+
+    public static CreateUserRequestBuilder of() {
+        return new CreateUserRequestBuilder();
     }
 }

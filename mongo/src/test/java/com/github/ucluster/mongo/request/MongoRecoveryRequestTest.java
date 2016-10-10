@@ -34,7 +34,7 @@ public class MongoRecoveryRequestTest {
 
     @Before
     public void setUp() throws Exception {
-        final Map<String, Object> request = CreateUserRequestBuilder.of("register")
+        final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")

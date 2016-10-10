@@ -38,7 +38,7 @@ public class MongoUserRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        final Map<String, Object> request = CreateUserRequestBuilder.of("register")
+        final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
@@ -52,7 +52,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_if_definition_not_satisfied() {
         thrown.expect(ConcernEffectException.class);
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of("register")
+        final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")
@@ -129,7 +129,7 @@ public class MongoUserRepositoryTest {
     @Test
     public void should_find_all_users() {
         for (int count = 0; count < 10; count++) {
-            users.create(CreateUserRequestBuilder.of("register")
+            users.create(CreateUserRequestBuilder.of()
                     .properties(ImmutableMap.<String, Object>builder()
                             .put("username", "kiwiwin" + count)
                             .put("password", "password" + count)
@@ -144,7 +144,7 @@ public class MongoUserRepositoryTest {
     @Test
     public void should_find_by_criteria() {
         for (int count = 0; count < 10; count++) {
-            users.create(CreateUserRequestBuilder.of("register")
+            users.create(CreateUserRequestBuilder.of()
                     .properties(ImmutableMap.<String, Object>builder()
                             .put("username", "kiwiwin" + count)
                             .put("password", "password" + count)

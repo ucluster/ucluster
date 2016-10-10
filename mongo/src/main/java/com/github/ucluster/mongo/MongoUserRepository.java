@@ -95,10 +95,14 @@ public class MongoUserRepository implements Repository<User> {
         }
 
         Map<String, Object> metadata() {
-            final Map<String, Object> defaultMetadata = new HashMap<>();
-            defaultMetadata.put("user_type", "default");
+            final Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
 
-            return (Map<String, Object>) request.getOrDefault("metadata", defaultMetadata);
+            metadata.put("model", "user");
+            if (!metadata.containsKey("type")) {
+                metadata.put("type", "default");
+            }
+
+            return metadata;
         }
 
         Map<String, Object> properties() {

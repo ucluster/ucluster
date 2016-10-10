@@ -21,8 +21,8 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
     @Override
     public Definition<T> find(Map<String, Object> metadata) {
         final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
-                .field("recordType").equal(recordType(metadata))
-                .field("recordGroup").equal(type(metadata))
+                .field("type").equal(recordType(metadata))
+                .field("model").equal(type(metadata))
                 .get();
 
         if (dsl == null) {
