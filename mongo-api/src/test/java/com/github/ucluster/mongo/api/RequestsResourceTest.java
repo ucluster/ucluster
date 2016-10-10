@@ -71,4 +71,11 @@ public class RequestsResourceTest extends ApiSupport {
         assertThat(json.path("type"), is("authentication"));
         assertThat(json.path("status"), is("APPROVED"));
     }
+
+    @Test
+    public void should_not_found_request() {
+        final Response response = get(userPath + "/requests/not_exist");
+
+        assertThat(response.getStatus(), is(404));
+    }
 }

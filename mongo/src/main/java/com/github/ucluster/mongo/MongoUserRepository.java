@@ -50,14 +50,11 @@ public class MongoUserRepository implements Repository<User> {
 
     @Override
     public Optional<User> uuid(String uuid) {
-        final MongoUser user;
         try {
-            user = datastore.get(MongoUser.class, new ObjectId(uuid));
+            return enhance(datastore.get(MongoUser.class, new ObjectId(uuid)));
         } catch (Exception e) {
             return Optional.empty();
         }
-
-        return enhance(user);
     }
 
     @Override
