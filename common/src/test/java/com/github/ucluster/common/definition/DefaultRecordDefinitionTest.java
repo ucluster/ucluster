@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 public class DefaultRecordDefinitionTest {
 
-    private DefaultRecordDefinition definition;
+    private DefaultRecordDefinition<User> definition;
     private User user;
 
     @Rule

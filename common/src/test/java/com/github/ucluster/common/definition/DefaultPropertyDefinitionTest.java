@@ -1,6 +1,5 @@
 package com.github.ucluster.common.definition;
 
-import com.github.ucluster.common.ConcernEffectExceptionMatcher;
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.core.Record;
@@ -66,7 +65,8 @@ public class DefaultPropertyDefinitionTest {
     @Test
     public void should_failed_validate_property_if_one_of_the_validator_failed() {
         capture(thrown).errors(
-                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("username") && type.equals("required")});
+                (path, type) -> path.equals("username") && type.equals("required")
+        );
 
         when(user.property(eq("username"))).thenReturn(Optional.empty());
 
@@ -76,7 +76,8 @@ public class DefaultPropertyDefinitionTest {
     @Test
     public void should_failed_validate_property() {
         capture(thrown).errors(
-                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("username") && type.equals("format")});
+                (path, type) -> path.equals("username") && type.equals("format")
+        );
 
         final Record.Property usernameProperty = mock(Record.Property.class);
         when(usernameProperty.path()).thenReturn("username");

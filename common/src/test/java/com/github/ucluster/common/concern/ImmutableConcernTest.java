@@ -1,6 +1,5 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.ConcernEffectExceptionMatcher;
 import com.github.ucluster.core.Record;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -59,7 +58,8 @@ public class ImmutableConcernTest {
     @Test
     public void should_failed_update_immutable_property() {
         capture(thrown).errors(
-                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("email") && type.equals("immutable")});
+                (path, type) -> path.equals("email") && type.equals("immutable")
+        );
 
         final Record record = builder()
                 .path("email").value("invalid.email")

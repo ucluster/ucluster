@@ -1,6 +1,5 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.ConcernEffectExceptionMatcher;
 import com.github.ucluster.core.Record;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -69,7 +68,8 @@ public class EmailConcernTest {
     @Test
     public void should_failed_validate_invalid_email() {
         capture(thrown).errors(
-                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("email") && type.equals("email")});
+                (path, type) -> path.equals("email") && type.equals("email")
+        );
 
         final Record record = builder()
                 .path("email").value("invalid.email")

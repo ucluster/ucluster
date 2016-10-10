@@ -1,6 +1,5 @@
 package com.github.ucluster.common.concern;
 
-import com.github.ucluster.common.ConcernEffectExceptionMatcher;
 import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
 import com.google.common.collect.ImmutableMap;
@@ -71,7 +70,8 @@ public class FormatConcernTest {
     @Test
     public void should_failed_to_validate_against_format() {
         capture(thrown).errors(
-                new ConcernEffectExceptionMatcher.ErrorMatcher[]{(path, type) -> path.equals("username") && type.equals("format")});
+                (path, type) -> path.equals("username") && type.equals("format")
+        );
 
         final Record record = SimpleRecord.builder()
                 .path("username").value("kiwi")
