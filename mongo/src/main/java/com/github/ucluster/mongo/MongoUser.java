@@ -88,6 +88,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
 
         json.put("id", uuid());
         json.put("uri", Routing.user(this));
+        json.put("created_at", createdAt());
         json.put("metadata", metadata());
         json.put("properties", properties().stream()
                 .filter(prop -> !definition().property(prop.path()).definition().containsKey("credential"))

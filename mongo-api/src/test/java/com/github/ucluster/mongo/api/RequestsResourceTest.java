@@ -48,4 +48,27 @@ public class RequestsResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(201));
     }
+
+    @Test
+    public void should_get_request() {
+        final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
+                .put("type", "authentication")
+                .put("identity", ImmutableMap.<String, Object>builder()
+                        .put("property", "username")
+                        .put("value", "kiwiwin").build())
+                .put("credential", ImmutableMap.<String, Object>builder()
+                        .put("property", "password")
+                        .put("value", "password").build())
+                .build()
+        );
+
+        final Response response = get(createdResponse.getLocation().getPath());
+
+        assertThat(response.getStatus(), is(200));
+
+        final JsonContext json = json(response);
+        assertThat(json.path("uri"), is(createdResponse.getLocation().getPath()));
+        assertThat(json.path("type"), is("authentication"));
+        assertThat(json.path("status"), is("APPROVED"));
+    }
 }

@@ -12,9 +12,6 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     @Reference
     protected User user;
 
-//    @org.mongodb.morphia.annotations.Property
-//    protected Status status = Status.PENDING;
-
     protected MongoRequest() {
     }
 
