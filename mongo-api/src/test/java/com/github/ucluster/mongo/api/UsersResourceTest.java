@@ -84,5 +84,6 @@ public class UsersResourceTest extends ApiSupport {
         assertThat(json.path("$.total_count"), is(1));
 
         assertThat(json.path("$.entries.length()"), is(1));
+        assertThat(json.path("$.entries[0].uri"), is(createdResponse.getLocation().getPath()));
     }
 }
