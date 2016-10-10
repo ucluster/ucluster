@@ -12,7 +12,7 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.ucluster.mongo.api.ResourceReader.read;
+import static com.github.ucluster.mongo.api.util.ResourceReader.read;
 
 public class ApiTestRunner extends InjectorBasedRunner {
     public ApiTestRunner(final Class<?> clazz) throws InitializationError {

@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo.api;
+package com.github.ucluster.mongo.api.util;
 
 import java.util.HashMap;
 import java.util.Map;

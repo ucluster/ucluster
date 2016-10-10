@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo.api;
+package com.github.ucluster.mongo.api.util;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
