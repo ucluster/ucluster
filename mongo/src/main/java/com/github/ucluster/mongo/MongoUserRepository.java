@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MongoUserRepository implements Repository<User> {
     @Inject
@@ -74,7 +75,10 @@ public class MongoUserRepository implements Repository<User> {
                 (page, perPage) -> query
                         .offset((page - 1) * perPage)
                         .limit(perPage)
-                        .asList());
+                        .asList()
+                        .stream()
+                        .map(user -> enhance(user).get())
+                        .collect(Collectors.toList()));
     }
 
     private Optional<User> enhance(MongoUser user) {
