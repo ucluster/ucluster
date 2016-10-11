@@ -3,6 +3,7 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
@@ -39,6 +40,10 @@ public class MongoRecord<T extends Record> implements Record {
     @Inject
     @Transient
     protected Datastore datastore;
+
+    @Inject
+    @Transient
+    protected Injector injector;
 
     @Override
     public String uuid() {

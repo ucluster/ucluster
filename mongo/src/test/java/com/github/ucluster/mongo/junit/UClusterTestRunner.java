@@ -25,6 +25,12 @@ public class UClusterTestRunner extends InjectorBasedRunner {
             try {
                 datastore.save(new MongoDSLScript("user", "default", read("user_dsl.js")));
                 datastore.save(new MongoDSLScript("request", "default", read("request_dsl.js")));
+                datastore.save(new MongoDSLScript("request", "auto_approvable", read("request_dsl.js")));
+                datastore.save(new MongoDSLScript("request", "non_auto_approvable", read("request_dsl.js")));
+                datastore.save(new MongoDSLScript("request", "default", read("request_dsl.js")));
+                datastore.save(new MongoDSLScript("request", "id5_async", read("requests/id5_async.js")));
+                datastore.save(new MongoDSLScript("request", "authentication", read("requests/authentication.js")));
+                datastore.save(new MongoDSLScript("request", "recovery", read("requests/recovery.js")));
                 base.evaluate();
             } finally {
                 final MongoDatabase database = mongoClient.getDatabase("ucluster");

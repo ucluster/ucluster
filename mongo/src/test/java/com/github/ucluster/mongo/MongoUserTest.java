@@ -45,8 +45,15 @@ public class MongoUserTest {
     @Test
     public void should_user_apply_auto_approvable_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "auto_approvable")
-                .put("nickname", "newnickname").build());
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "auto_approvable")
+                        .build()
+                )
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("nickname", "newnickname")
+                        .build()
+                ).build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
 
@@ -60,8 +67,15 @@ public class MongoUserTest {
     @Test
     public void should_user_apply_non_auto_approvable_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "non_auto_approvable")
-                .put("nickname", "newnickname").build());
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "non_auto_approvable")
+                        .build()
+                )
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("nickname", "newnickname")
+                        .build()
+                ).build());
 
         assertThat(request.status(), is(User.Request.Status.PENDING));
 
@@ -72,8 +86,15 @@ public class MongoUserTest {
     @Test
     public void should_user_apply_non_auto_approvable_request_and_approve_it_later() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "non_auto_approvable")
-                .put("nickname", "newnickname").build());
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "non_auto_approvable")
+                        .build()
+                )
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("nickname", "newnickname")
+                        .build()
+                ).build());
 
         final User userFound = users.uuid(user.uuid()).get();
 
@@ -91,8 +112,15 @@ public class MongoUserTest {
     @Test
     public void should_user_apply_non_auto_approvable_request_and_reject_it_later() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "non_auto_approvable")
-                .put("nickname", "newnickname").build());
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "non_auto_approvable")
+                        .build()
+                )
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("nickname", "newnickname")
+                        .build()
+                ).build());
 
         final User userFound = users.uuid(user.uuid()).get();
 
@@ -111,8 +139,15 @@ public class MongoUserTest {
     public void should_get_all_requests() {
         for (int count = 0; count < 11; count++) {
             user.apply(ImmutableMap.<String, Object>builder()
-                    .put("type", "non_auto_approvable")
-                    .put("nickname", "newnickname").build());
+                    .put("metadata", ImmutableMap.<String, Object>builder()
+                            .put("model", "request")
+                            .put("type", "non_auto_approvable")
+                            .build()
+                    )
+                    .put("properties", ImmutableMap.<String, Object>builder()
+                            .put("nickname", "newnickname")
+                            .build()
+                    ).build());
         }
 
         final PaginatedList<User.Request> requests = user.requests(Criteria.empty());

@@ -18,12 +18,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DSLCompiler {
-    private static String DSL_COMPILER = "var definition = {};" +
-            "var user = function (user) { definition = user; };" +
-            "var request = function (request) { definition = request; }";
+    private static String DSL_COMPILER = ResourceReader.read("dsl_compiler.js");
 
     public static <T extends Record> DefaultRecordDefinition<T> load(Injector injector, String script) {
         return new RecordDSL<T>(injector, loadRecordJsonDefinition(script)).load();
+    }
+
+    public static <T extends Record> DefaultRecordDefinition<T> load_action(Injector injector, String script, String action) {
+        return new RecordDSL<T>(injector, loadRecordActionJsonDefinition(script, action)).load();
     }
 
     private static Map<String, Object> loadRecordJsonDefinition(String definition) {
@@ -33,6 +35,19 @@ public class DSLCompiler {
             engine.eval(definition);
             String recordDefinition = (String) engine.eval("JSON.stringify(definition)");
             return Json.fromJson(recordDefinition);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Map<String, Object> loadRecordActionJsonDefinition(String definition, String action) {
+        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
+        try {
+            engine.eval(DSL_COMPILER);
+            engine.eval(definition);
+            String recordDefinition = (String) engine.eval("JSON.stringify(action_definition)");
+            return (Map<String, Object>) Json.fromJson(recordDefinition).get(action);
         } catch (ScriptException e) {
             e.printStackTrace();
             return null;

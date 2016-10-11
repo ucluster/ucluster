@@ -19,7 +19,7 @@ public class MongoRequestFactory implements RequestFactory {
     @Override
     public User.Request create(User user, Map<String, Object> request) {
         final Class<? extends User.Request> requestClass = injector.getInstance(Key.get(new TypeLiteral<User.Request>() {
-        }, Names.named("request." + request.get("type") + ".factory"))).getClass();
+        }, Names.named("request." + type(request) + ".factory"))).getClass();
 
         try {
             final Constructor<? extends User.Request> constructor = requestClass.getConstructor(User.class, Map.class);
@@ -28,5 +28,10 @@ public class MongoRequestFactory implements RequestFactory {
             e.printStackTrace();
             throw new RuntimeException("error to find request constructor", e);
         }
+    }
+
+    private Object type(Map<String, Object> request) {
+        final Map<String, Object> metadata = (Map<String, Object>) request.get("metadata");
+        return metadata.get("type");
     }
 }

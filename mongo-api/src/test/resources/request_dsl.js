@@ -4,4 +4,4 @@ request({
             pattern: "\\w{6,16}"
         }
     }
-});
+}).on('approve', {}).on('reject', {});

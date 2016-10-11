@@ -97,13 +97,7 @@ public class Api extends ResourceConfig {
 
                 bind(RequestFactory.class).to(MongoRequestFactory.class);
 
-                bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
-                }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
-                });
-
-                bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
-                }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
-                });
+                bindDefinitionRepositories();
 
                 registerConcern("format").to(new TypeLiteral<FormatConcern>() {
                 });
@@ -123,6 +117,20 @@ public class Api extends ResourceConfig {
                 registerRequestFactory("authentication").to(new TypeLiteral<MongoAuthenticationRequest>() {
                 });
                 registerRequestFactory("recovery").to(new TypeLiteral<MongoRecoveryRequest>() {
+                });
+            }
+
+            private void bindDefinitionRepositories() {
+                bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
+                }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
+                });
+
+                bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
+                }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
+                });
+
+                bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.ChangeLog>>>() {
+                }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.ChangeLog>>() {
                 });
             }
 

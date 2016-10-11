@@ -23,7 +23,8 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     public MongoRequest(User user, Map<String, Object> request) {
         this.user = user;
-        request.entrySet().stream()
+        this.metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
+        ((Map<String, Object>) request.get("properties")).entrySet().stream()
                 .forEach(e -> {
                     property(new MongoProperty<>(e.getKey(), e.getValue()));
                 });
@@ -31,8 +32,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     @Override
     public String type() {
-        final Optional<Property> type = property("type");
-        return (String) type.get().value();
+        return (String) metadata.get("type");
     }
 
     @Override
@@ -66,15 +66,26 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
                 .collect(Collectors.toList());
     }
 
-    protected void status(Status status) {
+    protected void status(Status status, Property... properties) {
         if (status != Status.PENDING) {
-            recordChangeLog(status);
+            recordChangeLog(status, properties);
         }
         property(new MongoProperty<>("status", status.toString()));
     }
 
-    protected void recordChangeLog(Status newStatus) {
-        datastore.save(MongoChangeLog.of(this).from(status()).to(newStatus));
+    protected void recordChangeLog(Status newStatus, Property... properties) {
+        final MongoChangeLog changeLog = MongoChangeLog.of(this).from(status()).to(newStatus);
+        for (Property property : properties) {
+            changeLog.property(property);
+        }
+
+        enhance(changeLog);
+        changeLog.save();
+    }
+
+    private void enhance(MongoChangeLog changeLog) {
+        changeLog.request = this;
+        injector.injectMembers(changeLog);
     }
 
     protected void ensurePending() {

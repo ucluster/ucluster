@@ -34,12 +34,13 @@ public class MongoRecoveryRequest extends MongoRequest implements Model {
         ensurePending();
         ensureOttMatched(detail);
 
-        final Map<String, Object> credential = (Map<String, Object>) detail.get("credential");
+        Map<String, Object> properties = (Map<String, Object>) detail.get("properties");
+        final Map<String, Object> credential = (Map<String, Object>) properties.get("credential");
         if (credential == null) {
             failed();
         }
 
-        final Property credentialProperty = getCredentialProperty(detail);
+        final Property credentialProperty = getCredentialProperty(properties);
         credentialProperty.value(credential.get("value"));
         user.property(credentialProperty);
         user.update();

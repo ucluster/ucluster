@@ -46,6 +46,19 @@ public class RequiredConcernTest {
     }
 
     @Test
+    public void should_failed_required_but_value_is_null() {
+        capture(thrown).errors(
+                (path, type) -> path.equals("username") && type.equals("required")
+        );
+
+        final Record record = SimpleRecord.builder()
+                .path("username").value(null)
+                .get();
+
+        required.effect(record, "username");
+    }
+
+    @Test
     public void should_success_optional_when_value_presence() {
         final Record record = SimpleRecord.builder()
                 .path("username").value("kiwiwin")

@@ -13,7 +13,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -47,14 +46,19 @@ public class MongoAuthenticationRequestTest {
     @Test
     public void should_success_authenticate_using_username() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "authentication")
-                .put("identity", ImmutableMap.<String, Object>builder()
-                        .put("property", "username")
-                        .put("value", "kiwiwin")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "authentication")
                         .build())
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "password")
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("identity", ImmutableMap.<String, Object>builder()
+                                .put("property", "username")
+                                .put("value", "kiwiwin")
+                                .build())
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "password")
+                                .build())
                         .build())
                 .build());
 
@@ -72,14 +76,19 @@ public class MongoAuthenticationRequestTest {
         thrown.expect(RequestException.class);
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "authentication")
-                .put("identity", ImmutableMap.<String, Object>builder()
-                        .put("property", "username")
-                        .put("value", "kiwiwin")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "authentication")
                         .build())
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "wrong")
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("identity", ImmutableMap.<String, Object>builder()
+                                .put("property", "username")
+                                .put("value", "kiwiwin")
+                                .build())
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "wrong")
+                                .build())
                         .build())
                 .build());
 
@@ -89,14 +98,19 @@ public class MongoAuthenticationRequestTest {
     @Test
     public void should_success_to_authenticate_using_identity_field() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "authentication")
-                .put("identity", ImmutableMap.<String, Object>builder()
-                        .put("property", "email")
-                        .put("value", "kiwi.swhite.coder@gmail.com")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "authentication")
                         .build())
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "password")
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("identity", ImmutableMap.<String, Object>builder()
+                                .put("property", "email")
+                                .put("value", "kiwi.swhite.coder@gmail.com")
+                                .build())
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "password")
+                                .build())
                         .build())
                 .build());
 
@@ -108,14 +122,19 @@ public class MongoAuthenticationRequestTest {
         thrown.expect(RequestException.class);
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "authentication")
-                .put("identity", ImmutableMap.<String, Object>builder()
-                        .put("property", "nickname")
-                        .put("value", "kiwinickname")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "authentication")
                         .build())
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "password")
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("identity", ImmutableMap.<String, Object>builder()
+                                .put("property", "nickname")
+                                .put("value", "kiwinickname")
+                                .build())
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "password")
+                                .build())
                         .build())
                 .build());
 

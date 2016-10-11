@@ -19,6 +19,7 @@ import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
 import com.github.ucluster.mongo.request.MongoAuthenticationRequest;
+import com.github.ucluster.mongo.request.MongoID5AsyncRequest;
 import com.github.ucluster.mongo.request.MongoRecoveryRequest;
 import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
 import com.github.ucluster.session.Session;
@@ -100,13 +101,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         bind(RequestFactory.class).to(MongoRequestFactory.class);
 
-                        bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
-                        }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
-                        });
-
-                        bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
-                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
-                        });
+                        bindDefinitionRepositories();
 
                         registerConcern("format").to(new TypeLiteral<FormatConcern>() {
                         });
@@ -126,13 +121,28 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         registerRequestFactory("auto_approvable").to(new TypeLiteral<AutoApprovableRequest>() {
                         });
-
                         registerRequestFactory("non_auto_approvable").to(new TypeLiteral<NonAutoApprovableRequest>() {
                         });
 
                         registerRequestFactory("authentication").to(new TypeLiteral<MongoAuthenticationRequest>() {
                         });
                         registerRequestFactory("recovery").to(new TypeLiteral<MongoRecoveryRequest>() {
+                        });
+                        registerRequestFactory("id5_async").to(new TypeLiteral<MongoID5AsyncRequest>() {
+                        });
+                    }
+
+                    private void bindDefinitionRepositories() {
+                        bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
+                        }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
+                        });
+
+                        bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
+                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
+                        });
+
+                        bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.ChangeLog>>>() {
+                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.ChangeLog>>() {
                         });
                     }
 

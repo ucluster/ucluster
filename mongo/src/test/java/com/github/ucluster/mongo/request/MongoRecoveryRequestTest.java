@@ -51,25 +51,35 @@ public class MongoRecoveryRequestTest {
         session.setex(user.uuid() + ":ott", "123456", 1);
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "recovery")
                 .put("ott", "123456")
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "recovered")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "recovery")
+                        .build())
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "recovered")
+                                .build())
                         .build())
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
 
         final User.Request authRequest = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "authentication")
-                .put("identity", ImmutableMap.<String, Object>builder()
-                        .put("property", "username")
-                        .put("value", "kiwiwin")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "authentication")
                         .build())
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "recovered")
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("identity", ImmutableMap.<String, Object>builder()
+                                .put("property", "username")
+                                .put("value", "kiwiwin")
+                                .build())
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "recovered")
+                                .build())
                         .build())
                 .build());
 
@@ -83,25 +93,35 @@ public class MongoRecoveryRequestTest {
         session.setex(user.uuid() + ":ott", "654321", 1);
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "recovery")
                 .put("ott", "123456")
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "recovered")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "recovery")
+                        .build())
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "recovered")
+                                .build())
                         .build())
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.REJECTED));
 
         final User.Request authRequest = user.apply(ImmutableMap.<String, Object>builder()
-                .put("type", "authentication")
-                .put("identity", ImmutableMap.<String, Object>builder()
-                        .put("property", "username")
-                        .put("value", "kiwiwin")
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "authentication")
                         .build())
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "password")
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("identity", ImmutableMap.<String, Object>builder()
+                                .put("property", "username")
+                                .put("value", "kiwiwin")
+                                .build())
+                        .put("credential", ImmutableMap.<String, Object>builder()
+                                .put("property", "password")
+                                .put("value", "password")
+                                .build())
                         .build())
                 .build());
 

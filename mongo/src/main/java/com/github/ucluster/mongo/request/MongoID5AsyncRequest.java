@@ -1,0 +1,41 @@
+package com.github.ucluster.mongo.request;
+
+import com.github.ucluster.core.User;
+import com.github.ucluster.mongo.Model;
+import com.github.ucluster.mongo.MongoProperty;
+import com.github.ucluster.mongo.MongoRequest;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MongoID5AsyncRequest extends MongoRequest implements Model {
+    public MongoID5AsyncRequest() {
+        super();
+    }
+
+    public MongoID5AsyncRequest(User user, Map<String, Object> request) {
+        super(user, request);
+    }
+
+    @Override
+    public boolean autoApprovable() {
+        return false;
+    }
+
+    @Override
+    public void approve(Map<String, Object> detail) {
+
+    }
+
+    @Override
+    public void reject(Map<String, Object> detail) {
+        status(Status.REJECTED, new MongoProperty<>("reason", reason(detail)));
+
+        update();
+    }
+
+    private Object reason(Map<String, Object> detail) {
+        final Map<String, Object> properties = (Map<String, Object>) detail.getOrDefault("properties", new HashMap<>());
+        return properties.get("reason");
+    }
+}

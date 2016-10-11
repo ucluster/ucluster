@@ -5,7 +5,6 @@ import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
-import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.mongodb.morphia.Key;
@@ -26,10 +25,6 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     @Transient
     RequestFactory requestFactory;
 
-    @Inject
-    @Transient
-    Injector injector;
-
     @Override
     public User.Request apply(Map<String, Object> request) {
         final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
@@ -37,7 +32,6 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         req.status(Request.Status.PENDING);
         enhance(req);
         req.save();
-
 
         if (req.autoApprovable()) {
             req.approve(request);

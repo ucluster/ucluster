@@ -1,6 +1,8 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
+import com.google.common.collect.ImmutableMap;
+import org.joda.time.DateTime;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
@@ -62,7 +64,7 @@ public class MongoChangeLog extends MongoRecord<User.Request.ChangeLog> implemen
         private User.Request request;
         private User.Request.Status oldStatus;
 
-        public Builder(User.Request request) {
+        Builder(User.Request request) {
             this.request = request;
         }
 
@@ -72,7 +74,16 @@ public class MongoChangeLog extends MongoRecord<User.Request.ChangeLog> implemen
         }
 
         MongoChangeLog to(User.Request.Status newStatus) {
-            return new MongoChangeLog(request, oldStatus, newStatus);
+            final MongoChangeLog changeLog = new MongoChangeLog(request, oldStatus, newStatus);
+
+            changeLog.metadata = ImmutableMap.<String, Object>builder()
+                    .put("model", "change_log")
+                    .put("type", request.type())
+                    .put("action", newStatus == User.Request.Status.APPROVED ? "approve" : "reject")
+                    .build();
+            changeLog.createdAt = new DateTime();
+
+            return changeLog;
         }
     }
 }
