@@ -13,6 +13,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -57,6 +59,12 @@ public class MongoAuthenticationRequestTest {
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
+
+        final List<User.Request.ChangeLog> changeLogs = request.changeLogs();
+        assertThat(changeLogs.size(), is(1));
+
+        assertThat(changeLogs.get(0).oldStatus(), is(User.Request.Status.PENDING));
+        assertThat(changeLogs.get(0).newStatus(), is(User.Request.Status.APPROVED));
     }
 
     @Test

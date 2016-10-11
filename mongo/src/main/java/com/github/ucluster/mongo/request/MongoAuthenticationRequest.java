@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public class MongoAuthenticationRequest extends MongoRequest implements Model {
     MongoAuthenticationRequest() {
+        super();
     }
 
     public MongoAuthenticationRequest(User user, Map<String, Object> request) {

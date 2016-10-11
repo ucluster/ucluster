@@ -3,12 +3,15 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.api.Routing;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity("user_requests")
 public class MongoRequest extends MongoRecord<User.Request> implements User.Request, Model {
@@ -53,8 +56,25 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
         throw new RuntimeException("need implemented");
     }
 
+    @Override
+    public List<ChangeLog> changeLogs() {
+        return datastore.createQuery(MongoChangeLog.class)
+                .disableValidation()
+                .field("request").equal(new Key<>(MongoRequest.class, "user_requests", uuid))
+                .order("-createdAt")
+                .asList().stream()
+                .collect(Collectors.toList());
+    }
+
     protected void status(Status status) {
+        if (status != Status.PENDING) {
+            recordChangeLog(status);
+        }
         property(new MongoProperty<>("status", status.toString()));
+    }
+
+    protected void recordChangeLog(Status newStatus) {
+        datastore.save(MongoChangeLog.of(this).from(status()).to(newStatus));
     }
 
     protected void ensurePending() {

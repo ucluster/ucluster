@@ -3,6 +3,7 @@ package com.github.ucluster.core;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -32,6 +33,17 @@ public interface User extends Record {
             PENDING,
             APPROVED,
             REJECTED
+        }
+
+        List<ChangeLog> changeLogs();
+
+        interface ChangeLog extends Record {
+
+            String uuid();
+
+            Status oldStatus();
+
+            Status newStatus();
         }
     }
 }

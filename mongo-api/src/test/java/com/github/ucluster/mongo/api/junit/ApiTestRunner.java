@@ -55,6 +55,11 @@ public class ApiTestRunner extends InjectorBasedRunner {
                     if (requests != null) {
                         requests.deleteMany(new Document());
                     }
+
+                    final MongoCollection<Document> changeLogs = database.getCollection("user_request_changelogs");
+                    if (changeLogs != null) {
+                        changeLogs.deleteMany(new Document());
+                    }
                 }
             }
         }

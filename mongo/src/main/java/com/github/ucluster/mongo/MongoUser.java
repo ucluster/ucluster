@@ -8,6 +8,7 @@ import com.github.ucluster.core.util.PaginatedList;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
+import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.query.Query;
@@ -68,7 +69,9 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
 
     @Override
     public PaginatedList<Request> requests(Criteria criteria) {
-        final Query<MongoRequest> query = datastore.createQuery(MongoRequest.class).disableValidation();
+        final Query<MongoRequest> query = datastore.createQuery(MongoRequest.class)
+                .disableValidation()
+                .field("user").equal(new Key<>(MongoUser.class, "users", uuid));
 
         criteria.params(e -> {
             query.field(MongoProperty.valueMongoField(e.getKey())).in(e.getValue());
