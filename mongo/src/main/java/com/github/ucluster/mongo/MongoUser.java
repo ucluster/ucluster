@@ -35,16 +35,15 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
         req.createdAt = new DateTime();
         req.status(Request.Status.PENDING);
-        datastore.save(req);
+        enhance(req);
+        req.save();
 
-        final MongoRequest createdRequest = datastore.get(MongoRequest.class, new ObjectId(req.uuid()));
-        enhance(createdRequest);
 
-        if (createdRequest.autoApprovable()) {
-            createdRequest.approve(request);
+        if (req.autoApprovable()) {
+            req.approve(request);
         }
 
-        return createdRequest;
+        return req;
     }
 
     @Override
