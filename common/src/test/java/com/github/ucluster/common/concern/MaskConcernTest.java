@@ -15,6 +15,7 @@ public class MaskConcernTest {
 
     private Record.Property.Concern trailing;
     private Record.Property.Concern leading;
+    private Record.Property.Concern range;
 
     @Before
     public void setUp() throws Exception {
@@ -24,6 +25,11 @@ public class MaskConcernTest {
 
         leading = new MaskConcern("mask", ImmutableMap.<String, Object>builder()
                 .put("leading", 8)
+                .build());
+
+        range = new MaskConcern("mask", ImmutableMap.<String, Object>builder()
+                .put("from", 6)
+                .put("to", 14)
                 .build());
     }
 
@@ -66,5 +72,19 @@ public class MaskConcernTest {
 
         final Record.Property idNumber = record.property("id_number").get();
         assertThat(idNumber.value(), is("********8801011212"));
+    }
+
+    @Test
+    public void should_mask_property_range() {
+        final Record record = builder()
+                .path("id_number").value("510108198801011212")
+                .get();
+
+
+        range.effect(record, "id_number", Record.Property.Point.DELIVERY);
+
+        final Record.Property idNumber = record.property("id_number").get();
+        assertThat(idNumber.value(), is("510108********1212"));
+
     }
 }

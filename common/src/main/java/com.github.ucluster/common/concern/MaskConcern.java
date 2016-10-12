@@ -41,7 +41,7 @@ public class MaskConcern implements Record.Property.Concern {
             }
 
             return star(digits) + origin.substring(digits);
-        } else {
+        } else if (isTrailing()) {
             final int digits = getTrailingDigits();
 
             if (origin.length() <= digits) {
@@ -49,6 +49,17 @@ public class MaskConcern implements Record.Property.Concern {
             }
 
             return origin.substring(0, origin.length() - digits) + star(digits);
+        } else {
+            final int from = getFromDigits();
+            final int to = getToDigits();
+
+            if (origin.length() < from) {
+                return star(origin.length());
+            } else if (origin.length() < to) {
+                return origin.substring(0, from) + star(origin.length() - from);
+            } else {
+                return origin.substring(0, from) + star(to - from) + origin.substring(to);
+            }
         }
     }
 
@@ -58,6 +69,14 @@ public class MaskConcern implements Record.Property.Concern {
 
     private int getLeadingDigits() {
         return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("leading")));
+    }
+
+    private int getFromDigits() {
+        return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("from")));
+    }
+
+    private int getToDigits() {
+        return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("to")));
     }
 
     private String star(int length) {
@@ -80,5 +99,9 @@ public class MaskConcern implements Record.Property.Concern {
 
     private boolean isLeading() {
         return ((Map<String, Object>) configuration()).containsKey("leading");
+    }
+
+    private boolean isTrailing() {
+        return ((Map<String, Object>) configuration()).containsKey("trailing");
     }
 }

@@ -164,6 +164,16 @@ Leading example:
     
 if the original value is `510108198801011212` and `leading` is `8`, the output is `********8801011212`. If the original value length is less than `leading` indicates, then it will return value with original length and are content are masked    
 
+Range example:
+
+    mask: {
+        from: 6
+        to: 14
+    }
+    
+if the original value is `510108198801011212` and `from` is `6` and `to` is `14`, the output is `510108********1212`. If the original value length is less than required, then it will return value with original length and are content are masked    
+
+
 #### hidden
 
 Example:
