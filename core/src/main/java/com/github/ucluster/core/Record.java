@@ -48,7 +48,8 @@ public interface Record {
         enum Point {
             VALIDATE,
             BEFORE_CREATE,
-            BEFORE_UPDATE
+            BEFORE_UPDATE,
+            DELIVERY
         }
     }
 }

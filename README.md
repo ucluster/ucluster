@@ -143,6 +143,16 @@ Example:
 default `transient` is `false`
     
 for request like authentication, you may not want to store the request property, so you can declare it as transient, transient is effected for BEFORE_UPDATE and BEFORE_CREATE, so validation of the property is still working     
+
+#### mask
+
+Example:
+
+    mask: {
+        trailing: 8
+    }
+    
+if property configured as mask, it will automatically mask the original property value, for example: if the original value is `510108198801011212` and `trailing` is `8`, the output is `5101081988********`     
     
 #### customize concern    
 
