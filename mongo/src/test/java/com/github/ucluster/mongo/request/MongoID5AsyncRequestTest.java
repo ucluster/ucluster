@@ -108,7 +108,7 @@ public class MongoID5AsyncRequestTest {
     }
 
     @Test
-    public void should_failed_reject_request_if_change_log_definition_not_matched() {
+    public void should_failed_reject_request_if_change_log_definition_not_matched_and_status_unchanged() {
         capture(thrown).errors(
                 (path, type) -> path.equals("reason") && type.equals("required")
         );
@@ -134,5 +134,38 @@ public class MongoID5AsyncRequestTest {
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.PENDING));
+    }
+
+    @Test
+    public void should_success_approve_request() {
+        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "id5_async")
+                        .build())
+                .put("properties", ImmutableMap.<String, String>builder()
+                        .put("id_number", "510108197806101318")
+                        .put("id_name", "张三")
+                        .build())
+                .build());
+
+        request.approve(ImmutableMap.<String, Object>builder()
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("model", "request")
+                        .put("type", "id5_async")
+                        .build())
+                .put("properties", ImmutableMap.<String, String>builder()
+                        .build())
+                .build());
+
+        assertThat(request.status(), is(User.Request.Status.APPROVED));
+
+        final User.Request requestFound = user.request(request.uuid()).get();
+        assertThat(requestFound.status(), is(User.Request.Status.APPROVED));
+        assertThat(requestFound.type(), is("id5_async"));
+
+        final User userFound = users.uuid(this.user.uuid()).get();
+        assertThat(userFound.property("id_number").get().value(), is("510108197806101318"));
+        assertThat(userFound.property("id_name").get().value(), is("张三"));
     }
 }
