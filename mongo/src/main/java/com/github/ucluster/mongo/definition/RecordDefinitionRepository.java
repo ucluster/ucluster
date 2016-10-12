@@ -21,30 +21,19 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
 
     @Override
     public Definition<T> find(Map<String, Object> metadata) {
-        if (isAction(metadata)) {
-            final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
-                    .field("model").equal("request")
-                    .field("type").equal(type(metadata))
-                    .get();
+        return load(dsl(metadata), metadata);
+    }
 
+    private MongoDSLScript dsl(Map<String, Object> metadata) {
+        final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
+                .field("model").equal(target_model(metadata))
+                .field("type").equal(type(metadata))
+                .get();
 
-            if (dsl == null) {
-                throw new RecordTypeNotSupportedException(type(metadata));
-            }
-
-            return DSLCompiler.load_action(injector, dsl.script(), action(metadata));
-        } else {
-            final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
-                    .field("model").equal(model(metadata))
-                    .field("type").equal(type(metadata))
-                    .get();
-
-            if (dsl == null) {
-                throw new RecordTypeNotSupportedException(type(metadata));
-            }
-
-            return DSLCompiler.load(injector, dsl.script());
+        if (dsl == null) {
+            throw new RecordTypeNotSupportedException(type(metadata));
         }
+        return dsl;
     }
 
     private String action(Map<String, Object> metadata) {
@@ -52,14 +41,29 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
     }
 
     private boolean isAction(Map<String, Object> metadata) {
-        return "change_log".equals(model(metadata));
+        return "change_log".equals(origin_model(metadata));
     }
 
-    private String model(Map<String, Object> metadata) {
+    private String origin_model(Map<String, Object> metadata) {
         return (String) metadata.getOrDefault("model", "user");
+    }
+
+    private String target_model(Map<String, Object> metadata) {
+        if (isAction(metadata)) {
+            return "request";
+        }
+        return origin_model(metadata);
     }
 
     private String type(Map<String, Object> metadata) {
         return (String) metadata.getOrDefault("type", "default");
+    }
+
+    private Definition<T> load(MongoDSLScript dsl, Map<String, Object> metadata) {
+        if (isAction(metadata)) {
+            return DSLCompiler.load_action(injector, dsl.script(), action(metadata));
+        } else {
+            return DSLCompiler.load(injector, dsl.script());
+        }
     }
 }
