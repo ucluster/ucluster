@@ -155,4 +155,21 @@ public class MongoUserTest {
         assertThat(requests.toPage(1, 10).getTotalEntriesCount(), is(11L));
         assertThat(requests.toPage(1, 10).getEntries().size(), is(10));
     }
+
+    @Test
+    public void should_not_get_requests_from_other_users() {
+        final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("username", "another")
+                        .put("password", "another")
+                        .build())
+                .get();
+
+        users.create(request);
+
+        final PaginatedList<User.Request> requests = user.requests(Criteria.empty());
+
+        assertThat(requests.toPage(1, 10).getTotalEntriesCount(), is(0L));
+        assertThat(requests.toPage(1, 10).getEntries().size(), is(0));
+    }
 }

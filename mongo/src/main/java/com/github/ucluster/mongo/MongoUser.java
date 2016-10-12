@@ -26,10 +26,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
 
     @Override
     public User.Request apply(Map<String, Object> request) {
-        final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
-        req.status(Request.Status.PENDING);
-        enhance(req);
-        req.save();
+        final MongoRequest req = saveRequest(request);
 
         if (req.autoApprovable()) {
             req.approve(request);
@@ -43,11 +40,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         try {
             final MongoRequest request = datastore.get(MongoRequest.class, new ObjectId(requestUuid));
 
-            if (request == null) {
-                return Optional.empty();
-            }
-
-            if (!request.user.uuid().equals(uuid())) {
+            if (request == null || !request.user.uuid().equals(uuid())) {
                 return Optional.empty();
             }
 
@@ -79,6 +72,14 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     private void enhance(MongoRequest request) {
         request.user = this;
         injector.injectMembers(request);
+    }
+
+    private MongoRequest saveRequest(Map<String, Object> request) {
+        final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
+        req.status(Request.Status.PENDING);
+        enhance(req);
+        req.save();
+        return req;
     }
 
     @Override
