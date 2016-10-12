@@ -2,6 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.exception.RequestTypeNotSupportException;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -18,8 +19,7 @@ public class MongoRequestFactory implements RequestFactory {
 
     @Override
     public User.Request create(User user, Map<String, Object> request) {
-        final Class<? extends User.Request> requestClass = injector.getInstance(Key.get(new TypeLiteral<User.Request>() {
-        }, Names.named("request." + type(request) + ".factory"))).getClass();
+        final Class<? extends User.Request> requestClass = getRequestClass(user, request);
 
         try {
             final Constructor<? extends User.Request> constructor = requestClass.getConstructor(User.class, Map.class);
@@ -27,6 +27,15 @@ public class MongoRequestFactory implements RequestFactory {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("error to find request constructor", e);
+        }
+    }
+
+    private Class<? extends User.Request> getRequestClass(User user, Map<String, Object> request) {
+        try {
+            return injector.getInstance(Key.get(new TypeLiteral<User.Request>() {
+            }, Names.named("request." + type(request) + ".factory"))).getClass();
+        } catch (Exception e) {
+            throw new RequestTypeNotSupportException(user, request);
         }
     }
 

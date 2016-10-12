@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.exception.RequestTypeNotSupportException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
@@ -46,7 +47,6 @@ public class MongoUserTest {
     public void should_user_apply_auto_approvable_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "auto_approvable")
                         .build()
                 )
@@ -68,7 +68,6 @@ public class MongoUserTest {
     public void should_user_apply_non_auto_approvable_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "non_auto_approvable")
                         .build()
                 )
@@ -87,7 +86,6 @@ public class MongoUserTest {
     public void should_user_apply_non_auto_approvable_request_and_approve_it_later() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "non_auto_approvable")
                         .build()
                 )
@@ -113,7 +111,6 @@ public class MongoUserTest {
     public void should_user_apply_non_auto_approvable_request_and_reject_it_later() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "non_auto_approvable")
                         .build()
                 )
@@ -140,7 +137,6 @@ public class MongoUserTest {
         for (int count = 0; count < 11; count++) {
             user.apply(ImmutableMap.<String, Object>builder()
                     .put("metadata", ImmutableMap.<String, Object>builder()
-                            .put("model", "request")
                             .put("type", "non_auto_approvable")
                             .build()
                     )
@@ -171,5 +167,21 @@ public class MongoUserTest {
 
         assertThat(requests.toPage(1, 10).getTotalEntriesCount(), is(0L));
         assertThat(requests.toPage(1, 10).getEntries().size(), is(0));
+    }
+
+    @Test
+    public void should_failed_to_apply_not_supported_request_type() {
+        thrown.expect(RequestTypeNotSupportException.class);
+
+        user.apply(ImmutableMap.<String, Object>builder()
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("type", "non_supported")
+                        .build()
+                )
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("nickname", "newnickname")
+                        .build()
+                ).build());
+
     }
 }
