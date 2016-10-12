@@ -62,7 +62,7 @@ public class EmailConcernTest {
                 .path("email").value("kiwi.swhite.coder@gmail.com")
                 .get();
 
-        email.effect(record, "email");
+        email.effect(record, "email", Record.Property.Point.VALIDATE);
     }
 
     @Test
@@ -75,6 +75,6 @@ public class EmailConcernTest {
                 .path("email").value("invalid.email")
                 .get();
 
-        email.effect(record, "email");
+        email.effect(record, "email", Record.Property.Point.VALIDATE);
     }
 }

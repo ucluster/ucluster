@@ -37,7 +37,7 @@ public class EmailConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath) {
+    public void effect(Record record, String propertyPath, Record.Property.Point point) {
         if (enabled) {
             final Optional<Record.Property> property = record.property(propertyPath);
 

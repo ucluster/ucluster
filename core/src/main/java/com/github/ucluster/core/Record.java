@@ -40,7 +40,7 @@ public interface Record {
 
             boolean isAbout(Point point);
 
-            void effect(Record record, String propertyPath);
+            void effect(Record record, String propertyPath, Point point);
 
             Object configuration();
         }

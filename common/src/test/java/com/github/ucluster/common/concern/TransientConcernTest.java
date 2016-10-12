@@ -57,12 +57,23 @@ public class TransientConcernTest {
     }
 
     @Test
-    public void should_effect_property_value_as_null() {
+    public void should_effect_property_value_as_null_before_create() {
         final Record record = builder()
                 .path("password").value("password")
                 .get();
 
-        enabledTransient.effect(record, "password");
+        enabledTransient.effect(record, "password", Record.Property.Point.BEFORE_CREATE);
+
+        assertThat(record.property("password").get().value(), is(nullValue()));
+    }
+
+    @Test
+    public void should_effect_property_value_as_null_before_update() {
+        final Record record = builder()
+                .path("password").value("password")
+                .get();
+
+        enabledTransient.effect(record, "password", Record.Property.Point.BEFORE_UPDATE);
 
         assertThat(record.property("password").get().value(), is(nullValue()));
     }

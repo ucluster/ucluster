@@ -56,7 +56,7 @@ public class CredentialConcernTest {
                 .path("password").value("password")
                 .get();
 
-        password.effect(record, "password");
+        password.effect(record, "password", Record.Property.Point.VALIDATE);
 
         final String encrypted = (String) record.property("password").get().value();
         assertThat(encrypted, not("password"));

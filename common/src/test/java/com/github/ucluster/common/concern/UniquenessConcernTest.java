@@ -3,6 +3,7 @@ package com.github.ucluster.common.concern;
 import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -14,11 +15,14 @@ import org.mockito.ArgumentMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static com.google.inject.Guice.createInjector;
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,6 +44,35 @@ public class UniquenessConcernTest {
         injector.injectMembers(uniqueness);
     }
 
+
+    @Test
+    public void should_uniqueness_care_about_before_create_and_before_update() {
+        final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
+                .put(Record.Property.Point.VALIDATE, false)
+                .put(Record.Property.Point.BEFORE_CREATE, true)
+                .put(Record.Property.Point.BEFORE_UPDATE, true)
+                .build();
+
+        expected.entrySet().stream()
+                .forEach(entry ->
+                        assertThat(uniqueness.isAbout(entry.getKey()), is(entry.getValue()))
+                );
+    }
+
+    @Test
+    public void should_non_uniqueness_care_about_nothing() {
+        final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
+                .put(Record.Property.Point.VALIDATE, false)
+                .put(Record.Property.Point.BEFORE_CREATE, false)
+                .put(Record.Property.Point.BEFORE_UPDATE, false)
+                .build();
+
+        expected.entrySet().stream()
+                .forEach(entry ->
+                        assertThat(nonUniqueness.isAbout(entry.getKey()), is(entry.getValue()))
+                );
+    }
+
     @Test
     public void should_success_when_unique_and_uniqueness_is_required() {
         final Record record = SimpleRecord.builder()
@@ -54,7 +87,7 @@ public class UniquenessConcernTest {
             }
         }))).thenReturn(Optional.empty());
 
-        uniqueness.effect(record, "username");
+        uniqueness.effect(record, "username", Record.Property.Point.BEFORE_CREATE);
     }
 
     @Test
@@ -75,7 +108,7 @@ public class UniquenessConcernTest {
             }
         }))).thenReturn(Optional.of(record));
 
-        uniqueness.effect(record, "username");
+        uniqueness.effect(record, "username", Record.Property.Point.BEFORE_CREATE);
     }
 
     @Test
@@ -92,7 +125,7 @@ public class UniquenessConcernTest {
             }
         }))).thenReturn(Optional.empty());
 
-        nonUniqueness.effect(record, "username");
+        nonUniqueness.effect(record, "username", Record.Property.Point.BEFORE_CREATE);
     }
 
     @Test
@@ -109,7 +142,7 @@ public class UniquenessConcernTest {
             }
         }))).thenReturn(Optional.of(record));
 
-        nonUniqueness.effect(record, "username");
+        nonUniqueness.effect(record, "username", Record.Property.Point.BEFORE_CREATE);
     }
 
     private Injector getInjector() {

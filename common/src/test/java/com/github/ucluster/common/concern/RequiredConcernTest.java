@@ -2,12 +2,17 @@ package com.github.ucluster.common.concern;
 
 import com.github.ucluster.common.SimpleRecord;
 import com.github.ucluster.core.Record;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Map;
+
 import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class RequiredConcernTest {
 
@@ -24,12 +29,41 @@ public class RequiredConcernTest {
     }
 
     @Test
+    public void should_required_care_about_validate() {
+        final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
+                .put(Record.Property.Point.VALIDATE, true)
+                .put(Record.Property.Point.BEFORE_CREATE, false)
+                .put(Record.Property.Point.BEFORE_UPDATE, false)
+                .build();
+
+        expected.entrySet().stream()
+                .forEach(entry ->
+                        assertThat(required.isAbout(entry.getKey()), is(entry.getValue()))
+                );
+    }
+
+
+    @Test
+    public void should_optional_care_about_nothing() {
+        final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
+                .put(Record.Property.Point.VALIDATE, false)
+                .put(Record.Property.Point.BEFORE_CREATE, false)
+                .put(Record.Property.Point.BEFORE_UPDATE, false)
+                .build();
+
+        expected.entrySet().stream()
+                .forEach(entry ->
+                        assertThat(optional.isAbout(entry.getKey()), is(entry.getValue()))
+                );
+    }
+
+    @Test
     public void should_success_required_when_value_presence() {
         final Record record = SimpleRecord.builder()
                 .path("username").value("kiwiwin")
                 .get();
 
-        required.effect(record, "username");
+        required.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 
     @Test
@@ -42,7 +76,7 @@ public class RequiredConcernTest {
                 .path("username").none()
                 .get();
 
-        required.effect(record, "username");
+        required.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 
     @Test
@@ -55,7 +89,7 @@ public class RequiredConcernTest {
                 .path("username").value(null)
                 .get();
 
-        required.effect(record, "username");
+        required.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 
     @Test
@@ -64,7 +98,7 @@ public class RequiredConcernTest {
                 .path("username").value("kiwiwin")
                 .get();
 
-        optional.effect(record, "username");
+        optional.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 
     @Test
@@ -73,6 +107,6 @@ public class RequiredConcernTest {
                 .path("username").none()
                 .get();
 
-        optional.effect(record, "username");
+        optional.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 }

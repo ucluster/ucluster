@@ -29,7 +29,7 @@ public class ImmutableConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath) {
+    public void effect(Record record, String propertyPath, Record.Property.Point point) {
         if (enabled) {
             throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
         }

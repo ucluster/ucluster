@@ -55,7 +55,7 @@ public class FormatConcernTest {
                 .path("username").none()
                 .get();
 
-        format.effect(record, "username");
+        format.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class FormatConcernTest {
                 .path("username").value("kiwiwin")
                 .get();
 
-        format.effect(record, "username");
+        format.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 
     @Test
@@ -77,6 +77,6 @@ public class FormatConcernTest {
                 .path("username").value("kiwi")
                 .get();
 
-        format.effect(record, "username");
+        format.effect(record, "username", Record.Property.Point.VALIDATE);
     }
 }

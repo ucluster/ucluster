@@ -62,9 +62,9 @@ public class ImmutableConcernTest {
         );
 
         final Record record = builder()
-                .path("email").value("invalid.email")
+                .path("email").value("another.email")
                 .get();
 
-        immutable.effect(record, "email");
+        immutable.effect(record, "email", Record.Property.Point.BEFORE_UPDATE);
     }
 }

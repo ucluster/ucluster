@@ -20,11 +20,11 @@ public class RequiredConcern implements Record.Property.Concern {
 
     @Override
     public boolean isAbout(Record.Property.Point point) {
-        return Record.Property.Point.VALIDATE == point;
+        return enabled && Record.Property.Point.VALIDATE == point;
     }
 
     @Override
-    public void effect(Record record, String propertyPath) {
+    public void effect(Record record, String propertyPath, Record.Property.Point point) {
         if (enabled) {
             final Record.Property property = record.property(propertyPath).orElseThrow(() ->
                     new ConcernEffectException(

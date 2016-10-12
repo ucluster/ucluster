@@ -25,7 +25,7 @@ public class DefaultPropertyDefinition<T extends Record> implements Definition.P
                 .filter(concern -> concern.isAbout(point))
                 .map(concern -> {
                     try {
-                        concern.effect(record, propertyPath);
+                        concern.effect(record, propertyPath, point);
                         return null;
                     } catch (ConcernEffectException e) {
                         return e.getEffectResult();
