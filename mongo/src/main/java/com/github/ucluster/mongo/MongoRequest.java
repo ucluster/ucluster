@@ -22,6 +22,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     public MongoRequest(User user, Map<String, Object> request) {
+        status(Status.PENDING);
         this.user = user;
         this.metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
         ((Map<String, Object>) request.get("properties")).entrySet().stream()

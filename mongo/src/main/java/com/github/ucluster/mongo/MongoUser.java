@@ -76,7 +76,6 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
 
     private MongoRequest saveRequest(Map<String, Object> request) {
         final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
-        req.status(Request.Status.PENDING);
         enhance(req);
         req.save();
         return req;
