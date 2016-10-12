@@ -20,17 +20,22 @@ public class CredentialConcern implements Record.Property.Concern {
 
     @Override
     public boolean isAbout(Record.Property.Point point) {
-        return enabled && (Record.Property.Point.BEFORE_CREATE == point || Record.Property.Point.BEFORE_UPDATE == point);
+        return enabled && (Record.Property.Point.BEFORE_CREATE == point || Record.Property.Point.BEFORE_UPDATE == point || Record.Property.Point.DELIVERY == point);
     }
 
     @Override
     public void effect(Record record, String propertyPath, Record.Property.Point point) {
         if (enabled) {
             final Optional<Record.Property> property = record.property(propertyPath);
-
-            property.ifPresent(prop -> {
-                prop.value(encrypt(String.valueOf(property.get().value())));
-            });
+            if (point != Record.Property.Point.DELIVERY) {
+                property.ifPresent(prop -> {
+                    prop.value(encrypt(String.valueOf(property.get().value())));
+                });
+            } else {
+                property.ifPresent(prop -> {
+                    prop.value(null);
+                });
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import static com.github.ucluster.common.SimpleRecord.builder;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 public class CredentialConcernTest {
     private Record.Property.Concern password;
@@ -23,11 +24,12 @@ public class CredentialConcernTest {
     }
 
     @Test
-    public void should_password_care_about_before_create_and_before_update() {
+    public void should_credential_care_about_before_create_and_before_update() {
         final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
                 .put(Record.Property.Point.VALIDATE, false)
                 .put(Record.Property.Point.BEFORE_CREATE, true)
                 .put(Record.Property.Point.BEFORE_UPDATE, true)
+                .put(Record.Property.Point.DELIVERY, true)
                 .build();
 
         expected.entrySet().stream()
@@ -37,11 +39,12 @@ public class CredentialConcernTest {
     }
 
     @Test
-    public void should_non_password_care_about_nothing() {
+    public void should_non_credential_care_about_nothing() {
         final Map<Record.Property.Point, Boolean> expected = ImmutableMap.<Record.Property.Point, Boolean>builder()
                 .put(Record.Property.Point.VALIDATE, false)
                 .put(Record.Property.Point.BEFORE_CREATE, false)
                 .put(Record.Property.Point.BEFORE_UPDATE, false)
+                .put(Record.Property.Point.DELIVERY, false)
                 .build();
 
         expected.entrySet().stream()
@@ -51,7 +54,7 @@ public class CredentialConcernTest {
     }
 
     @Test
-    public void should_encrypt_password() {
+    public void should_encrypt_credential() {
         final Record record = builder()
                 .path("password").value("password")
                 .get();
@@ -60,5 +63,16 @@ public class CredentialConcernTest {
 
         final String encrypted = (String) record.property("password").get().value();
         assertThat(encrypted, not("password"));
+    }
+
+    @Test
+    public void should_not_delivery_credential() {
+        final Record record = builder()
+                .path("password").value("password")
+                .get();
+
+        password.effect(record, "password", Record.Property.Point.DELIVERY);
+
+        assertThat(record.property("password").get().value(), is(nullValue()));
     }
 }
