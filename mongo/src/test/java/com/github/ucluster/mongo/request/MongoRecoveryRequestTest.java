@@ -2,10 +2,10 @@ package com.github.ucluster.mongo.request;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
-import com.github.ucluster.mongo.CreateUserRequestBuilder;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.github.ucluster.session.Session;
+import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;

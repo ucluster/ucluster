@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo;
+package com.github.ucluster.test.framework.request;
 
 import java.util.HashMap;
 import java.util.Map;
