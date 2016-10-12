@@ -10,7 +10,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.Map;
 
-import static com.github.ucluster.common.ConcernEffectExceptionMatcher.capture;
+import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

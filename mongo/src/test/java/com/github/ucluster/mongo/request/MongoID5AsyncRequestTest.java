@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.github.ucluster.mongo.junit.matcher.ConcernEffectExceptionMatcher.capture;
+import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static com.github.ucluster.test.framework.matcher.RecordMatcher.expect;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

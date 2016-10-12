@@ -12,7 +12,7 @@ import org.junit.rules.ExpectedException;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.ucluster.common.ConcernEffectExceptionMatcher.capture;
+import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

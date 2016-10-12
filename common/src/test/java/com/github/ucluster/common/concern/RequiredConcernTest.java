@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static com.github.ucluster.common.ConcernEffectExceptionMatcher.capture;
+import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 
 public class RequiredConcernTest {
 

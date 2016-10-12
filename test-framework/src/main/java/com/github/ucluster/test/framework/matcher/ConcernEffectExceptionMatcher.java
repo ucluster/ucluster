@@ -1,4 +1,4 @@
-package com.github.ucluster.common;
+package com.github.ucluster.test.framework.matcher;
 
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
@@ -48,6 +48,6 @@ public class ConcernEffectExceptionMatcher {
     }
 
     public interface ErrorMatcher {
-        boolean verify(String propertyPath, Object value);
+        boolean verify(String propertyPath, Object type);
     }
 }
