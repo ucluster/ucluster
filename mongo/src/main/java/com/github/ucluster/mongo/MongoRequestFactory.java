@@ -2,7 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.RequestTypeNotSupportException;
+import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -35,7 +35,7 @@ public class MongoRequestFactory implements RequestFactory {
             return injector.getInstance(Key.get(new TypeLiteral<User.Request>() {
             }, Names.named("request." + type(request) + ".factory"))).getClass();
         } catch (Exception e) {
-            throw new RequestTypeNotSupportException(user, request);
+            throw new RecordTypeNotSupportedException((String) type(request));
         }
     }
 

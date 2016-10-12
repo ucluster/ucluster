@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.RequestTypeNotSupportException;
+import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
@@ -171,7 +171,7 @@ public class MongoUserTest {
 
     @Test
     public void should_failed_to_apply_not_supported_request_type() {
-        thrown.expect(RequestTypeNotSupportException.class);
+        thrown.expect(RecordTypeNotSupportedException.class);
 
         user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()

@@ -103,7 +103,8 @@ public class MongoUserRepository implements Repository<User> {
         }
 
         Map<String, Object> metadata() {
-            final Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
+            Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
+            metadata = new HashMap<>(metadata);
 
             metadata.put("model", "user");
             if (!metadata.containsKey("type")) {

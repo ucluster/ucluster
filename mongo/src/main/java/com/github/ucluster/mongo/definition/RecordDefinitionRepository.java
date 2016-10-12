@@ -4,6 +4,7 @@ import com.github.ucluster.common.definition.DSLCompiler;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
 import com.google.inject.Injector;
 import org.mongodb.morphia.Datastore;
@@ -28,7 +29,7 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
 
 
             if (dsl == null) {
-                throw new RuntimeException("dsl not found");
+                throw new RecordTypeNotSupportedException(type(metadata));
             }
 
             return DSLCompiler.load_action(injector, dsl.script(), action(metadata));
@@ -39,7 +40,7 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
                     .get();
 
             if (dsl == null) {
-                throw new RuntimeException("dsl not found");
+                throw new RecordTypeNotSupportedException(type(metadata));
             }
 
             return DSLCompiler.load(injector, dsl.script());

@@ -2,6 +2,7 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.ConcernEffectException;
+import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
@@ -53,6 +54,23 @@ public class MongoUserRepositoryTest {
         thrown.expect(ConcernEffectException.class);
 
         final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("username", "kiwi")
+                        .put("password", "password")
+                        .build())
+                .get();
+
+        user = users.create(request);
+    }
+
+    @Test
+    public void should_failed_to_create_user_if_type_not_supported() {
+        thrown.expect(RecordTypeNotSupportedException.class);
+
+        final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("type", "not_supported")
+                        .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")
