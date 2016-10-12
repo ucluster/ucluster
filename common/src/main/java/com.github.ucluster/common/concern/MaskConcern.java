@@ -32,18 +32,32 @@ public class MaskConcern implements Record.Property.Concern {
         });
     }
 
+    private String mask(String origin) {
+        if (isLeading()) {
+            final int digits = getLeadingDigits();
+
+            if (origin.length() <= digits) {
+                return star(origin.length());
+            }
+
+            return star(digits) + origin.substring(digits);
+        } else {
+            final int digits = getTrailingDigits();
+
+            if (origin.length() <= digits) {
+                return star(origin.length());
+            }
+
+            return origin.substring(0, origin.length() - digits) + star(digits);
+        }
+    }
+
     private int getTrailingDigits() {
         return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("trailing")));
     }
 
-    private String mask(String origin) {
-        final int digits = getTrailingDigits();
-
-        if (origin.length() <= digits) {
-            return star(origin.length());
-        }
-
-        return origin.substring(0, origin.length() - digits) + star(digits);
+    private int getLeadingDigits() {
+        return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("leading")));
     }
 
     private String star(int length) {
@@ -61,6 +75,10 @@ public class MaskConcern implements Record.Property.Concern {
 
     @Override
     public Object configuration() {
-        return configuration();
+        return configuration;
+    }
+
+    private boolean isLeading() {
+        return ((Map<String, Object>) configuration()).containsKey("leading");
     }
 }

@@ -14,11 +14,16 @@ import static org.hamcrest.Matchers.is;
 public class MaskConcernTest {
 
     private Record.Property.Concern trailing;
+    private Record.Property.Concern leading;
 
     @Before
     public void setUp() throws Exception {
         trailing = new MaskConcern("mask", ImmutableMap.<String, Object>builder()
                 .put("trailing", 8)
+                .build());
+
+        leading = new MaskConcern("mask", ImmutableMap.<String, Object>builder()
+                .put("leading", 8)
                 .build());
     }
 
@@ -48,5 +53,18 @@ public class MaskConcernTest {
 
         final Record.Property idNumber = record.property("id_number").get();
         assertThat(idNumber.value(), is("5101081970********"));
+    }
+
+    @Test
+    public void should_mask_property_leading() {
+        final Record record = builder()
+                .path("id_number").value("510108198801011212")
+                .get();
+
+
+        leading.effect(record, "id_number", Record.Property.Point.DELIVERY);
+
+        final Record.Property idNumber = record.property("id_number").get();
+        assertThat(idNumber.value(), is("********8801011212"));
     }
 }

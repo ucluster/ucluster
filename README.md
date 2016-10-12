@@ -146,13 +146,23 @@ for request like authentication, you may not want to store the request property,
 
 #### mask
 
-Example:
+Effect at delivery property
+
+Trailing example:
 
     mask: {
         trailing: 8
     }
     
-if property configured as mask, it will automatically mask the original property value, for example: if the original value is `510108198801011212` and `trailing` is `8`, the output is `5101081988********`     
+if the original value is `510108198801011212` and `trailing` is `8`, the output is `5101081988********`. If the original value length is less than `trailing` indicates, then it will return value with original length and are content are masked     
+
+Leading example:
+
+    mask: {
+        leading: 8
+    }
+    
+if the original value is `510108198801011212` and `leading` is `8`, the output is `********8801011212`. If the original value length is less than `leading` indicates, then it will return value with original length and are content are masked    
 
 #### hidden
 
