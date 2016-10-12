@@ -153,6 +153,16 @@ Example:
     }
     
 if property configured as mask, it will automatically mask the original property value, for example: if the original value is `510108198801011212` and `trailing` is `8`, the output is `5101081988********`     
+
+#### hidden
+
+Example:
+
+    hidden: true
+    
+default `transient` is `false`
+
+if value is `true`, then will not returned to api
     
 #### customize concern    
 
