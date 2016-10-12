@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class MongoRecord<T extends Record> implements Record {
+public class MongoRecord<T extends Record> implements Record, Model {
     @Id
     protected ObjectId uuid;
 
@@ -134,6 +134,13 @@ public class MongoRecord<T extends Record> implements Record {
         dirtyTracker.clear();
     }
 
+    protected Map<String, Object> deliveryProperties() {
+        definition().effect(Property.Point.DELIVERY, (T) this);
+        return properties().stream()
+                .filter(property -> property.value() != null)
+                .collect(Collectors.toMap(Property::path, Property::value));
+    }
+
     @Transient
     protected DirtyTracker dirtyTracker = new DirtyTracker();
 
@@ -163,5 +170,22 @@ public class MongoRecord<T extends Record> implements Record {
         void clear() {
             dirtyProperties.clear();
         }
+    }
+
+    @Override
+    public Map<String, Object> toJson() {
+        Map<String, Object> json = new HashMap<>();
+
+        json.put("id", uuid());
+        json.put("created_at", createdAt());
+        json.put("metadata", metadata());
+        json.put("properties", deliveryProperties());
+
+        return json;
+    }
+
+    @Override
+    public Map<String, Object> toReferenceJson() {
+        return toJson();
     }
 }

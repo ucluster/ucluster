@@ -12,10 +12,8 @@ import org.mongodb.morphia.annotations.Transient;
 import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Entity("users")
 public class MongoUser extends MongoRecord<User> implements User, Model {
@@ -83,21 +81,9 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
 
     @Override
     public Map<String, Object> toJson() {
-        Map<String, Object> json = new HashMap<>();
-
-        json.put("id", uuid());
+        Map<String, Object> json = super.toJson();
         json.put("uri", Routing.user(this));
-        json.put("created_at", createdAt());
-        json.put("metadata", metadata());
-        json.put("properties", properties().stream()
-                .filter(prop -> !definition().property(prop.path()).definition().containsKey("credential"))
-                .collect(Collectors.toMap(Property::path, Property::value)));
 
         return json;
-    }
-
-    @Override
-    public Map<String, Object> toReferenceJson() {
-        return toJson();
     }
 }
