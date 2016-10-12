@@ -2,7 +2,6 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
 import com.google.common.collect.ImmutableMap;
-import org.joda.time.DateTime;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
@@ -81,7 +80,6 @@ public class MongoChangeLog extends MongoRecord<User.Request.ChangeLog> implemen
                     .put("type", request.type())
                     .put("action", newStatus == User.Request.Status.APPROVED ? "approve" : "reject")
                     .build();
-            changeLog.createdAt = new DateTime();
 
             return changeLog;
         }

@@ -6,7 +6,6 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Transient;
@@ -28,7 +27,6 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     @Override
     public User.Request apply(Map<String, Object> request) {
         final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
-        req.createdAt = new DateTime();
         req.status(Request.Status.PENDING);
         enhance(req);
         req.save();

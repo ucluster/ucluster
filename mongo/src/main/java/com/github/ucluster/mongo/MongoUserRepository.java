@@ -9,7 +9,6 @@ import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 
@@ -34,7 +33,6 @@ public class MongoUserRepository implements Repository<User> {
         final CreateUserRequest createUserRequest = new CreateUserRequest(request);
 
         final MongoUser user = new MongoUser();
-        user.createdAt = new DateTime();
         user.metadata = createUserRequest.metadata();
 
         enhance(user);
