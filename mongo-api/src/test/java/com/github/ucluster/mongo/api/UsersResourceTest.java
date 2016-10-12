@@ -66,7 +66,7 @@ public class UsersResourceTest extends ApiSupport {
                 CreateUserRequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "k")
-                                .put("password", "k")
+                                .put("password", "p")
                                 .build())
                         .get()
         );
@@ -81,6 +81,29 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat(json.path("$.errors[1].property"), is("username"));
         assertThat(json.path("$.errors[1].cause"), is("format"));
+    }
+
+    @Test
+    public void should_failed_to_create_user_with_not_suppported_type() {
+        final Response response = post("users",
+                CreateUserRequestBuilder.of()
+                        .metadata(ImmutableMap.<String, Object>builder()
+                                .put("type", "unsupported")
+                                .build())
+                        .properties(ImmutableMap.<String, Object>builder()
+                                .put("username", "kiwiwin")
+                                .put("password", "password")
+                                .build())
+                        .get()
+        );
+
+        assertThat(response.getStatus(), is(400));
+
+        final JsonContext json = json(response);
+
+        assertThat(json.path("$.errors.length()"), is(1));
+        assertThat(json.path("$.errors[0].cause"), is("unsupported.type"));
+        assertThat(json.path("$.errors[0].type"), is("unsupported"));
     }
 
     @Test
