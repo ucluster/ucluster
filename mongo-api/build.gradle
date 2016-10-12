@@ -22,4 +22,6 @@ dependencies {
     testCompile "org.glassfish.jersey.test-framework:jersey-test-framework-core:$jersey"
     testCompile "org.glassfish.jersey.connectors:jersey-apache-connector:$jersey"
     testCompile "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:$jersey"
+
+    testCompile project(':test-framework')
 }
