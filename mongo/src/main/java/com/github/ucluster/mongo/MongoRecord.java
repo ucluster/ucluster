@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MongoRecord<T extends Record> implements Record {
     @Id
@@ -100,7 +101,14 @@ public class MongoRecord<T extends Record> implements Record {
     }
 
     private void doSave() {
+        filterNullValueProperty();
         datastore.save(this);
+    }
+
+    private void filterNullValueProperty() {
+        properties = properties.entrySet().stream()
+                .filter(e -> e.getValue().value() != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private void doUpdate() {

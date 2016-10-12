@@ -15,7 +15,7 @@ Example:
             }
         },
         password: {
-            password: true,
+            credential: true,
             required: true,
             format: {
                 pattern: "\\w{6,16}"
@@ -72,11 +72,11 @@ Example:
 
 default `identity` is `false`.
 
-#### password
+#### credential
 
 *(required by authentication: authentication need one property as identity and one property as password)*
 
-if property is declared as `password`, then it will encrypted(BCrypt) before save to database, and this property cannot be searched
+if property is declared as `credential`, then it will encrypted(BCrypt) before save to database, and this property cannot be searched
 
 default value is `false`
 
@@ -133,6 +133,16 @@ positive pattern:
 negative pattern:
 
     .*@10minutemail\.com|.*@dreggn\.com
+    
+#### transient
+    
+Example:
+    
+    transient: true
+
+default `transient` is `false`
+    
+for request like authentication, you may not want to store the request property, so you can declare it as transient, transient is effected for BEFORE_UPDATE and BEFORE_CREATE, so validation of the property is still working     
     
 #### customize concern    
 
