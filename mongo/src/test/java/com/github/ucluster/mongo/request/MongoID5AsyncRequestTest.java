@@ -14,7 +14,8 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.github.ucluster.mongo.junit.ConcernEffectExceptionMatcher.capture;
+import static com.github.ucluster.mongo.junit.matcher.ConcernEffectExceptionMatcher.capture;
+import static com.github.ucluster.test.framework.matcher.RecordMatcher.expect;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -164,8 +165,8 @@ public class MongoID5AsyncRequestTest {
         assertThat(requestFound.status(), is(User.Request.Status.APPROVED));
         assertThat(requestFound.type(), is("id5_async"));
 
-        final User userFound = users.uuid(this.user.uuid()).get();
-        assertThat(userFound.property("id_number").get().value(), is("510108197806101318"));
-        assertThat(userFound.property("id_name").get().value(), is("张三"));
+        expect(users.uuid(user.uuid()).get())
+                .prop("id_number").value("510108197806101318")
+                .prop("id_name").value("张三");
     }
 }

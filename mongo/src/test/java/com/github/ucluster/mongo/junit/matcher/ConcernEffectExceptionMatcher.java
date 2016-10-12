@@ -1,4 +1,4 @@
-package com.github.ucluster.mongo.junit;
+package com.github.ucluster.mongo.junit.matcher;
 
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;

@@ -1,0 +1,6 @@
+dependencies {
+    compile project(":core")
+
+    compile "junit:junit:$junit"
+    compile "org.hamcrest:hamcrest-all:$hamcrest"
+}

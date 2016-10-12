@@ -9,4 +9,6 @@ dependencies {
     compile project(':api')
     compile project(':common')
     compile project(':session')
+
+    testCompile project(':test-framework')
 }
