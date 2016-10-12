@@ -53,7 +53,6 @@ public class MongoRecoveryRequestTest {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("ott", "123456")
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "recovery")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -68,7 +67,6 @@ public class MongoRecoveryRequestTest {
 
         final User.Request authRequest = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -95,7 +93,6 @@ public class MongoRecoveryRequestTest {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("ott", "123456")
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "recovery")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -110,7 +107,6 @@ public class MongoRecoveryRequestTest {
 
         final User.Request authRequest = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()

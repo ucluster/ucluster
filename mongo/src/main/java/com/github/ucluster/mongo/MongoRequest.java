@@ -22,9 +22,22 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     public MongoRequest(User user, Map<String, Object> request) {
-        status(Status.PENDING);
         this.user = user;
-        this.metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
+        status(Status.PENDING);
+        loadMetadata(request);
+        loadProperties(request);
+    }
+
+    private void loadMetadata(Map<String, Object> request) {
+        Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
+        //for immutable map
+        metadata = new HashMap<>(metadata);
+        metadata.put("model", "request");
+
+        this.metadata = metadata;
+    }
+
+    private void loadProperties(Map<String, Object> request) {
         ((Map<String, Object>) request.get("properties")).entrySet().stream()
                 .forEach(e -> {
                     property(new MongoProperty<>(e.getKey(), e.getValue()));

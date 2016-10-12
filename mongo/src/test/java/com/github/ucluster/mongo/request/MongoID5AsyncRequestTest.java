@@ -48,7 +48,6 @@ public class MongoID5AsyncRequestTest {
     public void should_create_pending_id5_async_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()
@@ -72,7 +71,6 @@ public class MongoID5AsyncRequestTest {
 
         user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()
@@ -86,7 +84,6 @@ public class MongoID5AsyncRequestTest {
     public void should_success_reject_request_if_change_log_definition_matched() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()
@@ -97,7 +94,6 @@ public class MongoID5AsyncRequestTest {
 
         request.reject(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()
@@ -116,7 +112,6 @@ public class MongoID5AsyncRequestTest {
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()
@@ -127,7 +122,6 @@ public class MongoID5AsyncRequestTest {
 
         request.reject(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()
@@ -141,7 +135,6 @@ public class MongoID5AsyncRequestTest {
     public void should_success_approve_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()
@@ -152,7 +145,6 @@ public class MongoID5AsyncRequestTest {
 
         request.approve(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "id5_async")
                         .build())
                 .put("properties", ImmutableMap.<String, String>builder()

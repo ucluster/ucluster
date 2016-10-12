@@ -47,7 +47,6 @@ public class MongoAuthenticationRequestTest {
     public void should_success_authenticate_using_username() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -77,7 +76,6 @@ public class MongoAuthenticationRequestTest {
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -99,7 +97,6 @@ public class MongoAuthenticationRequestTest {
     public void should_success_to_authenticate_using_identity_field() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -123,7 +120,6 @@ public class MongoAuthenticationRequestTest {
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
