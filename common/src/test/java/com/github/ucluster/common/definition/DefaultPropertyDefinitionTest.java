@@ -4,13 +4,12 @@ import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
+import com.github.ucluster.test.framework.json.JsonContext;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.Map;
 
 import static com.github.ucluster.common.SimpleRecord.builder;
 import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
@@ -39,10 +38,9 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_get_definition() {
-        final Map<String, Object> json = definition.definition();
+        final JsonContext json = JsonContext.json(definition.definition());
 
-        final Map<String, Object> formatValidatorConfiguration = (Map<String, Object>) json.get("format");
-        assertThat(formatValidatorConfiguration.get("pattern"), is("\\w{6,12}"));
+        assertThat(json.path("$.format.pattern"), is("\\w{6,12}"));
     }
 
     @Test
@@ -55,7 +53,7 @@ public class DefaultPropertyDefinitionTest {
     }
 
     @Test
-    public void should_failed_validate_property_if_one_of_the_validator_failed() {
+    public void should_failed_validate_property_if_one_validator_failed() {
         capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("required")
         );
@@ -66,7 +64,7 @@ public class DefaultPropertyDefinitionTest {
     }
 
     @Test
-    public void should_failed_validate_property() {
+    public void should_failed_validate_property_if_the_other_validator_failed() {
         capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("format")
         );

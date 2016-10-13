@@ -2,6 +2,7 @@ package com.github.ucluster.mongo.api;
 
 import com.github.ucluster.mongo.api.junit.ApiSupport;
 import com.github.ucluster.mongo.api.junit.ApiTestRunner;
+import com.github.ucluster.test.framework.json.JsonContext;
 import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -68,7 +69,7 @@ public class RequestsResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(200));
 
-        final JsonContext json = json(response);
+        final JsonContext json = JsonContext.json(response);
         assertThat(json.path("uri"), is(createdResponse.getLocation().getPath()));
         assertThat(json.path("type"), is("authentication"));
         assertThat(json.path("status"), is("APPROVED"));
@@ -127,7 +128,7 @@ public class RequestsResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(200));
 
-        final JsonContext json = json(response);
+        final JsonContext json = JsonContext.json(response);
 
         assertThat(json.path("$.page"), is(1));
         assertThat(json.path("$.total_page"), is(1));

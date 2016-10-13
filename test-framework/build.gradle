@@ -1,6 +1,12 @@
+ext {
+    json_path = '2.2.0'
+}
+
 dependencies {
     compile project(":core")
 
     compile "junit:junit:$junit"
     compile "org.hamcrest:hamcrest-all:$hamcrest"
+    compile "com.jayway.jsonpath:json-path:$json_path"
+    compile "javax.ws.rs:javax.ws.rs-api:$jaxrs"
 }

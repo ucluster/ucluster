@@ -1,8 +1,5 @@
 package com.github.ucluster.mongo.api.junit;
 
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.servlet.ServletRegistration;
 import org.glassfish.grizzly.servlet.WebappContext;
@@ -112,29 +109,6 @@ public class ApiSupport {
                 .delete();
     }
 
-    public JsonContext json(Response response) {
-        final String json = response.readEntity(String.class);
-        final DocumentContext context = JsonPath.parse(json);
-        return new JsonContext(context);
-    }
-
-    public static class JsonContext {
-        private DocumentContext context;
-
-        public JsonContext(DocumentContext context) {
-            this.context = context;
-        }
-
-        public Object path(String path) {
-            try {
-                return context.read(path);
-            } catch (PathNotFoundException e) {
-                return null;
-            }
-        }
-    }
-
-
     public Response get(String uri) {
         return target(uri).request().get();
     }
@@ -160,7 +134,7 @@ public class ApiSupport {
             private TestContainer(URI baseUri, ResourceConfig resourceConfig) {
                 this.baseUri = baseUri;
 
-                WebappContext context = new WebappContext("ginkgo-test-container");
+                WebappContext context = new WebappContext("ucluster-test-container");
 
                 ServletRegistration servlet = context.addServlet("Servlet", new ServletContainer(resourceConfig));
                 servlet.addMapping("/*");

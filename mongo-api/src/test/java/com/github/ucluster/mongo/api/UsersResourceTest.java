@@ -2,6 +2,7 @@ package com.github.ucluster.mongo.api;
 
 import com.github.ucluster.mongo.api.junit.ApiSupport;
 import com.github.ucluster.mongo.api.junit.ApiTestRunner;
+import com.github.ucluster.test.framework.json.JsonContext;
 import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(400));
 
-        final JsonContext json = json(response);
+        final JsonContext json = JsonContext.json(response);
 
         assertThat(json.path("$.errors.length()"), is(1));
         assertThat(json.path("$.errors[0].property"), is("username"));
@@ -73,7 +74,7 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(400));
 
-        final JsonContext json = json(response);
+        final JsonContext json = JsonContext.json(response);
 
         assertThat(json.path("$.errors.length()"), is(2));
         assertThat(json.path("$.errors[0].property"), is("password"));
@@ -99,7 +100,7 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(400));
 
-        final JsonContext json = json(response);
+        final JsonContext json = JsonContext.json(response);
 
         assertThat(json.path("$.errors.length()"), is(1));
         assertThat(json.path("$.errors[0].cause"), is("unsupported.type"));
@@ -123,7 +124,7 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(200));
 
-        final JsonContext json = json(response);
+        final JsonContext json = JsonContext.json(response);
 
         assertThat("/users/" + json.path("$.id"), is(createdResponse.getLocation().getPath()));
         assertThat(json.path("$.metadata.model"), is("user"));
@@ -159,7 +160,7 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat(response.getStatus(), is(200));
 
-        final JsonContext json = json(response);
+        final JsonContext json = JsonContext.json(response);
 
         assertThat(json.path("$.page"), is(1));
         assertThat(json.path("$.total_page"), is(1));

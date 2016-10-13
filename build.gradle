@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 allprojects {
-    group = 'com.sodacar.ginkgo'
+    group = 'com.github.ucluster'
     version = '0.0.1-SNAPSHOT'
 }
 
