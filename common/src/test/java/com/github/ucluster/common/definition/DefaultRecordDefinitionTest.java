@@ -3,6 +3,7 @@ package com.github.ucluster.common.definition;
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.definition.Definition;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 public class DefaultRecordDefinitionTest {
 
-    private DefaultRecordDefinition<User> definition;
+    private Definition<User> definition;
     private User user;
 
     @Rule
@@ -99,8 +100,8 @@ public class DefaultRecordDefinitionTest {
     @Test
     public void should_failed_validate_user_has_more_than_one_error() {
         capture(thrown).errors(
-                (path, type) -> path.equals("username") && type.equals("format"),
-                (path, type) -> path.equals("nickname") && type.equals("format")
+                (path, type) -> path.equals("nickname") && type.equals("format"),
+                (path, type) -> path.equals("username") && type.equals("format")
         );
 
         final Record.Property usernameProperty = mock(Record.Property.class);

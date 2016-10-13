@@ -70,14 +70,10 @@ public class MongoRecoveryRequestTest {
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity", ImmutableMap.<String, Object>builder()
-                                .put("property", "username")
-                                .put("value", "kiwiwin")
-                                .build())
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "recovered")
-                                .build())
+                        .put("identity_property", "username")
+                        .put("identity_value", "kiwiwin")
+                        .put("credential_property", "password")
+                        .put("credential_value", "recovered")
                         .build())
                 .build());
 

@@ -40,15 +40,12 @@ public class RequestsResourceTest extends ApiSupport {
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity", ImmutableMap.<String, Object>builder()
-                                .put("property", "username")
-                                .put("value", "kiwiwin").build())
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "password").build())
+                        .put("identity_property", "username")
+                        .put("identity_value", "kiwiwin")
+                        .put("credential_property", "password")
+                        .put("credential_value", "password")
                         .build())
-                .build()
-        );
+                .build());
 
         assertThat(response.getStatus(), is(201));
     }
@@ -60,15 +57,12 @@ public class RequestsResourceTest extends ApiSupport {
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity", ImmutableMap.<String, Object>builder()
-                                .put("property", "username")
-                                .put("value", "kiwiwin").build())
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "password").build())
+                        .put("identity_property", "username")
+                        .put("identity_value", "kiwiwin")
+                        .put("credential_property", "password")
+                        .put("credential_value", "password")
                         .build())
-                .build()
-        );
+                .build());
 
         final Response response = get(createdResponse.getLocation().getPath());
 
@@ -94,24 +88,21 @@ public class RequestsResourceTest extends ApiSupport {
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity", ImmutableMap.<String, Object>builder()
-                                .put("property", "username")
-                                .put("value", "kiwiwin").build())
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "password").build())
+                        .put("identity_property", "username")
+                        .put("identity_value", "kiwiwin")
+                        .put("credential_property", "password")
+                        .put("credential_value", "password")
                         .build())
-                .build()
-        );
+                .build());
 
         final Response response = put(createdResponse.getLocation().getPath() + "/approved", ImmutableMap.<String, Object>builder()
                 .put("type", "authentication")
-                .put("identity", ImmutableMap.<String, Object>builder()
-                        .put("property", "username")
-                        .put("value", "kiwiwin").build())
-                .put("credential", ImmutableMap.<String, Object>builder()
-                        .put("property", "password")
-                        .put("value", "password").build())
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("identity_property", "username")
+                        .put("identity_value", "kiwiwin")
+                        .put("credential_property", "password")
+                        .put("credential_value", "password")
+                        .build())
                 .build()
         );
 
@@ -125,12 +116,10 @@ public class RequestsResourceTest extends ApiSupport {
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity", ImmutableMap.<String, Object>builder()
-                                .put("property", "username")
-                                .put("value", "kiwiwin").build())
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "password").build())
+                        .put("identity_property", "username")
+                        .put("identity_value", "kiwiwin")
+                        .put("credential_property", "password")
+                        .put("credential_value", "password")
                         .build())
                 .build());
 

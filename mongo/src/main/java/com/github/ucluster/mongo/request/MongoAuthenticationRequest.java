@@ -35,15 +35,10 @@ public class MongoAuthenticationRequest extends MongoRequest implements Model {
     }
 
     private void ensurePasswordMatched(Map<String, Object> detail) {
-        final Map<String, Object> credential = (Map<String, Object>) detail.get("credential");
-        if (credential == null) {
-            failed();
-        }
-
-        final Optional<Property> credentialProperty = user.property((String) credential.get("property"));
+        final Optional<Property> credentialProperty = user.property((String) detail.get("credential_property"));
         ensurePropertyIsCredential(credentialProperty);
 
-        if (!Encryption.BCRYPT.check(String.valueOf(credential.get("value")), String.valueOf(credentialProperty.get().value()))) {
+        if (!Encryption.BCRYPT.check(String.valueOf(detail.get("credential_value")), String.valueOf(credentialProperty.get().value()))) {
             failed();
         }
     }
@@ -60,15 +55,10 @@ public class MongoAuthenticationRequest extends MongoRequest implements Model {
     }
 
     private void ensureIdentityMatched(Map<String, Object> detail) {
-        final Map<String, Object> identity = (Map<String, Object>) detail.get("identity");
-        if (identity == null) {
-            failed();
-        }
-
-        final Optional<Property> identityProperty = user.property((String) identity.get("property"));
+        final Optional<Property> identityProperty = user.property((String) detail.get("identity_property"));
         ensurePropertyIsIdentity(identityProperty);
 
-        if (!Objects.equals(identity.get("value"), identityProperty.get().value())) {
+        if (!Objects.equals(detail.get("identity_value"), identityProperty.get().value())) {
             failed();
         }
     }

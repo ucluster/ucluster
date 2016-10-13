@@ -76,23 +76,35 @@ public class MongoRecord<T extends Record> implements Record, Model {
         return properties.values();
     }
 
+    /**
+     * save:
+     * Called when you want to `CREATE` this record. All the properties defined in dsl will be passed through to the concerns
+     */
     @Override
     public void save() {
-        validate();
+        validateSave();
         beforeSaveOn(Record.Property.Point.BEFORE_CREATE);
         doSave();
         afterSave();
     }
 
+    /**
+     * update:
+     * Called when you want to `UPDATE` this record with some properties. The properties updated will be passed through to the concerns
+     */
     @Override
     public void update() {
-        validate();
+        validateUpdate();
         beforeSaveOn(Record.Property.Point.BEFORE_UPDATE);
         doUpdate();
         afterSave();
     }
 
-    private void validate() {
+    private void validateSave() {
+        definition().effect(Record.Property.Point.VALIDATE, (T) this);
+    }
+
+    private void validateUpdate() {
         definition().effect(Record.Property.Point.VALIDATE, (T) this, dirtyTracker.asArray());
     }
 

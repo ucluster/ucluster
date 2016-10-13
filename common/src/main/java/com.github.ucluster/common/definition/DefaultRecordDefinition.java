@@ -8,6 +8,7 @@ import com.github.ucluster.core.exception.ConcernEffectException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -22,7 +23,12 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
 
     @Override
     public void effect(Record.Property.Point point, T record) {
-        effect(point, record, allPaths(record));
+        effect(point, record, propertyPathsInDefinition());
+    }
+
+    private String[] propertyPathsInDefinition() {
+        final Set<String> keys = propertyDefinitions.keySet();
+        return keys.toArray(new String[keys.size()]);
     }
 
     @Override
@@ -44,12 +50,6 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
         if (!result.valid()) {
             throw new ConcernEffectException(result);
         }
-    }
-
-    private String[] allPaths(T record) {
-        final List<String> paths = record.properties().stream().map(Record.Property::path).collect(Collectors.toList());
-
-        return paths.toArray(new String[paths.size()]);
     }
 
     @Override
