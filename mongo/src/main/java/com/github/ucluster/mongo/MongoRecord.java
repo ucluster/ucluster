@@ -3,6 +3,7 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.github.ucluster.core.exception.RecordException;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
@@ -10,7 +11,9 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Version;
 import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -24,6 +27,9 @@ import java.util.stream.Collectors;
 public class MongoRecord<T extends Record> implements Record, Model {
     @Id
     protected ObjectId uuid;
+
+    @Version
+    protected Long version;
 
     @org.mongodb.morphia.annotations.Property
     protected final DateTime createdAt = new DateTime();
@@ -129,7 +135,10 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     private void doUpdate() {
-        datastore.update(this, generateDirtyUpdateOperations(this));
+        final UpdateResults results = datastore.update(this, generateDirtyUpdateOperations(this));
+        if (!results.getUpdatedExisting()) {
+            throw new RecordException("updated.not.effect");
+        }
     }
 
     private UpdateOperations<Record> generateDirtyUpdateOperations(Record record) {

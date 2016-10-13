@@ -151,22 +151,6 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
-    public void should_handle_concurrent_update_user_property() {
-        final User updateNicknameUser = users.uuid(user.uuid()).get();
-        final User updateEmailUser = users.uuid(user.uuid()).get();
-
-        updateNicknameUser.property(new MongoProperty<>("nickname", "newnickname"));
-        updateEmailUser.property(new MongoProperty<>("email", "kiwiwin@gmail.com"));
-
-        updateNicknameUser.update();
-        updateEmailUser.update();
-
-        final User updatedUser = users.uuid(user.uuid()).get();
-        assertThat(updatedUser.property("nickname").get().value(), is("newnickname"));
-        assertThat(updatedUser.property("email").get().value(), is("kiwiwin@gmail.com"));
-    }
-
-    @Test
     public void should_find_all_users() {
         for (int count = 0; count < 10; count++) {
             users.create(CreateUserRequestBuilder.of()

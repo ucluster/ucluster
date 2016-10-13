@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.exception.RecordException;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -196,5 +198,16 @@ public class MongoUserTest {
                         .put("nickname", "newnickname")
                         .build())
                 .build());
+    }
+
+    @Test
+    public void should_handle_concurrent_update_user_property() {
+        thrown.expect(RecordException.class);
+
+        IntStream.range(1, 20).parallel().forEach($ -> {
+            final User u = users.uuid(this.user.uuid()).get();
+            u.property(new MongoProperty<>("nickname", "newnickname" + $));
+            u.update();
+        });
     }
 }
