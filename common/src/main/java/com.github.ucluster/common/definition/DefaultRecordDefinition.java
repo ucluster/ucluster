@@ -33,9 +33,17 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
 
     @Override
     public void effect(Record.Property.Point point, T record, String... propertyPaths) {
-        ensureNonUndefinedPropertyExist(record, propertyPaths);
+        EffectResult result =
+                effectNonUndefinedPropertyExist(record, propertyPaths)
+                        .merge(effectOnPropertyDefinition(point, record, propertyPaths));
 
-        final EffectResult result = asList(propertyPaths).stream()
+        if (!result.valid()) {
+            throw new ConcernEffectException(result);
+        }
+    }
+
+    private EffectResult effectOnPropertyDefinition(Record.Property.Point point, T record, String[] propertyPaths) {
+        return asList(propertyPaths).stream()
                 .map(propertyPath -> propertyDefinitions.get(propertyPath))
                 .filter(propertyPath -> propertyPath != null)
                 .map(propertyDefinition -> {
@@ -48,10 +56,6 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                 })
                 .filter(e -> e != null)
                 .reduce(EffectResult.SUCCESS, EffectResult::merge);
-
-        if (!result.valid()) {
-            throw new ConcernEffectException(result);
-        }
     }
 
     @Override
@@ -68,7 +72,7 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
         return propertyDefinitions.get(propertyPath);
     }
 
-    protected void ensureNonUndefinedPropertyExist(T record, String... propertyPaths) {
+    protected EffectResult effectNonUndefinedPropertyExist(T record, String... propertyPaths) {
         EffectResult result = EffectResult.SUCCESS;
 
         for (String propertyPath : propertyPaths) {
@@ -86,8 +90,6 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
             }
         }
 
-        if (!result.valid()) {
-            throw new ConcernEffectException(result);
-        }
+        return result;
     }
 }

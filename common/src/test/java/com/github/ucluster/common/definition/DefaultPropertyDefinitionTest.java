@@ -3,6 +3,7 @@ package com.github.ucluster.common.definition;
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.definition.Definition;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 public class DefaultPropertyDefinitionTest {
 
-    private DefaultRecordDefinition.PropertyDefinition<Record> definition;
+    private Definition.PropertyDefinition<Record> definition;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

@@ -104,4 +104,20 @@ public class DefaultRecordDefinitionTest {
 
         definition.effect(Record.Property.Point.VALIDATE, record);
     }
+
+    @Test
+    public void should_failed_validate_record_has_property_not_defined_and_other_errors() {
+        capture(thrown).errors(
+                (path, type) -> path.equals("fake") && type.equals("undefined"),
+                (path, type) -> path.equals("username") && type.equals("format")
+        );
+
+        final Record record = builder()
+                .path("username").value("kiwi")
+                .path("nickname").value("kiwiwin")
+                .path("fake").value("fake")
+                .get();
+
+        definition.effect(Record.Property.Point.VALIDATE, record);
+    }
 }
