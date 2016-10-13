@@ -9,9 +9,9 @@ public interface Definition<D extends Record> {
 
     void effect(Record.Property.Point point, D record);
 
-    void effect(Record.Property.Point point, D record, String... propertyPaths);
+    void effect(Record.Property.Point point, D record, String... paths);
 
-    PropertyDefinition<D> property(String propertyPath);
+    PropertyDefinition<D> property(String path);
 
     Collection<PropertyDefinition<D>> properties();
 

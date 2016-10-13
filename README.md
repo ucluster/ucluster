@@ -194,7 +194,7 @@ Step 1: Inherit interface `Record.Property.Concern`
 
             boolean isAbout(Point point);
 
-            void effect(Record record, String propertyPath);
+            void effect(Record record, String path);
 
             Object configuration();
         }
@@ -203,7 +203,7 @@ Step 2: `String record()`: provide unique identifier of the validator
 
 Step 3: `boolean isAbout(Point point)`: checks which lifecycle step this concerns are cares about
 
-Step 4: `void effect(Record record, String propertyPath)`: handle the logic when concern effects
+Step 4: `void effect(Record record, String path)`: handle the logic when concern effects
 
 Step 5: `Object configuration();`: provide configuration of this validator
 
@@ -214,7 +214,7 @@ Example:
     }
 
     a) method `record` is fixed to return string `format`
-    b) method `validate` is using java regex pattern to verify does property in propertyPath of request has satisfied
+    b) method `validate` is using java regex pattern to verify does property in path of request has satisfied
     c) method `configuration` return map representation of 
 
     format: {

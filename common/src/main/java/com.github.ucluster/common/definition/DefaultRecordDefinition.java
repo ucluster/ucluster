@@ -30,10 +30,10 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
     }
 
     @Override
-    public void effect(Record.Property.Point point, T record, String... propertyPaths) {
+    public void effect(Record.Property.Point point, T record, String... paths) {
         EffectResult result =
-                effectNonUndefinedPropertyExist(record, propertyPaths)
-                        .merge(effectOnPropertyDefinition(point, record, propertyPaths));
+                effectNonUndefinedPropertyExist(record, paths)
+                        .merge(effectOnPropertyDefinition(point, record, paths));
 
         if (!result.valid()) {
             throw new ConcernEffectException(result);
@@ -77,8 +77,8 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
     }
 
     @Override
-    public PropertyDefinition<T> property(String propertyPath) {
-        return propertyDefinitions.get(propertyPath);
+    public PropertyDefinition<T> property(String path) {
+        return propertyDefinitions.get(path);
     }
 
     @Override

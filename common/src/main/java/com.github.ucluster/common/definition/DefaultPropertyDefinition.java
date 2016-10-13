@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DefaultPropertyDefinition<T extends Record> implements Definition.PropertyDefinition<T> {
-    private final String propertyPath;
+    private final String path;
     private Map<String, Record.Property.Concern> concerns = new HashMap<>();
 
-    public DefaultPropertyDefinition(String propertyPath, Collection<Record.Property.Concern> concerns) {
-        this.propertyPath = propertyPath;
+    public DefaultPropertyDefinition(String path, Collection<Record.Property.Concern> concerns) {
+        this.path = path;
         concerns.stream().forEach(concern -> this.concerns.put(concern.type(), concern));
     }
 
@@ -25,7 +25,7 @@ public class DefaultPropertyDefinition<T extends Record> implements Definition.P
                 .filter(concern -> concern.isAbout(point))
                 .map(concern -> {
                     try {
-                        concern.effect(record, propertyPath, point);
+                        concern.effect(record, path, point);
                         return null;
                     } catch (ConcernEffectException e) {
                         return e.getEffectResult();
@@ -41,7 +41,7 @@ public class DefaultPropertyDefinition<T extends Record> implements Definition.P
 
     @Override
     public String path() {
-        return propertyPath;
+        return path;
     }
 
     @Override
