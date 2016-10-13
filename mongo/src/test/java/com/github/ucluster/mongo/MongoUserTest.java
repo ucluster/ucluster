@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -86,12 +87,11 @@ public class MongoUserTest {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "non_auto_approvable")
-                        .build()
-                )
+                        .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
-                        .build()
-                ).build());
+                        .build())
+                .build());
 
         final User userFound = users.uuid(user.uuid()).get();
 
@@ -111,12 +111,11 @@ public class MongoUserTest {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "non_auto_approvable")
-                        .build()
-                )
+                        .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
-                        .build()
-                ).build());
+                        .build())
+                .build());
 
         final User userFound = users.uuid(user.uuid()).get();
 
@@ -132,17 +131,34 @@ public class MongoUserTest {
     }
 
     @Test
+    public void should_failed_to_apply_request_when_request_validation_failed() {
+        capture(thrown).errors(
+                (path, type) -> path.equals("nickname") && type.equals("format")
+        );
+
+        user.apply(ImmutableMap.<String, Object>builder()
+                .put("metadata", ImmutableMap.<String, Object>builder()
+                        .put("type", "non_auto_approvable")
+                        .build())
+                .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("nickname", "a")
+                        .build())
+                .build());
+
+        assertThat(user.requests(Criteria.empty()).page(0, 10).isEmpty(), is(true));
+    }
+
+    @Test
     public void should_get_all_requests() {
         for (int count = 0; count < 11; count++) {
             user.apply(ImmutableMap.<String, Object>builder()
                     .put("metadata", ImmutableMap.<String, Object>builder()
                             .put("type", "non_auto_approvable")
-                            .build()
-                    )
+                            .build())
                     .put("properties", ImmutableMap.<String, Object>builder()
                             .put("nickname", "newnickname")
-                            .build()
-                    ).build());
+                            .build())
+                    .build());
         }
 
         final PaginatedList<User.Request> requests = user.requests(Criteria.empty());
@@ -175,12 +191,10 @@ public class MongoUserTest {
         user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "non_supported")
-                        .build()
-                )
+                        .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
-                        .build()
-                ).build());
-
+                        .build())
+                .build());
     }
 }

@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
@@ -28,7 +29,7 @@ import static org.hamcrest.core.IsNot.not;
 @RunWith(UClusterTestRunner.class)
 public class MongoUserRepositoryTest {
     @Inject
-    MongoUserRepository users;
+    Repository<User> users;
 
     @Inject
     Datastore datastore;
@@ -51,7 +52,7 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
-    public void should_failed_to_create_user_if_definition_not_satisfied() {
+    public void should_failed_to_create_user_when_definition_not_satisfied() {
         capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("format")
         );
@@ -67,7 +68,7 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
-    public void should_validate_missing_property() {
+    public void should_failed_to_create_user_when_missing_property() {
         capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("required")
         );
@@ -82,7 +83,7 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
-    public void should_failed_to_create_user_if_type_not_supported() {
+    public void should_failed_to_create_user_when_type_not_supported() {
         thrown.expect(RecordTypeNotSupportedException.class);
 
         final Map<String, Object> request = CreateUserRequestBuilder.of()
@@ -90,7 +91,7 @@ public class MongoUserRepositoryTest {
                         .put("type", "not_supported")
                         .build())
                 .properties(ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwi")
+                        .put("username", "kiwiwin")
                         .put("password", "password")
                         .build())
                 .get();
@@ -122,12 +123,11 @@ public class MongoUserRepositoryTest {
         userBeforeUpdate.update();
 
         final User userAfterUpdate = users.uuid(user.uuid()).get();
-
         assertThat(userAfterUpdate.property("nickname").get().value(), is("kiwinick"));
     }
 
     @Test
-    public void should_failed_to_update_immutable_property() {
+    public void should_failed_when_update_immutable_property() {
         capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("immutable")
         );
@@ -139,7 +139,7 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
-    public void should_failed_to_update_user_if_definition_not_satisfied() {
+    public void should_failed_to_update_user_when_definition_not_satisfied() {
         capture(thrown).errors(
                 (path, type) -> path.equals("password") && type.equals("format")
         );

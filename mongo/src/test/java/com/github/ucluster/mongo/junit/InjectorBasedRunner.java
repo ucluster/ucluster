@@ -98,6 +98,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         bind(new TypeLiteral<Repository<? extends Record>>() {
                         }).to(MongoUserRepository.class);
+                        bind(new TypeLiteral<Repository<User>>() {
+                        }).to(MongoUserRepository.class);
 
                         bind(RequestFactory.class).to(MongoRequestFactory.class);
 
