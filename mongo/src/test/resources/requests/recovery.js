@@ -1,1 +1,8 @@
-request({}).on('approve', {}).on('reject', {});
+request({
+    credential_property: {
+        required: true
+    },
+    credential_value: {
+        required: true
+    }
+}).on('approve', {}).on('reject', {});

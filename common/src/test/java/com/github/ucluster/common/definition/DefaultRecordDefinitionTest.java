@@ -100,8 +100,8 @@ public class DefaultRecordDefinitionTest {
     @Test
     public void should_failed_validate_user_has_more_than_one_error() {
         capture(thrown).errors(
-                (path, type) -> path.equals("nickname") && type.equals("format"),
-                (path, type) -> path.equals("username") && type.equals("format")
+                (path, type) -> path.equals("username") && type.equals("format"),
+                (path, type) -> path.equals("nickname") && type.equals("format")
         );
 
         final Record.Property usernameProperty = mock(Record.Property.class);
@@ -115,6 +115,32 @@ public class DefaultRecordDefinitionTest {
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
         when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
+
+        definition.effect(Record.Property.Point.VALIDATE, user);
+    }
+
+    @Test
+    public void should_failed_validate_record_has_property_not_defined() {
+        capture(thrown).errors(
+                (path, type) -> path.equals("fake") && type.equals("undefined")
+        );
+
+        final Record.Property usernameProperty = mock(Record.Property.class);
+        when(usernameProperty.path()).thenReturn("username");
+        when(usernameProperty.value()).thenReturn("kiwiwin");
+
+        final Record.Property nicknameProperty = mock(Record.Property.class);
+        when(nicknameProperty.path()).thenReturn("nickname");
+        when(nicknameProperty.value()).thenReturn("kiwiwin");
+
+        final Record.Property fakeProperty = mock(Record.Property.class);
+        when(fakeProperty.path()).thenReturn("fake");
+        when(fakeProperty.value()).thenReturn("fake");
+
+        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
+        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
+        when(user.property(eq("fake"))).thenReturn(Optional.of(fakeProperty));
+        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty, fakeProperty));
 
         definition.effect(Record.Property.Point.VALIDATE, user);
     }

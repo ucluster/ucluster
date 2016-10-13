@@ -35,13 +35,9 @@ public class MongoRecoveryRequest extends MongoRequest implements Model {
         ensureOttMatched(detail);
 
         Map<String, Object> properties = (Map<String, Object>) detail.get("properties");
-        final Map<String, Object> credential = (Map<String, Object>) properties.get("credential");
-        if (credential == null) {
-            failed();
-        }
 
         final Property credentialProperty = getCredentialProperty(properties);
-        credentialProperty.value(credential.get("value"));
+        credentialProperty.value(properties.get("credential_value"));
         user.property(credentialProperty);
         user.update();
 
@@ -64,12 +60,7 @@ public class MongoRecoveryRequest extends MongoRequest implements Model {
     }
 
     private Property getCredentialProperty(Map<String, Object> detail) {
-        final Map<String, Object> credential = (Map<String, Object>) detail.get("credential");
-        if (credential == null) {
-            failed();
-        }
-
-        final Optional<Property> credentialProperty = user.property((String) credential.get("property"));
+        final Optional<Property> credentialProperty = user.property((String) detail.get("credential_property"));
         if (!credentialProperty.isPresent()) {
             failed();
         }

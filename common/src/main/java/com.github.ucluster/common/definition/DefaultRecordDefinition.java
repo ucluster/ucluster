@@ -1,6 +1,7 @@
 package com.github.ucluster.common.definition;
 
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
@@ -8,7 +9,6 @@ import com.github.ucluster.core.exception.ConcernEffectException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -23,16 +23,18 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
 
     @Override
     public void effect(Record.Property.Point point, T record) {
-        effect(point, record, propertyPathsInDefinition());
+        effect(point, record, propertyPaths(record));
     }
 
-    private String[] propertyPathsInDefinition() {
-        final Set<String> keys = propertyDefinitions.keySet();
-        return keys.toArray(new String[keys.size()]);
+    private String[] propertyPaths(T record) {
+        final List<String> properties = record.properties().stream().map(Record.Property::path).collect(Collectors.toList());
+        return properties.toArray(new String[properties.size()]);
     }
 
     @Override
     public void effect(Record.Property.Point point, T record, String... propertyPaths) {
+        ensureNonUndefinedPropertyExist(record, propertyPaths);
+
         final EffectResult result = asList(propertyPaths).stream()
                 .map(propertyPath -> propertyDefinitions.get(propertyPath))
                 .filter(propertyPath -> propertyPath != null)
@@ -64,5 +66,28 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
     @Override
     public PropertyDefinition<T> property(String propertyPath) {
         return propertyDefinitions.get(propertyPath);
+    }
+
+    protected void ensureNonUndefinedPropertyExist(T record, String... propertyPaths) {
+        EffectResult result = EffectResult.SUCCESS;
+
+        for (String propertyPath : propertyPaths) {
+            //TODO: for request to store status
+            if (record instanceof User.Request && propertyPath.equals("status")) {
+                continue;
+            }
+
+            if (record instanceof User.Request.ChangeLog) {
+                continue;
+            }
+
+            if (!propertyDefinitions.containsKey(propertyPath)) {
+                result = result.merge(new EffectResult(new EffectResult.Failure(propertyPath, "undefined")));
+            }
+        }
+
+        if (!result.valid()) {
+            throw new ConcernEffectException(result);
+        }
     }
 }

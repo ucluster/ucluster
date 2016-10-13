@@ -56,10 +56,8 @@ public class MongoRecoveryRequestTest {
                         .put("type", "recovery")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "recovered")
-                                .build())
+                        .put("credential_property", "password")
+                        .put("credential_value", "recovered")
                         .build())
                 .build());
 
@@ -92,10 +90,8 @@ public class MongoRecoveryRequestTest {
                         .put("type", "recovery")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "recovered")
-                                .build())
+                        .put("credential_property", "password")
+                        .put("credential_value", "recovered")
                         .build())
                 .build());
 
@@ -106,14 +102,10 @@ public class MongoRecoveryRequestTest {
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity", ImmutableMap.<String, Object>builder()
-                                .put("property", "username")
-                                .put("value", "kiwiwin")
-                                .build())
-                        .put("credential", ImmutableMap.<String, Object>builder()
-                                .put("property", "password")
-                                .put("value", "password")
-                                .build())
+                        .put("identity_property", "username")
+                        .put("identity_value", "kiwiwin")
+                        .put("credential_property", "password")
+                        .put("credential_value", "password")
                         .build())
                 .build());
 
