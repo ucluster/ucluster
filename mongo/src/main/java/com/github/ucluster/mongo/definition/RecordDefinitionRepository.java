@@ -5,6 +5,7 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
+import com.github.ucluster.mongo.Constants;
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
 import com.google.inject.Injector;
 import org.mongodb.morphia.Datastore;
@@ -45,7 +46,7 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
     }
 
     private String origin_model(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("model", "user");
+        return (String) metadata.getOrDefault("model", Constants.Record.USER);
     }
 
     private String target_model(Map<String, Object> metadata) {

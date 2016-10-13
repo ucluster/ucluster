@@ -37,7 +37,6 @@ public class RequestsResourceTest extends ApiSupport {
     public void should_create_request() {
         final Response response = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -58,7 +57,6 @@ public class RequestsResourceTest extends ApiSupport {
     public void should_get_request() {
         final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -93,7 +91,6 @@ public class RequestsResourceTest extends ApiSupport {
     public void should_failed_to_approve_non_pending_request() {
         final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
@@ -125,7 +122,6 @@ public class RequestsResourceTest extends ApiSupport {
     public void should_get_requests() {
         final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("model", "request")
                         .put("type", "authentication")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()

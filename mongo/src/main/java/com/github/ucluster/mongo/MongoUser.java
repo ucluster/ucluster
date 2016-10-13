@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.ucluster.mongo.RecordCollection.USERS;
+import static com.github.ucluster.mongo.Constants.Collection.USERS;
 
 @Entity(USERS)
 public class MongoUser extends MongoRecord<User> implements User, Model {

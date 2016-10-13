@@ -12,9 +12,9 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.ucluster.mongo.RecordCollection.CHANGE_LOGS;
-import static com.github.ucluster.mongo.RecordCollection.REQUESTS;
-import static com.github.ucluster.mongo.RecordCollection.USERS;
+import static com.github.ucluster.mongo.Constants.Collection.CHANGE_LOGS;
+import static com.github.ucluster.mongo.Constants.Collection.REQUESTS;
+import static com.github.ucluster.mongo.Constants.Collection.USERS;
 import static com.github.ucluster.mongo.api.util.ResourceReader.read;
 
 public class ApiTestRunner extends InjectorBasedRunner {

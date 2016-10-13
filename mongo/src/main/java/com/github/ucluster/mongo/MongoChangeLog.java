@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.ucluster.mongo.RecordCollection.CHANGE_LOGS;
+import static com.github.ucluster.mongo.Constants.Collection.CHANGE_LOGS;
 
 @Entity(CHANGE_LOGS)
 public class MongoChangeLog extends MongoRecord<User.Request.ChangeLog> implements User.Request.ChangeLog, Model {
@@ -78,7 +78,7 @@ public class MongoChangeLog extends MongoRecord<User.Request.ChangeLog> implemen
             final MongoChangeLog changeLog = new MongoChangeLog(request, oldStatus, newStatus);
 
             changeLog.metadata = ImmutableMap.<String, Object>builder()
-                    .put("model", "change_log")
+                    .put("model", Constants.Record.CHANGE_LOG)
                     .put("type", request.type())
                     .put("action", newStatus == User.Request.Status.APPROVED ? "approve" : "reject")
                     .build();

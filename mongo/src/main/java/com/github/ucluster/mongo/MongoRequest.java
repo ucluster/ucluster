@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.github.ucluster.mongo.RecordCollection.REQUESTS;
+import static com.github.ucluster.mongo.Constants.Collection.REQUESTS;
 
 @Entity(REQUESTS)
 public class MongoRequest extends MongoRecord<User.Request> implements User.Request, Model {
@@ -34,7 +34,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
         Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
         //for immutable map
         metadata = new HashMap<>(metadata);
-        metadata.put("model", "request");
+        metadata.put("model", Constants.Record.REQUEST);
 
         this.metadata = metadata;
     }
