@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Entity("user_request_changelogs")
+import static com.github.ucluster.mongo.RecordCollection.CHANGE_LOGS;
+
+@Entity(CHANGE_LOGS)
 public class MongoChangeLog extends MongoRecord<User.Request.ChangeLog> implements User.Request.ChangeLog, Model {
     @Reference
     protected User.Request request;

@@ -12,6 +12,9 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.ucluster.mongo.RecordCollection.CHANGE_LOGS;
+import static com.github.ucluster.mongo.RecordCollection.REQUESTS;
+import static com.github.ucluster.mongo.RecordCollection.USERS;
 import static com.github.ucluster.mongo.api.util.ResourceReader.read;
 
 public class ApiTestRunner extends InjectorBasedRunner {
@@ -52,17 +55,17 @@ public class ApiTestRunner extends InjectorBasedRunner {
             } finally {
                 final MongoDatabase database = mongoClient().getDatabase("ucluster");
                 if (database != null) {
-                    final MongoCollection<Document> users = database.getCollection("users");
+                    final MongoCollection<Document> users = database.getCollection(USERS);
                     if (users != null) {
                         users.deleteMany(new Document());
                     }
 
-                    final MongoCollection<Document> requests = database.getCollection("user_requests");
+                    final MongoCollection<Document> requests = database.getCollection(REQUESTS);
                     if (requests != null) {
                         requests.deleteMany(new Document());
                     }
 
-                    final MongoCollection<Document> changeLogs = database.getCollection("user_request_changelogs");
+                    final MongoCollection<Document> changeLogs = database.getCollection(CHANGE_LOGS);
                     if (changeLogs != null) {
                         changeLogs.deleteMany(new Document());
                     }

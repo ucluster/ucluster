@@ -15,7 +15,9 @@ import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
 
-@Entity("users")
+import static com.github.ucluster.mongo.RecordCollection.USERS;
+
+@Entity(USERS)
 public class MongoUser extends MongoRecord<User> implements User, Model {
 
     @Inject
@@ -53,7 +55,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     public PaginatedList<Request> requests(Criteria criteria) {
         final Query<MongoRequest> query = datastore.createQuery(MongoRequest.class)
                 .disableValidation()
-                .field("user").equal(new Key<>(MongoUser.class, "users", uuid));
+                .field("user").equal(new Key<>(MongoUser.class, USERS, uuid));
 
         criteria.params(e -> {
             query.field(MongoProperty.valueMongoField(e.getKey())).in(e.getValue());

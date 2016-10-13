@@ -13,7 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Entity("user_requests")
+import static com.github.ucluster.mongo.RecordCollection.REQUESTS;
+
+@Entity(REQUESTS)
 public class MongoRequest extends MongoRecord<User.Request> implements User.Request, Model {
     @Reference
     protected User user;
@@ -74,7 +76,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     public List<ChangeLog> changeLogs() {
         return datastore.createQuery(MongoChangeLog.class)
                 .disableValidation()
-                .field("request").equal(new Key<>(MongoRequest.class, "user_requests", uuid))
+                .field("request").equal(new Key<>(MongoRequest.class, REQUESTS, uuid))
                 .order("-createdAt")
                 .asList().stream()
                 .collect(Collectors.toList());
