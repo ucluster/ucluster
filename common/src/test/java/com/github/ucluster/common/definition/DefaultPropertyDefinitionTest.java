@@ -3,7 +3,6 @@ package com.github.ucluster.common.definition;
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,20 +10,16 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Map;
-import java.util.Optional;
 
+import static com.github.ucluster.common.SimpleRecord.builder;
 import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class DefaultPropertyDefinitionTest {
 
     private DefaultRecordDefinition.PropertyDefinition<Record> definition;
-    private User user;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -39,8 +34,6 @@ public class DefaultPropertyDefinitionTest {
                         new RequiredConcern("required", true)
                 )
         );
-
-        user = mock(User.class);
     }
 
     @Test
@@ -53,13 +46,11 @@ public class DefaultPropertyDefinitionTest {
 
     @Test
     public void should_success_validate_property() {
-        final Record.Property usernameProperty = mock(Record.Property.class);
-        when(usernameProperty.path()).thenReturn("username");
-        when(usernameProperty.value()).thenReturn("kiwiwin");
+        final Record record = builder()
+                .path("username").value("kiwiwin")
+                .get();
 
-        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
-
-        definition.effect(Record.Property.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, record);
     }
 
     @Test
@@ -68,9 +59,9 @@ public class DefaultPropertyDefinitionTest {
                 (path, type) -> path.equals("username") && type.equals("required")
         );
 
-        when(user.property(eq("username"))).thenReturn(Optional.empty());
+        final Record record = builder().get();
 
-        definition.effect(Record.Property.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, record);
     }
 
     @Test
@@ -79,12 +70,10 @@ public class DefaultPropertyDefinitionTest {
                 (path, type) -> path.equals("username") && type.equals("format")
         );
 
-        final Record.Property usernameProperty = mock(Record.Property.class);
-        when(usernameProperty.path()).thenReturn("username");
-        when(usernameProperty.value()).thenReturn("kiwi");
+        final Record record = builder()
+                .path("username").value("kiwi")
+                .get();
 
-        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
-
-        definition.effect(Record.Property.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, record);
     }
 }

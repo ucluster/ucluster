@@ -2,7 +2,6 @@ package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -11,20 +10,16 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Map;
-import java.util.Optional;
 
+import static com.github.ucluster.common.SimpleRecord.builder;
 import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class DefaultRecordDefinitionTest {
 
-    private Definition<User> definition;
-    private User user;
+    private Definition<Record> definition;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -41,9 +36,6 @@ public class DefaultRecordDefinitionTest {
                                 .put("pattern", "\\w{6,12}")
                                 .build())))
         ));
-
-        user = mock(User.class);
-
     }
 
     @Test
@@ -61,19 +53,12 @@ public class DefaultRecordDefinitionTest {
 
     @Test
     public void should_success_validate_user() {
-        final Record.Property usernameProperty = mock(Record.Property.class);
-        when(usernameProperty.path()).thenReturn("username");
-        when(usernameProperty.value()).thenReturn("kiwiwin");
+        final Record record = builder()
+                .path("username").value("kiwiwin")
+                .path("nickname").value("kiwiwin")
+                .get();
 
-        final Record.Property nicknameProperty = mock(Record.Property.class);
-        when(nicknameProperty.path()).thenReturn("nickname");
-        when(nicknameProperty.value()).thenReturn("kiwiwin");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
-        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
-        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
-
-        definition.effect(Record.Property.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, record);
     }
 
     @Test
@@ -82,19 +67,12 @@ public class DefaultRecordDefinitionTest {
                 (path, type) -> path.equals("username") && type.equals("format")
         );
 
-        final Record.Property usernameProperty = mock(Record.Property.class);
-        when(usernameProperty.path()).thenReturn("username");
-        when(usernameProperty.value()).thenReturn("kiwi");
+        final Record record = builder()
+                .path("username").value("kiwi")
+                .path("nickname").value("kiwiwin")
+                .get();
 
-        final Record.Property nicknameProperty = mock(Record.Property.class);
-        when(nicknameProperty.path()).thenReturn("nickname");
-        when(nicknameProperty.value()).thenReturn("kiwiwin");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
-        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
-        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
-
-        definition.effect(Record.Property.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, record);
     }
 
     @Test
@@ -104,19 +82,12 @@ public class DefaultRecordDefinitionTest {
                 (path, type) -> path.equals("nickname") && type.equals("format")
         );
 
-        final Record.Property usernameProperty = mock(Record.Property.class);
-        when(usernameProperty.path()).thenReturn("username");
-        when(usernameProperty.value()).thenReturn("kiwi");
+        final Record record = builder()
+                .path("username").value("kiwi")
+                .path("nickname").value("kiwi")
+                .get();
 
-        final Record.Property nicknameProperty = mock(Record.Property.class);
-        when(nicknameProperty.path()).thenReturn("nickname");
-        when(nicknameProperty.value()).thenReturn("kiwi");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
-        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
-        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty));
-
-        definition.effect(Record.Property.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, record);
     }
 
     @Test
@@ -125,23 +96,12 @@ public class DefaultRecordDefinitionTest {
                 (path, type) -> path.equals("fake") && type.equals("undefined")
         );
 
-        final Record.Property usernameProperty = mock(Record.Property.class);
-        when(usernameProperty.path()).thenReturn("username");
-        when(usernameProperty.value()).thenReturn("kiwiwin");
+        final Record record = builder()
+                .path("username").value("kiwiwin")
+                .path("nickname").value("kiwiwin")
+                .path("fake").value("fake")
+                .get();
 
-        final Record.Property nicknameProperty = mock(Record.Property.class);
-        when(nicknameProperty.path()).thenReturn("nickname");
-        when(nicknameProperty.value()).thenReturn("kiwiwin");
-
-        final Record.Property fakeProperty = mock(Record.Property.class);
-        when(fakeProperty.path()).thenReturn("fake");
-        when(fakeProperty.value()).thenReturn("fake");
-
-        when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
-        when(user.property(eq("nickname"))).thenReturn(Optional.of(nicknameProperty));
-        when(user.property(eq("fake"))).thenReturn(Optional.of(fakeProperty));
-        when(user.properties()).thenReturn(asList(usernameProperty, nicknameProperty, fakeProperty));
-
-        definition.effect(Record.Property.Point.VALIDATE, user);
+        definition.effect(Record.Property.Point.VALIDATE, record);
     }
 }
