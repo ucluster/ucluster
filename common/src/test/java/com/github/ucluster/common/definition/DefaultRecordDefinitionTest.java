@@ -1,6 +1,7 @@
 package com.github.ucluster.common.definition;
 
 import com.github.ucluster.common.concern.FormatConcern;
+import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.google.common.collect.ImmutableMap;
@@ -28,13 +29,16 @@ public class DefaultRecordDefinitionTest {
     public void setUp() throws Exception {
         definition = new DefaultRecordDefinition<>(asList(
                 new DefaultPropertyDefinition("username",
-                        asList(new FormatConcern("format", ImmutableMap.<String, Object>builder()
-                                .put("pattern", "\\w{6,12}")
-                                .build()))),
+                        asList(
+                                new RequiredConcern("required", true),
+                                new FormatConcern("format", ImmutableMap.<String, Object>builder()
+                                        .put("pattern", "\\w{6,12}")
+                                        .build()))),
                 new DefaultPropertyDefinition("nickname",
-                        asList(new FormatConcern("format", ImmutableMap.<String, Object>builder()
-                                .put("pattern", "\\w{6,12}")
-                                .build())))
+                        asList(
+                                new FormatConcern("format", ImmutableMap.<String, Object>builder()
+                                        .put("pattern", "\\w{6,12}")
+                                        .build())))
         ));
     }
 
@@ -62,7 +66,7 @@ public class DefaultRecordDefinitionTest {
     }
 
     @Test
-    public void should_failed_validate_user_has_exactly_one_error() {
+    public void should_failed_validate_record_has_exactly_one_error() {
         capture(thrown).errors(
                 (path, type) -> path.equals("username") && type.equals("format")
         );
@@ -76,10 +80,10 @@ public class DefaultRecordDefinitionTest {
     }
 
     @Test
-    public void should_failed_validate_user_has_more_than_one_error() {
+    public void should_failed_validate_record_has_more_than_one_error() {
         capture(thrown).errors(
-                (path, type) -> path.equals("username") && type.equals("format"),
-                (path, type) -> path.equals("nickname") && type.equals("format")
+                (path, type) -> path.equals("nickname") && type.equals("format"),
+                (path, type) -> path.equals("username") && type.equals("format")
         );
 
         final Record record = builder()

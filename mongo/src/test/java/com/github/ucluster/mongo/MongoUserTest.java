@@ -49,12 +49,11 @@ public class MongoUserTest {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "auto_approvable")
-                        .build()
-                )
+                        .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
-                        .build()
-                ).build());
+                        .build())
+                .build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
 
@@ -70,12 +69,11 @@ public class MongoUserTest {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "non_auto_approvable")
-                        .build()
-                )
+                        .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
-                        .build()
-                ).build());
+                        .build())
+                .build());
 
         assertThat(request.status(), is(User.Request.Status.PENDING));
 

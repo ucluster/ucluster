@@ -2,6 +2,7 @@ package com.github.ucluster.core.definition;
 
 import com.github.ucluster.core.Record;
 
+import java.util.Collection;
 import java.util.Map;
 
 public interface Definition<D extends Record> {
@@ -12,11 +13,13 @@ public interface Definition<D extends Record> {
 
     PropertyDefinition<D> property(String propertyPath);
 
+    Collection<PropertyDefinition<D>> properties();
+
     Map<String, Object> definition();
 
     interface PropertyDefinition<T extends Record> {
 
-        String propertyPath();
+        String path();
 
         Map<String, Object> definition();
 

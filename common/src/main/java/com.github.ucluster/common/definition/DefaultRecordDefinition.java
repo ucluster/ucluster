@@ -6,9 +6,12 @@ import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -18,17 +21,12 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
 
     public DefaultRecordDefinition(List<PropertyDefinition<T>> propertyDefinitions) {
         propertyDefinitions.stream()
-                .forEach(propertyDefinition -> this.propertyDefinitions.put(propertyDefinition.propertyPath(), propertyDefinition));
+                .forEach(propertyDefinition -> this.propertyDefinitions.put(propertyDefinition.path(), propertyDefinition));
     }
 
     @Override
     public void effect(Record.Property.Point point, T record) {
-        effect(point, record, propertyPaths(record));
-    }
-
-    private String[] propertyPaths(T record) {
-        final List<String> properties = record.properties().stream().map(Record.Property::path).collect(Collectors.toList());
-        return properties.toArray(new String[properties.size()]);
+        effect(point, record, propertyDefinitions.keySet().stream().toArray(String[]::new));
     }
 
     @Override
@@ -42,10 +40,21 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
         }
     }
 
-    private EffectResult effectOnPropertyDefinition(Record.Property.Point point, T record, String[] propertyPaths) {
-        return asList(propertyPaths).stream()
-                .map(propertyPath -> propertyDefinitions.get(propertyPath))
-                .filter(propertyPath -> propertyPath != null)
+    private EffectResult effectOnPropertyDefinition(Record.Property.Point point, T record, String... paths) {
+        return asList(paths).stream()
+                .filter(path -> {
+                    //TODO: refactor
+                    if (record instanceof User.Request && path.equals("status")) {
+                        return false;
+                    }
+
+                    if (record instanceof User.Request.ChangeLog && (path.equals("old_status") || path.equals("new_status"))) {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .map(path -> propertyDefinitions.get(path))
                 .map(propertyDefinition -> {
                     try {
                         propertyDefinition.effect(point, record);
@@ -72,24 +81,35 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
         return propertyDefinitions.get(propertyPath);
     }
 
+    @Override
+    public Collection<PropertyDefinition<T>> properties() {
+        return propertyDefinitions.values();
+    }
+
     protected EffectResult effectNonUndefinedPropertyExist(T record, String... propertyPaths) {
         EffectResult result = EffectResult.SUCCESS;
 
-        for (String propertyPath : propertyPaths) {
+        for (String path : mergePaths(record, propertyPaths)) {
             //TODO: for request to store status
-            if (record instanceof User.Request && propertyPath.equals("status")) {
+            if (record instanceof User.Request && path.equals("status")) {
                 continue;
             }
 
-            if (record instanceof User.Request.ChangeLog) {
+            if (record instanceof User.Request.ChangeLog && (path.equals("old_status") || path.equals("new_status"))) {
                 continue;
             }
 
-            if (!propertyDefinitions.containsKey(propertyPath)) {
-                result = result.merge(new EffectResult(new EffectResult.Failure(propertyPath, "undefined")));
+            if (!propertyDefinitions.containsKey(path)) {
+                result = result.merge(new EffectResult(new EffectResult.Failure(path, "undefined")));
             }
         }
 
         return result;
+    }
+
+    private Set<String> mergePaths(T record, String... propertyPaths) {
+        final Set<String> paths = new HashSet<>(asList(propertyPaths));
+        paths.addAll(record.properties().stream().map(Record.Property::path).collect(Collectors.toList()));
+        return paths;
     }
 }

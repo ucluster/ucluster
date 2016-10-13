@@ -101,11 +101,16 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     private void validateSave() {
-        definition().effect(Record.Property.Point.VALIDATE, (T) this);
+        definition().effect(
+                Record.Property.Point.VALIDATE,
+                (T) this);
     }
 
     private void validateUpdate() {
-        definition().effect(Record.Property.Point.VALIDATE, (T) this, dirtyTracker.asArray());
+        definition().effect(
+                Record.Property.Point.VALIDATE,
+                (T) this,
+                dirtyTracker.asArray());
     }
 
     private void beforeSaveOn(Record.Property.Point point) {

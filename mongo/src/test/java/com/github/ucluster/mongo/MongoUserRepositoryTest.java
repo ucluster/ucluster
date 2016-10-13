@@ -1,7 +1,6 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.ConcernEffectException;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -52,7 +52,9 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_failed_to_create_user_if_definition_not_satisfied() {
-        thrown.expect(ConcernEffectException.class);
+        capture(thrown).errors(
+                (path, type) -> path.equals("username") && type.equals("format")
+        );
 
         final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
@@ -61,7 +63,22 @@ public class MongoUserRepositoryTest {
                         .build())
                 .get();
 
-        user = users.create(request);
+        users.create(request);
+    }
+
+    @Test
+    public void should_validate_missing_property() {
+        capture(thrown).errors(
+                (path, type) -> path.equals("username") && type.equals("required")
+        );
+
+        final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("password", "password")
+                        .build())
+                .get();
+
+        users.create(request);
     }
 
     @Test
@@ -111,7 +128,9 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_failed_to_update_immutable_property() {
-        thrown.expect(ConcernEffectException.class);
+        capture(thrown).errors(
+                (path, type) -> path.equals("username") && type.equals("immutable")
+        );
 
         final User userUpdateImmutableProperty = users.uuid(user.uuid()).get();
         userUpdateImmutableProperty.property(new MongoProperty<>("username", "anotherkiwi"));
@@ -121,7 +140,9 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_failed_to_update_user_if_definition_not_satisfied() {
-        thrown.expect(ConcernEffectException.class);
+        capture(thrown).errors(
+                (path, type) -> path.equals("password") && type.equals("format")
+        );
 
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 

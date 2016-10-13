@@ -40,7 +40,7 @@ public class DefaultPropertyDefinition<T extends Record> implements Definition.P
     }
 
     @Override
-    public String propertyPath() {
+    public String path() {
         return propertyPath;
     }
 
