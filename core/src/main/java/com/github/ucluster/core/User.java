@@ -23,7 +23,7 @@ public interface User extends Record {
 
         Status status();
 
-        boolean autoApprovable();
+        boolean auto();
 
         void approve(Map<String, Object> detail);
 

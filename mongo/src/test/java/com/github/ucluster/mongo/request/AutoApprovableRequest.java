@@ -17,7 +17,7 @@ public class AutoApprovableRequest extends MongoRequest {
     }
 
     @Override
-    public boolean autoApprovable() {
+    public boolean auto() {
         return true;
     }
 

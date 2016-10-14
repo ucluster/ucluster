@@ -58,7 +58,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     @Override
-    public boolean autoApprovable() {
+    public boolean auto() {
         throw new RuntimeException("need implemented");
     }
 

@@ -25,7 +25,7 @@ public class MongoRecoveryRequest extends MongoRequest implements Model {
     }
 
     @Override
-    public boolean autoApprovable() {
+    public boolean auto() {
         return true;
     }
 

@@ -18,7 +18,7 @@ public class MongoID5AsyncRequest extends MongoRequest implements Model {
     }
 
     @Override
-    public boolean autoApprovable() {
+    public boolean auto() {
         return false;
     }
 

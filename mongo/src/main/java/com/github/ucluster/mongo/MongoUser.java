@@ -28,7 +28,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     public User.Request apply(Map<String, Object> request) {
         final MongoRequest req = saveRequest(request);
 
-        if (req.autoApprovable()) {
+        if (req.auto()) {
             req.approve(request);
         }
 
