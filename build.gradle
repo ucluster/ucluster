@@ -25,6 +25,7 @@ subprojects {
         jaxrs = '2.0.1'
         jackson_joda = '2.7.5'
         joda_time = '2.9.4'
+        json_path = '2.2.0'
 
         guice = '4.0'
         jersey = '2.16'

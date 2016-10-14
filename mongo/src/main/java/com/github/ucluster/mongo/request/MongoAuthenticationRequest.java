@@ -5,6 +5,7 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
 import com.github.ucluster.mongo.Model;
 import com.github.ucluster.mongo.MongoRequest;
+import com.github.ucluster.mongo.json.JsonRequest;
 
 import java.util.Map;
 import java.util.Objects;
@@ -27,38 +28,29 @@ public class MongoAuthenticationRequest extends MongoRequest implements Model {
     @Override
     public void approve(Map<String, Object> detail) {
         ensurePending();
-        ensureIdentityMatched((Map<String, Object>) detail.get("properties"));
-        ensurePasswordMatched((Map<String, Object>) detail.get("properties"));
+
+        final JsonRequest request = JsonRequest.of(detail);
+        ensureIdentityMatched(request);
+        ensurePasswordMatched(request);
 
         status(Status.APPROVED);
         update();
     }
 
-    private void ensurePasswordMatched(Map<String, Object> detail) {
-        final Optional<Property> credentialProperty = user.property((String) detail.get("credential_property"));
-        ensurePropertyIsCredential(credentialProperty);
-
-        if (!Encryption.BCRYPT.check(String.valueOf(detail.get("credential_value")), String.valueOf(credentialProperty.get().value()))) {
-            failed();
-        }
-    }
-
-    private void ensurePropertyIsCredential(Optional<Property> credentialProperty) {
-        if (!credentialProperty.isPresent()) {
-            failed();
-        }
-
-        final Object identity = user.definition().property(credentialProperty.get().path()).definition().get("credential");
-        if (!Objects.equals(true, identity)) {
-            failed();
-        }
-    }
-
-    private void ensureIdentityMatched(Map<String, Object> detail) {
-        final Optional<Property> identityProperty = user.property((String) detail.get("identity_property"));
+    private void ensureIdentityMatched(JsonRequest request) {
+        final Optional<Property> identityProperty = user.property((String) request.property("identity_property"));
         ensurePropertyIsIdentity(identityProperty);
 
-        if (!Objects.equals(detail.get("identity_value"), identityProperty.get().value())) {
+        if (!Objects.equals(request.property("identity_value"), identityProperty.get().value())) {
+            failed();
+        }
+    }
+
+    private void ensurePasswordMatched(JsonRequest request) {
+        final Optional<Property> credentialProperty = user.property((String) request.property("credential_property"));
+        ensurePropertyIsCredential(credentialProperty);
+
+        if (!Encryption.BCRYPT.check(String.valueOf(request.property("credential_value")), String.valueOf(credentialProperty.get().value()))) {
             failed();
         }
     }
@@ -69,6 +61,17 @@ public class MongoAuthenticationRequest extends MongoRequest implements Model {
         }
 
         final Object identity = user.definition().property(identityProperty.get().path()).definition().get("identity");
+        if (!Objects.equals(true, identity)) {
+            failed();
+        }
+    }
+
+    private void ensurePropertyIsCredential(Optional<Property> credentialProperty) {
+        if (!credentialProperty.isPresent()) {
+            failed();
+        }
+
+        final Object identity = user.definition().property(credentialProperty.get().path()).definition().get("credential");
         if (!Objects.equals(true, identity)) {
             failed();
         }

@@ -4,8 +4,8 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.Model;
 import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.mongo.MongoRequest;
+import com.github.ucluster.mongo.json.JsonRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class MongoID5AsyncRequest extends MongoRequest implements Model {
@@ -40,7 +40,6 @@ public class MongoID5AsyncRequest extends MongoRequest implements Model {
     }
 
     private Object reason(Map<String, Object> detail) {
-        final Map<String, Object> properties = (Map<String, Object>) detail.getOrDefault("properties", new HashMap<>());
-        return properties.get("reason");
+        return JsonRequest.of(detail).path("$.properties.reason");
     }
 }

@@ -5,6 +5,7 @@ ext {
 dependencies {
     compile "com.google.inject:guice:$guice"
     compile "org.mongodb.morphia:morphia:$morphia"
+    compile "com.jayway.jsonpath:json-path:$json_path"
 
     compile project(':api')
     compile project(':common')
