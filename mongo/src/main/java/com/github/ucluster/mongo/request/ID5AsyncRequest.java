@@ -23,7 +23,7 @@ public class ID5AsyncRequest extends MongoRequest implements Model {
     }
 
     @Override
-    public void approve(Map<String, Object> detail) {
+    public User.Request.Response approve(Map<String, Object> detail) {
         status(Status.APPROVED);
 
         user.property(property("id_name").get());
@@ -31,12 +31,16 @@ public class ID5AsyncRequest extends MongoRequest implements Model {
 
         user.update();
         update();
+
+        return Response.empty();
     }
 
     @Override
-    public void reject(Map<String, Object> detail) {
+    public User.Request.Response reject(Map<String, Object> detail) {
         status(Status.REJECTED, new MongoProperty<>("reason", reason(detail)));
         update();
+
+        return Response.empty();
     }
 
     private Object reason(Map<String, Object> detail) {

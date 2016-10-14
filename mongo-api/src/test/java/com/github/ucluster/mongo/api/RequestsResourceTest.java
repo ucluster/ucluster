@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(ApiTestRunner.class)
 public class RequestsResourceTest extends ApiSupport {
@@ -49,6 +50,7 @@ public class RequestsResourceTest extends ApiSupport {
                 .build());
 
         assertThat(response.getStatus(), is(201));
+        assertThat(response.getHeaderString("TOKEN"), is(notNullValue()));
     }
 
     @Test

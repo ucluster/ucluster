@@ -30,7 +30,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         final MongoRequest req = saveRequest(request);
 
         if (req.auto()) {
-            req.approve(request);
+            req.response = req.approve(request);
         }
 
         return req;

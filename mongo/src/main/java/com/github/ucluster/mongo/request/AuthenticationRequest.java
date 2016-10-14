@@ -6,12 +6,21 @@ import com.github.ucluster.core.exception.RequestException;
 import com.github.ucluster.mongo.Model;
 import com.github.ucluster.mongo.MongoRequest;
 import com.github.ucluster.mongo.json.JsonRequest;
+import com.github.ucluster.session.Session;
+import org.mongodb.morphia.annotations.Transient;
 
+import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 public class AuthenticationRequest extends MongoRequest implements Model {
+    @Inject
+    @Transient
+    Session session;
+
     AuthenticationRequest() {
         super();
     }
@@ -26,7 +35,7 @@ public class AuthenticationRequest extends MongoRequest implements Model {
     }
 
     @Override
-    public void approve(Map<String, Object> detail) {
+    public User.Request.Response approve(Map<String, Object> detail) {
         ensurePending();
 
         final JsonRequest request = JsonRequest.of(detail);
@@ -35,6 +44,19 @@ public class AuthenticationRequest extends MongoRequest implements Model {
 
         status(Status.APPROVED);
         update();
+
+        final String token = generateToken();
+        saveTokenSession(token);
+        return Response.builder().key("$TOKEN").value(token).get();
+    }
+
+    private void saveTokenSession(String token) {
+        final Map<String, String> userSession = new HashMap<>();
+        userSession.put("uuid", user.uuid());
+        session.hmset(token, userSession);
+        session.expire(token, 3600);
+
+        session.set(user.uuid(), token);
     }
 
     private void ensureIdentityMatched(JsonRequest request) {
@@ -80,5 +102,9 @@ public class AuthenticationRequest extends MongoRequest implements Model {
     private void failed() {
         status(Status.REJECTED);
         throw new RequestException();
+    }
+
+    private String generateToken() {
+        return UUID.randomUUID().toString();
     }
 }

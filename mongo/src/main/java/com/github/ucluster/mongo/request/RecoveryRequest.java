@@ -31,7 +31,7 @@ public class RecoveryRequest extends MongoRequest implements Model {
     }
 
     @Override
-    public void approve(Map<String, Object> detail) {
+    public User.Request.Response approve(Map<String, Object> detail) {
         ensurePending();
         final JsonRequest request = JsonRequest.of(detail);
         ensureOttMatched(request);
@@ -43,6 +43,8 @@ public class RecoveryRequest extends MongoRequest implements Model {
 
         status(Status.APPROVED);
         update();
+
+        return Response.empty();
     }
 
     private void ensureOttMatched(JsonRequest request) {

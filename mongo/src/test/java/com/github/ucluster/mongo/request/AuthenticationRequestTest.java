@@ -4,6 +4,7 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
+import com.github.ucluster.session.Session;
 import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -13,16 +14,21 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(UClusterTestRunner.class)
 public class AuthenticationRequestTest {
     @Inject
     MongoUserRepository users;
+
+    @Inject
+    Session session;
 
     private User user;
 
@@ -58,6 +64,11 @@ public class AuthenticationRequestTest {
                 .build());
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
+        final User.Request.Response response = request.response().get();
+        final List<User.Request.Response.Attribute> attributes = new ArrayList<>(response.attributes());
+        assertThat(attributes.size(), is(1));
+        assertThat(attributes.get(0).key(), is("$TOKEN"));
+        assertThat(session.hgetall(attributes.get(0).value()), is(notNullValue()));
 
         final List<User.Request.ChangeLog> changeLogs = request.changeLogs();
         assertThat(changeLogs.size(), is(1));

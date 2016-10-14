@@ -30,7 +30,15 @@ public class RequestsResource {
     public Response apply(Map<String, Object> request) {
         final User.Request appliedRequest = user.apply(request);
 
-        return Response.created(Routing.request(user, appliedRequest)).build();
+        final Response.ResponseBuilder created = Response.created(Routing.request(user, appliedRequest));
+        appliedRequest.response()
+                .ifPresent(rsp ->
+                        rsp.attributes()
+                                .stream()
+                                .filter(attr -> attr.key().startsWith("$"))
+                                .forEach(attr -> created.header(attr.key().substring(1), attr.value()))
+                );
+        return created.build();
     }
 
     @GET

@@ -3,6 +3,7 @@ package com.github.ucluster.core;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,9 +26,11 @@ public interface User extends Record {
 
         boolean auto();
 
-        void approve(Map<String, Object> detail);
+        Optional<Response> response();
 
-        void reject(Map<String, Object> detail);
+        Response approve(Map<String, Object> detail);
+
+        Response reject(Map<String, Object> detail);
 
         enum Status {
             PENDING,
@@ -36,6 +39,18 @@ public interface User extends Record {
         }
 
         List<ChangeLog> changeLogs();
+
+        interface Response {
+
+            Collection<Attribute> attributes();
+
+            interface Attribute {
+
+                String key();
+
+                String value();
+            }
+        }
 
         interface ChangeLog extends Record {
 

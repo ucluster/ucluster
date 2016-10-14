@@ -88,6 +88,14 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
         return jedisPool;
     }
 
+    protected static Session session() {
+        if (session == null) {
+            session = new Session(jedisPool());
+        }
+
+        return session;
+    }
+
     private List<AbstractModule> getAbstractModules() {
         return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {
@@ -95,7 +103,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                     protected void configure() {
                         bind(MongoClient.class).toInstance(mongoClient());
                         bind(Datastore.class).toInstance(datastore());
-                        bind(Session.class).toInstance(new Session(jedisPool()));
+                        bind(Session.class).toInstance(session());
 
                         bind(new TypeLiteral<Repository<? extends Record>>() {
                         }).to(MongoUserRepository.class);
