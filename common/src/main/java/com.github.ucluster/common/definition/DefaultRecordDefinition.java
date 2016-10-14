@@ -48,7 +48,7 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                         return false;
                     }
 
-                    if (record instanceof User.Request.ChangeLog && (path.equals("old_status") || path.equals("new_status"))) {
+                    if (record instanceof User.Request.Result && path.equals("status")) {
                         return false;
                     }
 
@@ -95,7 +95,7 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                 continue;
             }
 
-            if (record instanceof User.Request.ChangeLog && (path.equals("old_status") || path.equals("new_status"))) {
+            if (record instanceof User.Request.Result && path.equals("status")) {
                 continue;
             }
 

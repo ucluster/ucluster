@@ -42,7 +42,7 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
     }
 
     private boolean isAction(Map<String, Object> metadata) {
-        return "change_log".equals(origin_model(metadata));
+        return Constants.Record.RESULT.equals(origin_model(metadata));
     }
 
     private String origin_model(Map<String, Object> metadata) {

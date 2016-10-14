@@ -12,8 +12,8 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.ucluster.mongo.Constants.Collection.CHANGE_LOGS;
 import static com.github.ucluster.mongo.Constants.Collection.REQUESTS;
+import static com.github.ucluster.mongo.Constants.Collection.RESULTS;
 import static com.github.ucluster.mongo.Constants.Collection.USERS;
 import static com.github.ucluster.mongo.junit.ResourceReader.read;
 
@@ -65,9 +65,9 @@ public class UClusterTestRunner extends InjectorBasedRunner {
                         requests.deleteMany(new Document());
                     }
 
-                    final MongoCollection<Document> changeLogs = database.getCollection(CHANGE_LOGS);
-                    if (changeLogs != null) {
-                        changeLogs.deleteMany(new Document());
+                    final MongoCollection<Document> results = database.getCollection(RESULTS);
+                    if (results != null) {
+                        results.deleteMany(new Document());
                     }
                 }
             }

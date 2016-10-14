@@ -81,7 +81,7 @@ public class ID5AsyncRequestTest {
     }
 
     @Test
-    public void should_success_reject_request_if_change_log_definition_matched() {
+    public void should_success_reject_request_if_result_definition_matched() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "id5_async")
@@ -105,7 +105,7 @@ public class ID5AsyncRequestTest {
     }
 
     @Test
-    public void should_failed_reject_request_if_change_log_definition_not_matched_and_status_unchanged() {
+    public void should_failed_reject_request_if_result_definition_not_matched_and_status_unchanged() {
         capture(thrown).errors(
                 (path, type) -> path.equals("reason") && type.equals("required")
         );

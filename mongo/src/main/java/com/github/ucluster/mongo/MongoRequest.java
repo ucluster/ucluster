@@ -8,10 +8,8 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.github.ucluster.mongo.Constants.Collection.REQUESTS;
 
@@ -73,13 +71,12 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     @Override
-    public List<ChangeLog> changeLogs() {
-        return datastore.createQuery(MongoChangeLog.class)
+    public Optional<Result> result() {
+        return Optional.of(datastore.createQuery(MongoResult.class)
                 .disableValidation()
                 .field("request").equal(new Key<>(MongoRequest.class, REQUESTS, uuid))
                 .order("-createdAt")
-                .asList().stream()
-                .collect(Collectors.toList());
+                .get());
     }
 
     protected void status(Status status, Property... properties) {
@@ -90,18 +87,19 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     protected void recordChangeLog(Status newStatus, Property... properties) {
-        final MongoChangeLog changeLog = MongoChangeLog.of(this).from(status()).to(newStatus);
+        final MongoResult result = MongoResult.request(this).result(newStatus);
         for (Property property : properties) {
-            changeLog.property(property);
+            result.property(property);
         }
 
-        enhance(changeLog);
-        changeLog.save();
+        enhance(result);
+        result.save();
     }
 
-    private void enhance(MongoChangeLog changeLog) {
-        changeLog.request = this;
-        injector.injectMembers(changeLog);
+    private MongoResult enhance(MongoResult result) {
+        result.request = this;
+        injector.injectMembers(result);
+        return result;
     }
 
     protected void ensurePending() {
