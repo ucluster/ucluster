@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(UClusterTestRunner.class)
-public class MongoID5AsyncRequestTest {
+public class ID5AsyncRequestTest {
     @Inject
     MongoUserRepository users;
 

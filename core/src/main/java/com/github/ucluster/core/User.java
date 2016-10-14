@@ -39,8 +39,6 @@ public interface User extends Record {
 
         interface ChangeLog extends Record {
 
-            String uuid();
-
             Status oldStatus();
 
             Status newStatus();

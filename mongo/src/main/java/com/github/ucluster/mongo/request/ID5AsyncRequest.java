@@ -8,12 +8,12 @@ import com.github.ucluster.mongo.json.JsonRequest;
 
 import java.util.Map;
 
-public class MongoID5AsyncRequest extends MongoRequest implements Model {
-    public MongoID5AsyncRequest() {
+public class ID5AsyncRequest extends MongoRequest implements Model {
+    public ID5AsyncRequest() {
         super();
     }
 
-    public MongoID5AsyncRequest(User user, Map<String, Object> request) {
+    public ID5AsyncRequest(User user, Map<String, Object> request) {
         super(user, request);
     }
 

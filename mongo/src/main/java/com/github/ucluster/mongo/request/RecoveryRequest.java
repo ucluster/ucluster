@@ -13,15 +13,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MongoRecoveryRequest extends MongoRequest implements Model {
+public class RecoveryRequest extends MongoRequest implements Model {
     @Inject
     @Transient
     Session session;
 
-    MongoRecoveryRequest() {
+    RecoveryRequest() {
     }
 
-    public MongoRecoveryRequest(User user, Map<String, Object> request) {
+    public RecoveryRequest(User user, Map<String, Object> request) {
         super(user, request);
     }
 

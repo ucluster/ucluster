@@ -17,8 +17,8 @@ import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
-import com.github.ucluster.mongo.request.MongoAuthenticationRequest;
-import com.github.ucluster.mongo.request.MongoRecoveryRequest;
+import com.github.ucluster.mongo.request.AuthenticationRequest;
+import com.github.ucluster.mongo.request.RecoveryRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -114,9 +114,9 @@ public class Api extends ResourceConfig {
                 registerConcern("immutable").to(new TypeLiteral<ImmutableConcern>() {
                 });
 
-                registerRequestFactory("authentication").to(new TypeLiteral<MongoAuthenticationRequest>() {
+                registerRequestFactory("authentication").to(new TypeLiteral<AuthenticationRequest>() {
                 });
-                registerRequestFactory("recovery").to(new TypeLiteral<MongoRecoveryRequest>() {
+                registerRequestFactory("recovery").to(new TypeLiteral<RecoveryRequest>() {
                 });
             }
 

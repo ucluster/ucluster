@@ -18,9 +18,9 @@ import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
-import com.github.ucluster.mongo.request.MongoAuthenticationRequest;
-import com.github.ucluster.mongo.request.MongoID5AsyncRequest;
-import com.github.ucluster.mongo.request.MongoRecoveryRequest;
+import com.github.ucluster.mongo.request.AuthenticationRequest;
+import com.github.ucluster.mongo.request.ID5AsyncRequest;
+import com.github.ucluster.mongo.request.RecoveryRequest;
 import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
@@ -126,11 +126,11 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         registerRequestFactory("non_auto_approvable").to(new TypeLiteral<NonAutoApprovableRequest>() {
                         });
 
-                        registerRequestFactory("authentication").to(new TypeLiteral<MongoAuthenticationRequest>() {
+                        registerRequestFactory("authentication").to(new TypeLiteral<AuthenticationRequest>() {
                         });
-                        registerRequestFactory("recovery").to(new TypeLiteral<MongoRecoveryRequest>() {
+                        registerRequestFactory("recovery").to(new TypeLiteral<RecoveryRequest>() {
                         });
-                        registerRequestFactory("id5_async").to(new TypeLiteral<MongoID5AsyncRequest>() {
+                        registerRequestFactory("id5_async").to(new TypeLiteral<ID5AsyncRequest>() {
                         });
                     }
 

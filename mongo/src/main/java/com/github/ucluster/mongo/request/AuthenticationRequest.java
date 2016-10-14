@@ -11,12 +11,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class MongoAuthenticationRequest extends MongoRequest implements Model {
-    MongoAuthenticationRequest() {
+public class AuthenticationRequest extends MongoRequest implements Model {
+    AuthenticationRequest() {
         super();
     }
 
-    public MongoAuthenticationRequest(User user, Map<String, Object> request) {
+    public AuthenticationRequest(User user, Map<String, Object> request) {
         super(user, request);
     }
 

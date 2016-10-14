@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(UClusterTestRunner.class)
-public class MongoRecoveryRequestTest {
+public class RecoveryRequestTest {
     @Inject
     MongoUserRepository users;
 
