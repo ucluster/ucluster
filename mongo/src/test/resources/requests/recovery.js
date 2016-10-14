@@ -4,5 +4,9 @@ request({
     },
     credential_value: {
         required: true
+    },
+    ott: {
+        transient: true,
+        required: true
     }
 }).on('approve', {}).on('reject', {});

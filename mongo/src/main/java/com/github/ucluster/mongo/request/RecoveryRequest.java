@@ -33,9 +33,9 @@ public class RecoveryRequest extends MongoRequest implements Model {
     @Override
     public void approve(Map<String, Object> detail) {
         ensurePending();
-        ensureOttMatched(detail);
-
         final JsonRequest request = JsonRequest.of(detail);
+        ensureOttMatched(request);
+
         ensurePropertyIsCredential((String) request.property("credential_property"));
 
         user.property((String) request.property("credential_property"), request.property("credential_value"));
@@ -45,8 +45,8 @@ public class RecoveryRequest extends MongoRequest implements Model {
         update();
     }
 
-    private void ensureOttMatched(Map<String, Object> detail) {
-        final String ott = String.valueOf(detail.get("ott"));
+    private void ensureOttMatched(JsonRequest request) {
+        final String ott = String.valueOf(request.property("ott"));
 
         final Optional<Object> ottInSession = session.get(user.uuid() + ":ott");
         if (!ottInSession.isPresent()) {

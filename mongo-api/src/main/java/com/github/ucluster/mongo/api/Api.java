@@ -6,6 +6,7 @@ import com.github.ucluster.common.concern.FormatConcern;
 import com.github.ucluster.common.concern.IdentityConcern;
 import com.github.ucluster.common.concern.ImmutableConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
+import com.github.ucluster.common.concern.TransientConcern;
 import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
@@ -112,6 +113,8 @@ public class Api extends ResourceConfig {
                 registerConcern("credential").to(new TypeLiteral<CredentialConcern>() {
                 });
                 registerConcern("immutable").to(new TypeLiteral<ImmutableConcern>() {
+                });
+                registerConcern("transient").to(new TypeLiteral<TransientConcern>() {
                 });
 
                 registerRequestFactory("authentication").to(new TypeLiteral<AuthenticationRequest>() {

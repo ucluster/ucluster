@@ -51,11 +51,11 @@ public class RecoveryRequestTest {
         session.setex(user.uuid() + ":ott", "123456", 1);
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("ott", "123456")
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "recovery")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("ott", "123456")
                         .put("credential_property", "password")
                         .put("credential_value", "recovered")
                         .build())
@@ -85,11 +85,11 @@ public class RecoveryRequestTest {
         session.setex(user.uuid() + ":ott", "654321", 1);
 
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("ott", "123456")
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "recovery")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
+                        .put("ott", "123456")
                         .put("credential_property", "password")
                         .put("credential_value", "recovered")
                         .build())
