@@ -129,8 +129,8 @@ public class Api extends ResourceConfig {
                 }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
                 });
 
-                bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.Result>>>() {
-                }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.Result>>() {
+                bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.ChangeLog>>>() {
+                }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.ChangeLog>>() {
                 });
             }
 

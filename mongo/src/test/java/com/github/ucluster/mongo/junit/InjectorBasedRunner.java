@@ -17,11 +17,11 @@ import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
-import com.github.ucluster.mongo.request.AuthenticationRequest;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
+import com.github.ucluster.mongo.request.AuthenticationRequest;
 import com.github.ucluster.mongo.request.ID5AsyncRequest;
-import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
 import com.github.ucluster.mongo.request.RecoveryRequest;
+import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -143,8 +143,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
                         });
 
-                        bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.Result>>>() {
-                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.Result>>() {
+                        bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.ChangeLog>>>() {
+                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.ChangeLog>>() {
                         });
                     }
 

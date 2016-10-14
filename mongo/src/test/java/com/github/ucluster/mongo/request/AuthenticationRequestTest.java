@@ -13,8 +13,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -59,9 +59,11 @@ public class AuthenticationRequestTest {
 
         assertThat(request.status(), is(User.Request.Status.APPROVED));
 
-        final Optional<User.Request.Result> result = request.result();
-        assertThat(result.isPresent(), is(true));
+        final List<User.Request.ChangeLog> changeLogs = request.changeLogs();
+        assertThat(changeLogs.size(), is(1));
 
+        assertThat(changeLogs.get(0).oldStatus(), is(User.Request.Status.PENDING));
+        assertThat(changeLogs.get(0).newStatus(), is(User.Request.Status.APPROVED));
     }
 
     @Test

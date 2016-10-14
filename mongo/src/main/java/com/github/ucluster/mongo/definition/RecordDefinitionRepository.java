@@ -13,6 +13,8 @@ import org.mongodb.morphia.Datastore;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static com.github.ucluster.mongo.Constants.Record.CHANGE_LOG;
+
 public class RecordDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
     @Inject
     Injector injector;
@@ -42,7 +44,7 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
     }
 
     private boolean isAction(Map<String, Object> metadata) {
-        return Constants.Record.RESULT.equals(origin_model(metadata));
+        return CHANGE_LOG.equals(origin_model(metadata));
     }
 
     private String origin_model(Map<String, Object> metadata) {
