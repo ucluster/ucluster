@@ -1,7 +1,6 @@
 package com.github.ucluster.mongo.request;
 
 import com.github.ucluster.core.User;
-import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.mongo.MongoRequest;
 
 import java.util.Map;
@@ -27,7 +26,7 @@ public class AutoApprovableRequest extends MongoRequest {
         status(Status.APPROVED);
         update();
 
-        user.property(new MongoProperty<>("nickname", value.get().value()));
+        user.property("nickname", value.get().value());
         user.update();
     }
 

@@ -42,7 +42,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     private void loadProperties(Map<String, Object> request) {
         ((Map<String, Object>) request.get("properties")).entrySet().stream()
                 .forEach(e -> {
-                    property(new MongoProperty<>(e.getKey(), e.getValue()));
+                    property(e.getKey(), e.getValue());
                 });
     }
 
@@ -86,7 +86,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
         if (status != Status.PENDING) {
             recordChangeLog(status, properties);
         }
-        property(new MongoProperty<>("status", status.toString()));
+        property("status", status.toString());
     }
 
     protected void recordChangeLog(Status newStatus, Property... properties) {

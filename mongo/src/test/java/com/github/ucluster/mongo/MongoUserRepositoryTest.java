@@ -119,7 +119,7 @@ public class MongoUserRepositoryTest {
     public void should_update_user_property() {
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
-        userBeforeUpdate.property(new MongoProperty<>("nickname", "kiwinick"));
+        userBeforeUpdate.property("nickname", "kiwinick");
         userBeforeUpdate.update();
 
         final User userAfterUpdate = users.uuid(user.uuid()).get();
@@ -133,7 +133,7 @@ public class MongoUserRepositoryTest {
         );
 
         final User userUpdateImmutableProperty = users.uuid(user.uuid()).get();
-        userUpdateImmutableProperty.property(new MongoProperty<>("username", "anotherkiwi"));
+        userUpdateImmutableProperty.property("username", "anotherkiwi");
 
         userUpdateImmutableProperty.update();
     }
@@ -146,7 +146,7 @@ public class MongoUserRepositoryTest {
 
         final User userBeforeUpdate = users.uuid(user.uuid()).get();
 
-        userBeforeUpdate.property(new MongoProperty<>("password", "a"));
+        userBeforeUpdate.property("password", "a");
         userBeforeUpdate.update();
     }
 

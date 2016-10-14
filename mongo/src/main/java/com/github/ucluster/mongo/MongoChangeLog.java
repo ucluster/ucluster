@@ -21,8 +21,8 @@ public class MongoChangeLog extends MongoRecord<User.Request.ChangeLog> implemen
 
     public MongoChangeLog(User.Request request, User.Request.Status oldStatus, User.Request.Status newStatus) {
         this.request = request;
-        property(new MongoProperty<>("old_status", oldStatus.toString()));
-        property(new MongoProperty<>("new_status", newStatus.toString()));
+        property("old_status", oldStatus.toString());
+        property("new_status", newStatus.toString());
     }
 
     @Override

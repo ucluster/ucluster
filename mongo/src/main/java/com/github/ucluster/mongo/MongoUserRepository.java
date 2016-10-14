@@ -37,10 +37,10 @@ public class MongoUserRepository implements Repository<User> {
 
         enhance(user);
         createUserRequest.properties().keySet().stream()
-                .forEach(propertyPath -> user.property(new MongoProperty<>(
+                .forEach(propertyPath -> user.property(
                         propertyPath,
                         createUserRequest.properties().get(propertyPath))
-                ));
+                );
 
         user.save();
         return user;

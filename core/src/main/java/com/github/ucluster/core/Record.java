@@ -14,6 +14,8 @@ public interface Record {
 
     void property(Property property);
 
+    <V> void property(String path, V value);
+
     Optional<Property> property(String propertyPath);
 
     Collection<Property> properties();

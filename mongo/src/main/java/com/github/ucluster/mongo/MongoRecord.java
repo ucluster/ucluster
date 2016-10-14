@@ -73,6 +73,11 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     @Override
+    public <V> void property(String path, V value) {
+        property(new MongoProperty<>(path, value));
+    }
+
+    @Override
     public Optional<Property> property(String propertyPath) {
         return Optional.ofNullable(properties.get(propertyPath));
     }

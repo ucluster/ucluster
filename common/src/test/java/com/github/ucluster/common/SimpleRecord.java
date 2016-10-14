@@ -31,7 +31,12 @@ public class SimpleRecord implements Record {
 
     @Override
     public void property(Property property) {
+        property(property.path(), property.value());
+    }
 
+    @Override
+    public <V> void property(String path, V value) {
+        properties().stream().filter(prop -> prop.path().equals(path)).forEach(prop -> prop.value(value));
     }
 
     public SimpleRecord.FieldBuilder path(String path) {

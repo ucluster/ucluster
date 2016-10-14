@@ -206,7 +206,7 @@ public class MongoUserTest {
 
         IntStream.range(1, 20).parallel().forEach($ -> {
             final User u = users.uuid(this.user.uuid()).get();
-            u.property(new MongoProperty<>("nickname", "newnickname" + $));
+            u.property("nickname", "newnickname" + $);
             u.update();
         });
     }
