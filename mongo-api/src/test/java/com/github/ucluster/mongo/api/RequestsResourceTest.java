@@ -71,8 +71,9 @@ public class RequestsResourceTest extends ApiSupport {
 
         final JsonContext json = JsonContext.json(response);
         assertThat(json.path("uri"), is(createdResponse.getLocation().getPath()));
-        assertThat(json.path("type"), is("authentication"));
-        assertThat(json.path("status"), is("APPROVED"));
+        assertThat(json.metadata("model"), is("request"));
+        assertThat(json.metadata("type"), is("authentication"));
+        assertThat(json.property("status"), is("APPROVED"));
     }
 
     @Test

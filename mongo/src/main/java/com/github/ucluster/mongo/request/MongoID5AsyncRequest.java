@@ -40,6 +40,6 @@ public class MongoID5AsyncRequest extends MongoRequest implements Model {
     }
 
     private Object reason(Map<String, Object> detail) {
-        return JsonRequest.of(detail).path("$.properties.reason");
+        return JsonRequest.of(detail).property("reason");
     }
 }

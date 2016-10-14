@@ -112,13 +112,8 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     @Override
     public Map<String, Object> toJson() {
-        Map<String, Object> json = new HashMap<>();
-
-        json.put("id", uuid());
+        Map<String, Object> json = super.toJson();
         json.put("uri", Routing.request(user, this));
-        json.put("created_at", createdAt());
-        json.put("type", type());
-        json.put("status", status());
 
         return json;
     }

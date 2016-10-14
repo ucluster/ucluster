@@ -14,6 +14,7 @@ import org.mongodb.morphia.query.Query;
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.github.ucluster.mongo.Constants.Collection.USERS;
 
@@ -66,12 +67,17 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
                         .order("-createdAt")
                         .offset((page - 1) * perPage)
                         .limit(perPage)
-                        .asList());
+                        .asList()
+                        .stream()
+                        .map(this::enhance)
+                        .collect(Collectors.toList())
+        );
     }
 
-    private void enhance(MongoRequest request) {
+    private MongoRequest enhance(MongoRequest request) {
         request.user = this;
         injector.injectMembers(request);
+        return request;
     }
 
     private MongoRequest saveRequest(Map<String, Object> request) {

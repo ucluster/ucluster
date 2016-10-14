@@ -21,6 +21,14 @@ public class JsonContext {
         }
     }
 
+    public Object metadata(String path) {
+        return path("$.metadata." + path);
+    }
+
+    public Object property(String path) {
+        return path("$.properties." + path);
+    }
+
     public static JsonContext json(Object object) {
         final DocumentContext context = JsonPath.parse(object);
         return new JsonContext(context);

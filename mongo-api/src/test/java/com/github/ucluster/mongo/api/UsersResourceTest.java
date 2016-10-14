@@ -127,13 +127,13 @@ public class UsersResourceTest extends ApiSupport {
         final JsonContext json = JsonContext.json(response);
 
         assertThat("/users/" + json.path("$.id"), is(createdResponse.getLocation().getPath()));
-        assertThat(json.path("$.metadata.model"), is("user"));
-        assertThat(json.path("$.metadata.type"), is("default"));
+        assertThat(json.metadata("model"), is("user"));
+        assertThat(json.metadata("type"), is("default"));
 
-        assertThat(json.path("$.properties.username"), is("kiwiwin"));
-        assertThat(json.path("$.properties.nickname"), is("kiwinickname"));
-        assertThat(json.path("$.properties.email"), is("kiwi.swhite.coder@gmail.com"));
-        assertThat(json.path("$.properties.password"), is(nullValue()));
+        assertThat(json.property("username"), is("kiwiwin"));
+        assertThat(json.property("nickname"), is("kiwinickname"));
+        assertThat(json.property("email"), is("kiwi.swhite.coder@gmail.com"));
+        assertThat(json.property("password"), is(nullValue()));
     }
 
     @Test
