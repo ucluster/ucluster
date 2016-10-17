@@ -230,8 +230,20 @@ convention is JSON being used
 
 ## TODO-LIST
 
-    1. support multi user definition at the same time(how to distinguish group?)
-    2. user definition migration support 
-    3. plugin-in supported
-    4. provide common plugin
-    5. consider using compile-time instrumentation to encapsulate model, as well as generate models      
+###Jackson Polymorphic Support(High)
+
+easier plugin implementation with less code
+
+references:
+
+https://www.dilipkumarg.com/dynamic-polymorphic-type-handling-jackson/
+http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html
+
+###Nested Property Support(Medium)
+
+easier to understand from domain point of view
+
+###User Definition Migration Support(Low) 
+
+###Split Json Representation(Undefined)
+    
