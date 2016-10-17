@@ -31,13 +31,13 @@ public class IdentityConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath, Record.Property.Point point) {
+    public void effect(Record record, String path, Record.Property.Point point) {
         injector.injectMembers(uniquenessConcern);
 
         EffectResult result = EffectResult.SUCCESS;
 
         try {
-            uniquenessConcern.effect(record, propertyPath, point);
+            uniquenessConcern.effect(record, path, point);
         } catch (ConcernEffectException e) {
             result = result.merge(e.getEffectResult());
         }

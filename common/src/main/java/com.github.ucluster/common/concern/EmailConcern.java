@@ -37,15 +37,15 @@ public class EmailConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath, Record.Property.Point point) {
+    public void effect(Record record, String path, Record.Property.Point point) {
         if (enabled) {
-            final Optional<Record.Property> property = record.property(propertyPath);
+            final Optional<Record.Property> property = record.property(path);
 
             property.ifPresent(prop -> {
                 final String propertyValue = String.valueOf(prop.value());
 
                 if (!positivePattern.matcher(propertyValue).matches() || negativePattern.matcher(propertyValue).matches()) {
-                    throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
+                    throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(path, type())));
                 }
             });
         }

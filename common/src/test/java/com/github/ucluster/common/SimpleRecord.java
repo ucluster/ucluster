@@ -48,8 +48,8 @@ public class SimpleRecord implements Record {
     }
 
     @Override
-    public Optional<Property> property(String propertyPath) {
-        return properties().stream().filter(property -> property.path().equals(propertyPath)).findAny();
+    public Optional<Property> property(String path) {
+        return properties().stream().filter(property -> property.path().equals(path)).findAny();
     }
 
     @Override

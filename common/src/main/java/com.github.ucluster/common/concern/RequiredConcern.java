@@ -24,17 +24,17 @@ public class RequiredConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath, Record.Property.Point point) {
+    public void effect(Record record, String path, Record.Property.Point point) {
         if (enabled) {
-            final Record.Property property = record.property(propertyPath).orElseThrow(() ->
+            final Record.Property property = record.property(path).orElseThrow(() ->
                     new ConcernEffectException(
-                            new EffectResult(new EffectResult.Failure(propertyPath, type()))
+                            new EffectResult(new EffectResult.Failure(path, type()))
                     )
             );
 
             if (property.value() == null) {
                 throw new ConcernEffectException(
-                        new EffectResult(new EffectResult.Failure(propertyPath, type()))
+                        new EffectResult(new EffectResult.Failure(path, type()))
                 );
             }
         }

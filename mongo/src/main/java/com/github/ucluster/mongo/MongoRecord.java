@@ -78,8 +78,8 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     @Override
-    public Optional<Property> property(String propertyPath) {
-        return Optional.ofNullable(properties.get(propertyPath));
+    public Optional<Property> property(String path) {
+        return Optional.ofNullable(properties.get(path));
     }
 
     @Override

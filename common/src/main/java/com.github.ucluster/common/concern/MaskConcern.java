@@ -24,8 +24,8 @@ public class MaskConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath, Record.Property.Point point) {
-        final Optional<Record.Property> property = record.property(propertyPath);
+    public void effect(Record record, String path, Record.Property.Point point) {
+        final Optional<Record.Property> property = record.property(path);
 
         property.ifPresent(prop -> {
             prop.value(mask(String.valueOf(property.get().value())));

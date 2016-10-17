@@ -24,9 +24,9 @@ public class CredentialConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath, Record.Property.Point point) {
+    public void effect(Record record, String path, Record.Property.Point point) {
         if (enabled) {
-            final Optional<Record.Property> property = record.property(propertyPath);
+            final Optional<Record.Property> property = record.property(path);
             if (point != Record.Property.Point.DELIVERY) {
                 property.ifPresent(prop -> {
                     prop.value(encrypt(String.valueOf(property.get().value())));

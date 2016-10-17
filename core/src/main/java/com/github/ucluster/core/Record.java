@@ -16,7 +16,7 @@ public interface Record {
 
     <V> void property(String path, V value);
 
-    Optional<Property> property(String propertyPath);
+    Optional<Property> property(String path);
 
     Collection<Property> properties();
 
@@ -42,7 +42,7 @@ public interface Record {
 
             boolean isAbout(Point point);
 
-            void effect(Record record, String propertyPath, Point point);
+            void effect(Record record, String path, Point point);
 
             Object configuration();
         }

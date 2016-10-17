@@ -41,16 +41,16 @@ public class UniquenessConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath, Record.Property.Point point) {
+    public void effect(Record record, String path, Record.Property.Point point) {
         if (enabled) {
-            record.property(propertyPath).ifPresent(prop -> {
+            record.property(path).ifPresent(prop -> {
                 final Repository<? extends Record> records = injector.getInstance(Key.get(new TypeLiteral<Repository<? extends Record>>() {
                 }));
 
                 final Optional<? extends Record> existingRecord = records.findBy(prop);
 
                 existingRecord.ifPresent($ -> {
-                    throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
+                    throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(path, type())));
                 });
             });
         }

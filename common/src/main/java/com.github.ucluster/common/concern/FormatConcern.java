@@ -28,10 +28,10 @@ public class FormatConcern implements Record.Property.Concern {
     }
 
     @Override
-    public void effect(Record record, String propertyPath, Record.Property.Point point) {
-        record.property(propertyPath).ifPresent(prop -> {
+    public void effect(Record record, String path, Record.Property.Point point) {
+        record.property(path).ifPresent(prop -> {
             if (!pattern.matcher(String.valueOf(prop.value())).matches()) {
-                throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(propertyPath, type())));
+                throw new ConcernEffectException(new EffectResult(new EffectResult.Failure(path, type())));
             }
         });
     }
