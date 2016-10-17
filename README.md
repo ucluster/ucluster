@@ -230,6 +230,11 @@ convention is JSON being used
 
 ## TODO-LIST
 
+###Role Based Access Control(High)
+
+https://github.com/mdarby/restful_acl
+http://stackoverflow.com/questions/190257/best-role-based-access-control-rbac-database-model
+
 ###Jackson Polymorphic Support(High)
 
 easier plugin implementation with less code
