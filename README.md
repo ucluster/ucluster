@@ -223,7 +223,7 @@ Example:
             
 convention is JSON being used   
    
-## Confirmation(Doing)
+## Verification(Doing)
    
 verify user actually holds the confirmation way.
    
@@ -237,9 +237,9 @@ Example:
            }
            ... ...
        })
-       .confirm_by('email').on('email');
+       .verify('email').using('email');
    
-In the example above, this means when user want to register, it must be confirmed by email. `confirm_by(<method>)` indicates how the user should be confirmed, `method` can be email, SMS, phone call, etc. `on(<property>)` means validate against which property in case that user have multi property can be confirmed the same way.   
+In the example above, this means when user want to register, it must be confirmed by email. `verify(<property>)` indicates how the user should be verified/confirmed, `method` can be email, SMS, phone call, etc. `using(<method>)` means validate against which property in case that user have multi property can be confirmed the same way.   
 
 ## Dev-Env
 

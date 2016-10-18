@@ -1,0 +1,10 @@
+ext {
+    mail = '1.4.7'
+}
+
+dependencies {
+    compile "javax.mail:mail:$mail"
+
+    compile project(':verification')
+    compile project(':session')
+}

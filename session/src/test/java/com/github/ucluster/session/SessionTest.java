@@ -32,6 +32,13 @@ public class SessionTest {
     }
 
     @Test
+    public void should_able_to_set_email_as_key() {
+        session.setex("confirm:kiwi.swhite.coder@gmail.com", "403125", 30);
+
+        assertThat(session.get("confirm:kiwi.swhite.coder@gmail.com").get(), is("403125"));
+    }
+
+    @Test
     public void should_set_multi_times() {
         assertThat(session.set("key", "value"), is(true));
         assertThat(session.set("key", "value"), is(true));
