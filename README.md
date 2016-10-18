@@ -251,4 +251,9 @@ easier to understand from domain point of view
 ###User Definition Migration Support(Low) 
 
 ###Split Json Representation(Undefined)
+
+###Pretty Dirty Tracker
+
+https://vladmihalcea.com/2014/08/21/the-anatomy-of-hibernate-dirty-checking/
+https://vladmihalcea.com/2016/02/11/how-to-enable-bytecode-enhancement-dirty-checking-in-hibernate/
     
