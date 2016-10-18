@@ -221,7 +221,25 @@ Example:
         pattern: "\\w{6,16}"
     }
             
-convention is JSON being used      
+convention is JSON being used   
+   
+## Confirmation(Doing)
+   
+verify user actually holds the confirmation way.
+   
+Example:
+   
+       user({
+           ... ...
+           email: {
+               email: true,
+               identity: true
+           }
+           ... ...
+       })
+       .confirm_by('email').on('email');
+   
+In the example above, this means when user want to register, it must be confirmed by email. `confirm_by(<method>)` indicates how the user should be confirmed, `method` can be email, SMS, phone call, etc. `on(<property>)` means validate against which property in case that user have multi property can be confirmed the same way.   
 
 ## Dev-Env
 
@@ -257,3 +275,6 @@ easier to understand from domain point of view
 https://vladmihalcea.com/2014/08/21/the-anatomy-of-hibernate-dirty-checking/
 https://vladmihalcea.com/2016/02/11/how-to-enable-bytecode-enhancement-dirty-checking-in-hibernate/
     
+###List Property Support
+    
+for example, user can provide multi mobile phone or email address for contact    
