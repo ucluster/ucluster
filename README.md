@@ -281,14 +281,16 @@ for example, user can provide multi mobile phone or email address for contact
 
 ###Verification Frequency Control
 
-captcha?
+captcha? method: always, by_frequency, etc. may refer topbeat
 
-###Session Rename
+###Session Rename(Medium)
 
 currently session just an interface for Redis, find a better name to represent what actually doing. Currently session is also used for store things like auth code.
 
-###Guice Registration Refactor
+###Guice Registration Refactor(Medium)
 
 Using patterns like 'registry'
 
-###Refactor modules to make it clear for implementation
+###Refactor modules to make it clear for implementation(Medium)
+
+###Query Object(Low)
