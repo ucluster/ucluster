@@ -278,3 +278,17 @@ https://vladmihalcea.com/2016/02/11/how-to-enable-bytecode-enhancement-dirty-che
 ###List Property Support
     
 for example, user can provide multi mobile phone or email address for contact    
+
+###Verification Frequency Control
+
+captcha?
+
+###Session Rename
+
+currently session just an interface for Redis, find a better name to represent what actually doing. Currently session is also used for store things like auth code.
+
+###Guice Registration Refactor
+
+Using patterns like 'registry'
+
+###Refactor modules to make it clear for implementation
