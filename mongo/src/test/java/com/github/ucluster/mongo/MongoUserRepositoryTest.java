@@ -6,7 +6,9 @@ import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
+import com.github.ucluster.session.Session;
 import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
+import com.github.ucluster.verification.VerificationException;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,12 +41,21 @@ public class MongoUserRepositoryTest {
 
     User user;
 
+    @Inject
+    private Session session;
+
     @Before
     public void setUp() throws Exception {
+        session.set("confirm:kiwiwin@qq.com", "3102");
+
         final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("token", "3102")
+                        .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
+                        .put("email", "kiwiwin@qq.com")
                         .build())
                 .get();
 
@@ -93,6 +104,24 @@ public class MongoUserRepositoryTest {
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
+                        .build())
+                .get();
+
+        user = users.create(request);
+    }
+
+    @Test
+    public void should_failed_to_create_user_when_verification_required_but_code_not_match() throws Exception {
+        thrown.expect(VerificationException.class);
+
+        final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("token", "not_match_1102")
+                        .build())
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("username", "kiwiwin")
+                        .put("password", "password")
+                        .put("email", "kiwiwin@qq.com")
                         .build())
                 .get();
 
@@ -153,10 +182,15 @@ public class MongoUserRepositoryTest {
     @Test
     public void should_find_all_users() {
         for (int count = 0; count < 10; count++) {
+            session.set("confirm:kiwiwin@qq.com" + count, "3102");
             users.create(CreateUserRequestBuilder.of()
+                    .metadata(ImmutableMap.<String, Object>builder()
+                            .put("token", "3102")
+                            .build())
                     .properties(ImmutableMap.<String, Object>builder()
                             .put("username", "kiwiwin" + count)
                             .put("password", "password" + count)
+                            .put("email", "kiwiwin@qq.com" + count)
                             .build())
                     .get());
         }
@@ -168,10 +202,15 @@ public class MongoUserRepositoryTest {
     @Test
     public void should_find_by_criteria() {
         for (int count = 0; count < 10; count++) {
+            session.set("confirm:kiwiwin@qq.com" + count, "3102");
             users.create(CreateUserRequestBuilder.of()
+                    .metadata(ImmutableMap.<String, Object>builder()
+                            .put("token", "3102")
+                            .build())
                     .properties(ImmutableMap.<String, Object>builder()
                             .put("username", "kiwiwin" + count)
                             .put("password", "password" + count)
+                            .put("email", "kiwiwin@qq.com" + count)
                             .build())
                     .get());
         }

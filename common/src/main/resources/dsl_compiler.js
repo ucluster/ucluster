@@ -1,5 +1,6 @@
 var definition = {};
 var action_definition = {};
+var verification_definition = {}
 
 function Action() {
     var target = this;
@@ -9,8 +10,21 @@ function Action() {
     }
 }
 
+function Verification() {
+    this.verify = function(property) {
+        verification_definition[property] = property;
+        return {
+           target: property,
+           using: function(method) {
+             verification_definition[this.target] = method;
+           }
+        }
+    }
+}
+
 var user = function (user) {
     definition = user;
+    return new Verification();
 };
 
 var request = function (request) {

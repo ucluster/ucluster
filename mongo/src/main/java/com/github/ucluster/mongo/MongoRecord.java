@@ -4,6 +4,8 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.exception.RecordException;
+import com.github.ucluster.verification.VerificationRegistry;
+import com.github.ucluster.verification.VerificationService;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
@@ -16,12 +18,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MongoRecord<T extends Record> implements Record, Model {
@@ -51,6 +48,10 @@ public class MongoRecord<T extends Record> implements Record, Model {
     @Inject
     @Transient
     protected Injector injector;
+
+    @Inject
+    @Transient
+    protected VerificationRegistry registry;
 
     @Override
     public String uuid() {
@@ -125,7 +126,17 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     private void beforeSaveOn(Record.Property.Point point) {
+        definition().verifications().stream().forEach(this::verify);
         definition().effect(point, (T) this, dirtyTracker.asArray());
+    }
+
+    private void verify(Definition.Verification verification) {
+        Optional<VerificationService> verificationService = registry.find(verification.method());
+        verificationService.ifPresent(service -> service.verify(
+                (String) this.property(verification.target()).get().value(),
+                (String) metadata().get("token")
+        ));
+        //TODO: handle if cannot find a verification service
     }
 
     private void doSave() {

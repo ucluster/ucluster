@@ -66,8 +66,13 @@ public class DSLCompilerTest {
         when(passwordProperty.path()).thenReturn("password");
         when(passwordProperty.value()).thenReturn("password");
 
+        final Record.Property emailProperty = mock(Record.Property.class);
+        when(emailProperty.path()).thenReturn("email");
+        when(emailProperty.value()).thenReturn("kiwiwin@qq.com");
+
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));
+        when(user.property(eq("email"))).thenReturn(Optional.of(emailProperty));
 
         definition.effect(Record.Property.Point.VALIDATE, user);
     }
@@ -86,9 +91,14 @@ public class DSLCompilerTest {
         when(passwordProperty.path()).thenReturn("password");
         when(passwordProperty.value()).thenReturn("password");
 
+        final Record.Property emailProperty = mock(Record.Property.class);
+        when(emailProperty.path()).thenReturn("email");
+        when(emailProperty.value()).thenReturn("kiwiwin@qq.com");
+
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));
         when(user.properties()).thenReturn(asList(usernameProperty, passwordProperty));
+        when(user.property(eq("email"))).thenReturn(Optional.of(emailProperty));
 
         definition.effect(Record.Property.Point.VALIDATE, user);
     }

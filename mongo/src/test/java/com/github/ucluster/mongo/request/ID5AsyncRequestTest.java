@@ -3,6 +3,7 @@ package com.github.ucluster.mongo.request;
 import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
+import com.github.ucluster.session.Session;
 import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -30,9 +31,17 @@ public class ID5AsyncRequestTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
+    @Inject
+    private Session session;
+
     @Before
     public void setUp() throws Exception {
+        session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
+
         final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("token", "3102")
+                        .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")

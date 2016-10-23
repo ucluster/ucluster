@@ -1,13 +1,6 @@
 package com.github.ucluster.mongo.junit;
 
-import com.github.ucluster.common.concern.CredentialConcern;
-import com.github.ucluster.common.concern.EmailConcern;
-import com.github.ucluster.common.concern.FormatConcern;
-import com.github.ucluster.common.concern.IdentityConcern;
-import com.github.ucluster.common.concern.ImmutableConcern;
-import com.github.ucluster.common.concern.RequiredConcern;
-import com.github.ucluster.common.concern.TransientConcern;
-import com.github.ucluster.common.concern.UniquenessConcern;
+import com.github.ucluster.common.concern.*;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
@@ -18,12 +11,12 @@ import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
-import com.github.ucluster.mongo.request.AuthenticationRequest;
-import com.github.ucluster.mongo.request.AutoApprovableRequest;
-import com.github.ucluster.mongo.request.ID5AsyncRequest;
-import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
-import com.github.ucluster.mongo.request.RecoveryRequest;
+import com.github.ucluster.mongo.request.*;
+import com.github.ucluster.mongo.verification.MongoVerificationRegistry;
 import com.github.ucluster.session.Session;
+import com.github.ucluster.verification.VerificationRegistry;
+import com.github.ucluster.verification.VerificationService;
+import com.github.ucluster.verification.email.EmailVerificationService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -109,6 +102,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(MongoUserRepository.class);
                         bind(new TypeLiteral<Repository<User>>() {
                         }).to(MongoUserRepository.class);
+                        bind(new TypeLiteral<VerificationRegistry>() {
+                        }).to(MongoVerificationRegistry.class);
 
                         bind(RequestFactory.class).to(MongoRequestFactory.class);
 
@@ -131,6 +126,9 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         registerConcern("transient").to(new TypeLiteral<TransientConcern>() {
                         });
 
+                        registerVerificationService("email").to(new TypeLiteral<EmailVerificationService>() {
+                        });
+
                         registerRequestFactory("auto_approvable").to(new TypeLiteral<AutoApprovableRequest>() {
                         });
                         registerRequestFactory("non_auto_approvable").to(new TypeLiteral<NonAutoApprovableRequest>() {
@@ -142,6 +140,11 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
                         registerRequestFactory("id5_async").to(new TypeLiteral<ID5AsyncRequest>() {
                         });
+                    }
+
+                    private LinkedBindingBuilder<VerificationService> registerVerificationService(String type) {
+                        return bind(new TypeLiteral<VerificationService>() {
+                        }).annotatedWith(Names.named("verification." + type + ".method"));
                     }
 
                     private void bindDefinitionRepositories() {

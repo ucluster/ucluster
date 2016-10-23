@@ -37,7 +37,12 @@ public class AuthenticationRequestTest {
 
     @Before
     public void setUp() throws Exception {
+        session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
+
         final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("token", "3102")
+                        .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")

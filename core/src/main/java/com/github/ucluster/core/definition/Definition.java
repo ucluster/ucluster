@@ -17,6 +17,8 @@ public interface Definition<D extends Record> {
 
     Map<String, Object> definition();
 
+    Collection<Verification> verifications();
+
     interface PropertyDefinition<T extends Record> {
 
         String path();
@@ -24,5 +26,12 @@ public interface Definition<D extends Record> {
         Map<String, Object> definition();
 
         void effect(Record.Property.Point point, T record);
+    }
+
+    interface Verification {
+
+        String target();
+
+        String method();
     }
 }

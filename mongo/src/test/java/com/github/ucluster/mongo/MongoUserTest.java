@@ -6,6 +6,7 @@ import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
+import com.github.ucluster.session.Session;
 import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -34,13 +35,22 @@ public class MongoUserTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
+    @Inject
+    private Session session;
+
     @Before
     public void setUp() throws Exception {
+        session.set("confirm:kiwiwin@qq.com", "3102");
+
         final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("token", "3102")
+                        .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")
                         .put("password", "password")
+                        .put("email", "kiwiwin@qq.com")
                         .build())
                 .get();
 
@@ -171,10 +181,16 @@ public class MongoUserTest {
 
     @Test
     public void should_not_get_requests_from_other_users() {
+        session.set("confirm:kiwiwin@qq1.com", "3102");
+
         final Map<String, Object> request = CreateUserRequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("token", "3102")
+                        .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "another")
                         .put("password", "another")
+                        .put("email", "kiwiwin@qq1.com")
                         .build())
                 .get();
 

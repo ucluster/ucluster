@@ -20,7 +20,9 @@ import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AuthenticationRequest;
 import com.github.ucluster.mongo.request.RecoveryRequest;
+import com.github.ucluster.mongo.verification.MongoVerificationRegistry;
 import com.github.ucluster.session.Session;
+import com.github.ucluster.verification.VerificationRegistry;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -95,6 +97,8 @@ public class Api extends ResourceConfig {
                 }).to(MongoUserRepository.class);
                 bind(new TypeLiteral<Repository<User>>() {
                 }).to(MongoUserRepository.class);
+                bind(new TypeLiteral<VerificationRegistry>() {
+                }).to(MongoVerificationRegistry.class);
 
                 bind(RequestFactory.class).to(MongoRequestFactory.class);
 

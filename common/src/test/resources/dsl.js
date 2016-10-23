@@ -12,5 +12,9 @@ user({
         format: {
             pattern: "\\w{6,16}"
         }
+    },
+    email: {
+        email: true,
+        identity: true
     }
-});
+}).verify("email").using("email");

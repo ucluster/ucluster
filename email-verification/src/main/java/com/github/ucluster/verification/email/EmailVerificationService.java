@@ -26,9 +26,13 @@ public class EmailVerificationService implements VerificationService {
     @Inject
     com.github.ucluster.session.Session session;
 
-    private final String username;
-    private final String password;
-    private final Properties properties;
+    private String username;
+    private String password;
+    private Properties properties;
+
+    public EmailVerificationService() {
+
+    }
 
     public EmailVerificationService(String username, String password, Properties properties) {
         this.username = username;

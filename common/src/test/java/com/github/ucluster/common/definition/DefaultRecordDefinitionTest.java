@@ -38,7 +38,7 @@ public class DefaultRecordDefinitionTest {
                                 new FormatConcern("format", ImmutableMap.<String, Object>builder()
                                         .put("pattern", "\\w{6,12}")
                                         .build())))
-        ));
+        ), asList(getVerification()));
     }
 
     @Test
@@ -130,5 +130,19 @@ public class DefaultRecordDefinitionTest {
                 .get();
 
         definition.effect(Record.Property.Point.VALIDATE, record);
+    }
+
+    private Definition.Verification getVerification() {
+        return new Definition.Verification() {
+            @Override
+            public String target() {
+                return "email";
+            }
+
+            @Override
+            public String method() {
+                return "email";
+            }
+        };
     }
 }
