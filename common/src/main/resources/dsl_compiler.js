@@ -7,7 +7,7 @@ function Record() {
     this.on = function (type, action) {
         action_definition[type] = action;
         return target;
-    }
+    };
     this.verify = function(property) {
         verification_definition[property] = property;
         return {
@@ -17,7 +17,7 @@ function Record() {
              return target;
            }
         }
-    }
+    };
 }
 
 var user = function (user) {
