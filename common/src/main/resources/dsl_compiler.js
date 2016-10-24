@@ -10,12 +10,11 @@ function Action() {
     }
     this.verify = function(property) {
         verification_definition[property] = property;
-        that = this;
         return {
-           target: property,
+           verify_target: property,
            using: function(method) {
-             verification_definition[this.target] = method;
-             return that;
+             verification_definition[this.verify_target] = method;
+             return target;
            }
         }
     }
