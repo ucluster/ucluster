@@ -2,7 +2,7 @@ var definition = {};
 var action_definition = {};
 var verification_definition = {}
 
-function Action() {
+function Record() {
     var target = this;
     this.on = function (type, action) {
         action_definition[type] = action;
@@ -20,13 +20,12 @@ function Action() {
     }
 }
 
-
 var user = function (user) {
     definition = user;
-    return new Action();
+    return new Record();
 };
 
 var request = function (request) {
     definition = request;
-    return new Action();
+    return new Record();
 };
