@@ -8,23 +8,23 @@ function Action() {
         action_definition[type] = action;
         return target;
     }
-}
-
-function Verification() {
     this.verify = function(property) {
         verification_definition[property] = property;
+        that = this;
         return {
            target: property,
            using: function(method) {
              verification_definition[this.target] = method;
+             return that;
            }
         }
     }
 }
 
+
 var user = function (user) {
     definition = user;
-    return new Verification();
+    return new Action();
 };
 
 var request = function (request) {
