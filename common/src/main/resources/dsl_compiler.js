@@ -1,6 +1,6 @@
 var definition = {};
 var action_definition = {};
-var verification_definition = {}
+var verification_definition = {};
 
 function Record() {
     var target = this;
