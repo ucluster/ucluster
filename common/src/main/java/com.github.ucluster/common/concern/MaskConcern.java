@@ -2,20 +2,22 @@ package com.github.ucluster.common.concern;
 
 import com.github.ucluster.core.Record;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class MaskConcern implements Record.Property.Concern {
     private String type;
     private Object configuration;
+    private Parser parser;
 
     MaskConcern() {
-
     }
 
     MaskConcern(String type, Object configuration) {
         this.type = type;
         this.configuration = configuration;
+        this.parser = configuration instanceof Map ? new MapParser(configuration) : new ListParser(configuration);
     }
 
     @Override
@@ -33,50 +35,30 @@ public class MaskConcern implements Record.Property.Concern {
     }
 
     private String mask(String origin) {
-        if (isLeading()) {
-            final int digits = getLeadingDigits();
+        final int from = consolidatedFrom(origin);
+        final int end = consolidatedEnd(origin);
 
-            if (origin.length() <= digits) {
-                return star(origin.length());
-            }
+        if (from > end || from < 0 || end > origin.length()) {
+            return origin;
+        }
 
-            return star(digits) + origin.substring(digits);
-        } else if (isTrailing()) {
-            final int digits = getTrailingDigits();
+        return origin.substring(0, from) + star(end - from + 1) + origin.substring(end + 1);
+    }
 
-            if (origin.length() <= digits) {
-                return star(origin.length());
-            }
-
-            return origin.substring(0, origin.length() - digits) + star(digits);
+    private int consolidatedFrom(String origin) {
+        if (parser.from() >= 0) {
+            return parser.from() >= origin.length() ? origin.length() - 1 : parser.from();
         } else {
-            final int from = getFromDigits();
-            final int to = getToDigits();
-
-            if (origin.length() < from) {
-                return star(origin.length());
-            } else if (origin.length() < to) {
-                return origin.substring(0, from) + star(origin.length() - from);
-            } else {
-                return origin.substring(0, from) + star(to - from) + origin.substring(to);
-            }
+            return origin.length() + parser.from() < 0 ? 0 : origin.length() + parser.from();
         }
     }
 
-    private int getTrailingDigits() {
-        return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("trailing")));
-    }
-
-    private int getLeadingDigits() {
-        return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("leading")));
-    }
-
-    private int getFromDigits() {
-        return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("from")));
-    }
-
-    private int getToDigits() {
-        return Integer.valueOf(String.valueOf(((Map<String, Object>) configuration).get("to")));
+    private int consolidatedEnd(String origin) {
+        if (parser.end() > 0) {
+            return parser.end();
+        } else {
+            return origin.length() + parser.end() < 0 ? 0 : origin.length() + parser.end();
+        }
     }
 
     private String star(int length) {
@@ -97,11 +79,83 @@ public class MaskConcern implements Record.Property.Concern {
         return configuration;
     }
 
-    private boolean isLeading() {
-        return ((Map<String, Object>) configuration()).containsKey("leading");
+    interface Parser {
+
+        int from();
+
+        int end();
     }
 
-    private boolean isTrailing() {
-        return ((Map<String, Object>) configuration()).containsKey("trailing");
+    private static class MapParser implements Parser {
+        private Map<String, Object> configuration;
+
+        MapParser(Object configuration) {
+            this.configuration = (Map<String, Object>) configuration;
+        }
+
+        @Override
+        public int from() {
+            if (isLeading()) {
+                return 0;
+            } else if (isTrailing()) {
+                return -trailingDigits();
+            } else {
+                return fromDigits();
+            }
+        }
+
+        @Override
+        public int end() {
+            if (isLeading()) {
+                return leadingDigits() - 1;
+            } else if (isTrailing()) {
+                return -1;
+            } else {
+                return toDigits();
+            }
+        }
+
+        private boolean isLeading() {
+            return configuration.containsKey("leading");
+        }
+
+        private boolean isTrailing() {
+            return configuration.containsKey("trailing");
+        }
+
+        private int fromDigits() {
+            return Integer.valueOf(String.valueOf(configuration.get("from")));
+        }
+
+        private int toDigits() {
+            return Integer.valueOf(String.valueOf(configuration.get("to")));
+        }
+
+        private int trailingDigits() {
+            return Integer.valueOf(String.valueOf(configuration.get("trailing")));
+        }
+
+        private int leadingDigits() {
+            return Integer.valueOf(String.valueOf(configuration.get("leading")));
+        }
+    }
+
+    private static class ListParser implements Parser {
+
+        private List<Integer> configuration;
+
+        ListParser(Object configuration) {
+            this.configuration = (List<Integer>) configuration;
+        }
+
+        @Override
+        public int from() {
+            return configuration.get(0);
+        }
+
+        @Override
+        public int end() {
+            return configuration.get(1);
+        }
     }
 }

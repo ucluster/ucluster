@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.github.ucluster.common.SimpleRecord.builder;
@@ -16,6 +17,9 @@ public class MaskConcernTest {
     private Record.Property.Concern trailing;
     private Record.Property.Concern leading;
     private Record.Property.Concern range;
+    private Record.Property.Concern list_trailing;
+    private Record.Property.Concern list_leading;
+    private Record.Property.Concern list_range;
 
     @Before
     public void setUp() throws Exception {
@@ -29,8 +33,14 @@ public class MaskConcernTest {
 
         range = new MaskConcern("mask", ImmutableMap.<String, Object>builder()
                 .put("from", 6)
-                .put("to", 14)
+                .put("to", 13)
                 .build());
+
+        list_trailing = new MaskConcern("mask", Arrays.asList(-8, -1));
+
+        list_leading = new MaskConcern("mask", Arrays.asList(0, 7));
+
+        list_range = new MaskConcern("mask", Arrays.asList(6, 13));
     }
 
     @Test
@@ -85,6 +95,43 @@ public class MaskConcernTest {
 
         final Record.Property idNumber = record.property("id_number").get();
         assertThat(idNumber.value(), is("510108********1212"));
+    }
 
+    @Test
+    public void should_mask_property_trailing_by_list() {
+        final Record record = builder()
+                .path("id_number").value("510108197010101313")
+                .get();
+
+
+        list_trailing.effect(record, "id_number", Record.Property.Point.DELIVERY);
+
+        final Record.Property idNumber = record.property("id_number").get();
+        assertThat(idNumber.value(), is("5101081970********"));
+    }
+
+    @Test
+    public void should_mask_property_leading_by_list() {
+        final Record record = builder()
+                .path("id_number").value("510108198801011212")
+                .get();
+
+
+        list_leading.effect(record, "id_number", Record.Property.Point.DELIVERY);
+
+        final Record.Property idNumber = record.property("id_number").get();
+        assertThat(idNumber.value(), is("********8801011212"));
+    }
+
+    @Test
+    public void should_mask_property_range_by_list() {
+        final Record record = builder()
+                .path("id_number").value("510108198801011212")
+                .get();
+
+        list_range.effect(record, "id_number", Record.Property.Point.DELIVERY);
+
+        final Record.Property idNumber = record.property("id_number").get();
+        assertThat(idNumber.value(), is("510108********1212"));
     }
 }
