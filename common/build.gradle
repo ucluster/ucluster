@@ -6,7 +6,7 @@ dependencies {
 
     compile files('libs/jbcrypt.jar')
     compile project(':core')
-    compile project(':verification')
+    compile project(':confirmation')
 
     testCompile project(':test-framework')
 }

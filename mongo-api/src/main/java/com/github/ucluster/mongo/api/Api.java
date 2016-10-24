@@ -1,13 +1,7 @@
 package com.github.ucluster.mongo.api;
 
-import com.github.ucluster.common.concern.CredentialConcern;
-import com.github.ucluster.common.concern.EmailConcern;
-import com.github.ucluster.common.concern.FormatConcern;
-import com.github.ucluster.common.concern.IdentityConcern;
-import com.github.ucluster.common.concern.ImmutableConcern;
-import com.github.ucluster.common.concern.RequiredConcern;
-import com.github.ucluster.common.concern.TransientConcern;
-import com.github.ucluster.common.concern.UniquenessConcern;
+import com.github.ucluster.common.concern.*;
+import com.github.ucluster.confirmation.ConfirmationRegistry;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
@@ -16,18 +10,13 @@ import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AuthenticationRequest;
 import com.github.ucluster.mongo.request.RecoveryRequest;
-import com.github.ucluster.mongo.verification.MongoVerificationRegistry;
 import com.github.ucluster.session.Session;
-import com.github.ucluster.verification.VerificationRegistry;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
+import com.google.inject.*;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
@@ -97,8 +86,8 @@ public class Api extends ResourceConfig {
                 }).to(MongoUserRepository.class);
                 bind(new TypeLiteral<Repository<User>>() {
                 }).to(MongoUserRepository.class);
-                bind(new TypeLiteral<VerificationRegistry>() {
-                }).to(MongoVerificationRegistry.class);
+                bind(new TypeLiteral<ConfirmationRegistry>() {
+                }).to(MongoConfirmationRegistry.class);
 
                 bind(RequestFactory.class).to(MongoRequestFactory.class);
 

@@ -23,7 +23,7 @@ public class DSLCompiler {
 
     public static <T extends Record> DefaultRecordDefinition<T> load(Injector injector, String script) {
         return new RecordDSL<T>(injector, loadRecordJsonDefinition(script))
-                .withVerification(loadVerificationDefinition(script))
+                .withConfirmation(loadConfirmationDefinition(script))
                 .load();
     }
 
@@ -57,12 +57,12 @@ public class DSLCompiler {
         }
     }
 
-    private static Map<String, Object> loadVerificationDefinition(String definition) {
+    private static Map<String, Object> loadConfirmationDefinition(String definition) {
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
         try {
             engine.eval(DSL_COMPILER);
             engine.eval(definition);
-            String recordDefinition = (String) engine.eval("JSON.stringify(verification_definition)");
+            String recordDefinition = (String) engine.eval("JSON.stringify(confirmation_definition)");
             return Json.fromJson(recordDefinition);
         } catch (ScriptException e) {
             e.printStackTrace();
@@ -73,7 +73,7 @@ public class DSLCompiler {
     private static class RecordDSL<R extends Record> {
         private final Injector injector;
         private final Map<String, Object> recordJson;
-        private Map<String, Object> verificationJson = new HashMap<>();
+        private Map<String, Object> confirmationJson = new HashMap<>();
 
         RecordDSL(Injector injector, Map<String, Object> recordJson) {
             this.injector = injector;
@@ -86,19 +86,19 @@ public class DSLCompiler {
                             .map(propertyPath -> mapPropertyDSL(propertyPath).load())
                             .collect(Collectors.toList());
 
-            List<Definition.Verification> verifications = verificationJson.keySet().stream()
-                    .map(verifyingProperty -> mapVerificationDSL(verifyingProperty).load())
+            List<Definition.Confirmation> confirmations = confirmationJson.keySet().stream()
+                    .map(confirmingProperty -> mapConfirmationDSL(confirmingProperty).load())
                     .collect(Collectors.toList());
 
-            return new DefaultRecordDefinition<>(propertyDefinitions, verifications);
+            return new DefaultRecordDefinition<>(propertyDefinitions, confirmations);
         }
 
-        private VerificationDSL mapVerificationDSL(String verification) {
-            return new VerificationDSL(verification, verificationJson.get(verification));
+        private ConfirmationDSL mapConfirmationDSL(String confirmation) {
+            return new ConfirmationDSL(confirmation, confirmationJson.get(confirmation));
         }
 
-        RecordDSL<R> withVerification(Map<String, Object> verificationDefinitions) {
-            this.verificationJson = verificationDefinitions;
+        RecordDSL<R> withConfirmation(Map<String, Object> confirmationDefinitions) {
+            this.confirmationJson = confirmationDefinitions;
             return this;
         }
 
@@ -142,20 +142,20 @@ public class DSLCompiler {
             }
         }
 
-        private class VerificationDSL {
-            private final String verifyingProperty;
+        private class ConfirmationDSL {
+            private final String confirmingProperty;
             private final String usingMethod;
 
-            public VerificationDSL(String verifyingProperty, Object usingMethod) {
-                this.verifyingProperty = verifyingProperty;
+            public ConfirmationDSL(String confirmingProperty, Object usingMethod) {
+                this.confirmingProperty = confirmingProperty;
                 this.usingMethod = (String)usingMethod;
             }
 
-            public Definition.Verification load() {
-                return new Definition.Verification() {
+            public Definition.Confirmation load() {
+                return new Definition.Confirmation() {
                     @Override
                     public String target() {
-                        return verifyingProperty;
+                        return confirmingProperty;
                     }
 
                     @Override

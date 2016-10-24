@@ -1,11 +1,11 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.confirmation.ConfirmationRegistry;
+import com.github.ucluster.confirmation.ConfirmationService;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.exception.RecordException;
-import com.github.ucluster.verification.VerificationRegistry;
-import com.github.ucluster.verification.VerificationService;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
@@ -51,7 +51,7 @@ public class MongoRecord<T extends Record> implements Record, Model {
 
     @Inject
     @Transient
-    protected VerificationRegistry registry;
+    protected ConfirmationRegistry registry;
 
     @Override
     public String uuid() {
@@ -126,17 +126,17 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     private void beforeSaveOn(Record.Property.Point point) {
-        definition().verifications().stream().forEach(this::verify);
+        definition().confirmations().stream().forEach(this::confirm);
         definition().effect(point, (T) this, dirtyTracker.asArray());
     }
 
-    private void verify(Definition.Verification verification) {
-        Optional<VerificationService> verificationService = registry.find(verification.method());
-        verificationService.ifPresent(service -> service.verify(
-                (String) this.property(verification.target()).get().value(),
+    private void confirm(Definition.Confirmation confirmation) {
+        Optional<ConfirmationService> confirmationService = registry.find(confirmation.method());
+        confirmationService.ifPresent(service -> service.confirm(
+                (String) this.property(confirmation.target()).get().value(),
                 (String) metadata().get("token")
         ));
-        //TODO: handle if cannot find a verification service
+        //TODO: handle if cannot find a confirmation service
     }
 
     private void doSave() {

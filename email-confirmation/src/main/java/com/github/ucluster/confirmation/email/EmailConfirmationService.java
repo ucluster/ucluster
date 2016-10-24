@@ -1,14 +1,11 @@
-package com.github.ucluster.verification.email;
+package com.github.ucluster.confirmation.email;
 
-import com.github.ucluster.verification.VerificationException;
-import com.github.ucluster.verification.VerificationService;
+
+import com.github.ucluster.confirmation.ConfirmationException;
+import com.github.ucluster.confirmation.ConfirmationService;
 
 import javax.inject.Inject;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Objects;
@@ -22,7 +19,7 @@ import java.util.Properties;
  * <p>
  * https://www.mkyong.com/java/javamail-api-sending-email-via-gmail-smtp-example/
  */
-public class EmailVerificationService implements VerificationService {
+public class EmailConfirmationService implements ConfirmationService {
     @Inject
     com.github.ucluster.session.Session session;
 
@@ -30,11 +27,11 @@ public class EmailVerificationService implements VerificationService {
     private String password;
     private Properties properties;
 
-    public EmailVerificationService() {
+    public EmailConfirmationService() {
 
     }
 
-    public EmailVerificationService(String username, String password, Properties properties) {
+    public EmailConfirmationService(String username, String password, Properties properties) {
         this.username = username;
         this.password = password;
         this.properties = properties;
@@ -55,11 +52,11 @@ public class EmailVerificationService implements VerificationService {
     }
 
     @Override
-    public void verify(String target, String token) {
+    public void confirm(String target, String token) {
         final Optional<Object> value = session.get(getTargetKey(target));
 
         if (!value.isPresent() || !Objects.equals(value.get(), token)) {
-            throw new VerificationException();
+            throw new ConfirmationException();
         }
     }
 

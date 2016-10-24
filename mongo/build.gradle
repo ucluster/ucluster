@@ -9,8 +9,8 @@ dependencies {
 
     compile project(':api')
     compile project(':common')
-    compile project(':verification')
-    compile project(':email-verification')
+    compile project(':confirmation')
+    compile project(':email-confirmation')
     compile project(':session')
 
     testCompile project(':test-framework')

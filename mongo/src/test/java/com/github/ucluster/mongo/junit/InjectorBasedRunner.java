@@ -1,6 +1,9 @@
 package com.github.ucluster.mongo.junit;
 
 import com.github.ucluster.common.concern.*;
+import com.github.ucluster.confirmation.ConfirmationRegistry;
+import com.github.ucluster.confirmation.ConfirmationService;
+import com.github.ucluster.confirmation.email.EmailConfirmationService;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
@@ -9,14 +12,11 @@ import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.*;
-import com.github.ucluster.mongo.verification.MongoVerificationRegistry;
 import com.github.ucluster.session.Session;
-import com.github.ucluster.verification.VerificationRegistry;
-import com.github.ucluster.verification.VerificationService;
-import com.github.ucluster.verification.email.EmailVerificationService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.TypeLiteral;
@@ -102,8 +102,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(MongoUserRepository.class);
                         bind(new TypeLiteral<Repository<User>>() {
                         }).to(MongoUserRepository.class);
-                        bind(new TypeLiteral<VerificationRegistry>() {
-                        }).to(MongoVerificationRegistry.class);
+                        bind(new TypeLiteral<ConfirmationRegistry>() {
+                        }).to(MongoConfirmationRegistry.class);
 
                         bind(RequestFactory.class).to(MongoRequestFactory.class);
 
@@ -126,7 +126,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         registerConcern("transient").to(new TypeLiteral<TransientConcern>() {
                         });
 
-                        registerVerificationService("email").to(new TypeLiteral<EmailVerificationService>() {
+                        registerConfirmationService("email").to(new TypeLiteral<EmailConfirmationService>() {
                         });
 
                         registerRequestFactory("auto_approvable").to(new TypeLiteral<AutoApprovableRequest>() {
@@ -142,9 +142,9 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
                     }
 
-                    private LinkedBindingBuilder<VerificationService> registerVerificationService(String type) {
-                        return bind(new TypeLiteral<VerificationService>() {
-                        }).annotatedWith(Names.named("verification." + type + ".method"));
+                    private LinkedBindingBuilder<ConfirmationService> registerConfirmationService(String type) {
+                        return bind(new TypeLiteral<ConfirmationService>() {
+                        }).annotatedWith(Names.named("confirmation." + type + ".method"));
                     }
 
                     private void bindDefinitionRepositories() {

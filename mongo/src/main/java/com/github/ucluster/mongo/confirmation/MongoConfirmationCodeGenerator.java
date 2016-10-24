@@ -1,14 +1,14 @@
-package com.github.ucluster.mongo.verification;
+package com.github.ucluster.mongo.confirmation;
 
-import com.github.ucluster.verification.VerificationCodeGenerator;
+import com.github.ucluster.confirmation.ConfirmationCodeGenerator;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
-public class MongoVerificationCodeGenerator implements VerificationCodeGenerator {
+public class MongoConfirmationCodeGenerator implements ConfirmationCodeGenerator {
     private final int digits;
 
-    public MongoVerificationCodeGenerator(int digits) {
+    public MongoConfirmationCodeGenerator(int digits) {
         this.digits = digits;
     }
 

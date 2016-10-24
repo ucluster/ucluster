@@ -1,6 +1,6 @@
 var definition = {};
 var action_definition = {};
-var verification_definition = {};
+var confirmation_definition = {};
 
 function Record() {
     var target = this;
@@ -8,12 +8,12 @@ function Record() {
         action_definition[type] = action;
         return target;
     };
-    this.verify = function(property) {
-        verification_definition[property] = property;
+    this.confirm = function(property) {
+        confirmation_definition[property] = property;
         return {
-           verify_target: property,
+           confirming: property,
            using: function(method) {
-             verification_definition[this.verify_target] = method;
+             confirmation_definition[this.confirming] = method;
              return target;
            }
         }

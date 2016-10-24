@@ -29,4 +29,4 @@ user({
             pattern: "\\w{6,16}"
         }
     }
-}).verify("email").using("email");
+}).confirm("email").using("email");

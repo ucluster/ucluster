@@ -17,4 +17,4 @@ user({
         email: true,
         identity: true
     }
-}).verify("email").using("email");
+}).confirm("email").using("email");

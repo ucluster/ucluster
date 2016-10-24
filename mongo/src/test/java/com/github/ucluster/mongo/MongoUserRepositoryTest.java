@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.confirmation.ConfirmationException;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
@@ -8,7 +9,6 @@ import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.github.ucluster.session.Session;
 import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
-import com.github.ucluster.verification.VerificationException;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -111,8 +111,8 @@ public class MongoUserRepositoryTest {
     }
 
     @Test
-    public void should_failed_to_create_user_when_verification_required_but_code_not_match() throws Exception {
-        thrown.expect(VerificationException.class);
+    public void should_failed_to_create_user_when_confirmation_required_but_code_not_match() throws Exception {
+        thrown.expect(ConfirmationException.class);
 
         final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()

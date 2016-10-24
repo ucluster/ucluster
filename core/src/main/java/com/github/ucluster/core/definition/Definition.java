@@ -17,7 +17,7 @@ public interface Definition<D extends Record> {
 
     Map<String, Object> definition();
 
-    Collection<Verification> verifications();
+    Collection<Confirmation> confirmations();
 
     interface PropertyDefinition<T extends Record> {
 
@@ -28,7 +28,7 @@ public interface Definition<D extends Record> {
         void effect(Record.Property.Point point, T record);
     }
 
-    interface Verification {
+    interface Confirmation {
 
         String target();
 

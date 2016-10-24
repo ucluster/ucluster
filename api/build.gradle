@@ -5,5 +5,5 @@ dependencies {
     compile "javax.ws.rs:javax.ws.rs-api:$jaxrs"
 
     compile project(':core')
-    compile project(':verification')
+    compile project(':confirmation')
 }

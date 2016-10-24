@@ -5,6 +5,6 @@ ext {
 dependencies {
     compile "javax.mail:mail:$mail"
 
-    compile project(':verification')
+    compile project(':confirmation')
     compile project(':session')
 }

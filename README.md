@@ -238,9 +238,9 @@ Example:
             
 convention is JSON being used   
    
-## Verification(Doing)
+## Confirmation(Doing)
    
-verify user actually holds the confirmation way.
+confirm user actually holds the confirmation way.
    
 Example:
    
@@ -252,9 +252,9 @@ Example:
            }
            ... ...
        })
-       .verify('email').using('email');
+       .confirm('email').using('email');
    
-In the example above, this means when user want to register, it must be confirmed by email. `verify(<property>)` indicates how the user should be verified/confirmed, `method` can be email, SMS, phone call, etc. `using(<method>)` means validate against which property in case that user have multi property can be confirmed the same way.   
+In the example above, this means when user want to register, it must be confirmed by email. `confirm(<property>)` indicates how the user should be verified/confirmed, `method` can be email, SMS, phone call, etc. `using(<method>)` means validate against which property in case that user have multi property can be confirmed the same way.
 
 ## Dev-Env
 
@@ -294,7 +294,7 @@ https://vladmihalcea.com/2016/02/11/how-to-enable-bytecode-enhancement-dirty-che
     
 for example, user can provide multi mobile phone or email address for contact    
 
-###Verification Frequency Control
+###Confirmation Frequency Control
 
 captcha? method: always, by_frequency, etc. may refer topbeat
 
