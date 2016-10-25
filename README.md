@@ -198,6 +198,16 @@ Example:
 default `transient` is `false`
 
 if value is `true`, then will not returned to api
+
+#### numeric
+
+Example:
+
+    numeric: true
+    
+default `numeric` is `false`
+    
+if value is `true`, then it use regex `/\A[+-]?\d+\z/`    
     
 #### customize concern    
 
@@ -309,3 +319,8 @@ Using patterns like 'registry'
 ###Refactor modules to make it clear for implementation(Medium)
 
 ###Query Object(Low)
+
+###Blob Support
+
+something like this:
+photo: 'azure'
