@@ -22,6 +22,8 @@ public interface Record {
 
     Definition definition();
 
+    Optional<Object> metadata(String key);
+
     default void save() {
     }
 

@@ -4,13 +4,11 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class SimpleRecord implements Record {
     private List<Record.Property> properties = new ArrayList<>();
+    private Map<String, Object> metadata = new HashMap<>();
 
     public SimpleRecord() {
     }
@@ -60,6 +58,16 @@ public class SimpleRecord implements Record {
     @Override
     public Definition definition() {
         return null;
+    }
+
+    @Override
+    public Optional<Object> metadata(String key) {
+        return Optional.ofNullable(metadata.get(key));
+    }
+
+    public SimpleRecord withMetadata(String key, Object value) {
+        metadata.put(key, value);
+        return this;
     }
 
     public class FieldBuilder {

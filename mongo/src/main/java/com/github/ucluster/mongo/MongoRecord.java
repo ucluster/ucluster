@@ -199,6 +199,11 @@ public class MongoRecord<T extends Record> implements Record, Model {
         return definitions.find(metadata());
     }
 
+    @Override
+    public Optional<Object> metadata(String key) {
+        return Optional.ofNullable(metadata.get(key));
+    }
+
     private static class DirtyTracker {
         Set<String> dirtyProperties = new HashSet<>();
 
