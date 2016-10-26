@@ -1,6 +1,13 @@
 package com.github.ucluster.mongo.junit;
 
-import com.github.ucluster.common.concern.*;
+import com.github.ucluster.common.concern.CredentialConcern;
+import com.github.ucluster.common.concern.EmailConcern;
+import com.github.ucluster.common.concern.FormatConcern;
+import com.github.ucluster.common.concern.IdentityConcern;
+import com.github.ucluster.common.concern.ImmutableConcern;
+import com.github.ucluster.common.concern.RequiredConcern;
+import com.github.ucluster.common.concern.TransientConcern;
+import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.confirmation.ConfirmationRegistry;
 import com.github.ucluster.confirmation.ConfirmationService;
 import com.github.ucluster.confirmation.email.EmailConfirmationService;
@@ -15,7 +22,11 @@ import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
-import com.github.ucluster.mongo.request.*;
+import com.github.ucluster.mongo.request.AuthenticationRequest;
+import com.github.ucluster.mongo.request.AutoApprovableRequest;
+import com.github.ucluster.mongo.request.ID5AsyncRequest;
+import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
+import com.github.ucluster.mongo.request.RecoveryRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;

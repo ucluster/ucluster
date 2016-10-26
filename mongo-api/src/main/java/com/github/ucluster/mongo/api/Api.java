@@ -1,40 +1,31 @@
 package com.github.ucluster.mongo.api;
 
-import com.github.ucluster.common.concern.*;
 import com.github.ucluster.confirmation.ConfirmationRegistry;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.definition.Definition;
-import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.api.module.ConcernModule;
+import com.github.ucluster.mongo.api.module.DefinitionModule;
+import com.github.ucluster.mongo.api.module.MongoModule;
+import com.github.ucluster.mongo.api.module.RequestModule;
+import com.github.ucluster.mongo.api.module.SessionModule;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
-import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
-import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
-import com.github.ucluster.mongo.request.AuthenticationRequest;
-import com.github.ucluster.mongo.request.RecoveryRequest;
-import com.github.ucluster.session.Session;
-import com.google.inject.*;
-import com.google.inject.binder.LinkedBindingBuilder;
-import com.google.inject.name.Names;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 import com.google.inject.util.Modules;
-import com.mongodb.MongoClient;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Protocol;
-import redis.clients.util.Pool;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -50,17 +41,18 @@ import static org.jvnet.hk2.guice.bridge.api.GuiceBridge.getGuiceBridge;
 public class Api extends ResourceConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(Api.class);
 
-    private JedisPool jedisPool;
-    private Datastore datastore;
-    private Morphia morphia;
-
     @Inject
     public Api(ServiceLocator locator) throws Exception {
         LOGGER.info("bridge locator and guice injector");
         try {
             final Injector injector = Guice.createInjector(
                     Modules.override(
-                            domainModule(locator)
+                            domainModule(locator),
+                            new ConcernModule(),
+                            new RequestModule(),
+                            new DefinitionModule(),
+                            new SessionModule(),
+                            new MongoModule()
                     ).with(overrideModules())
             );
 
@@ -80,94 +72,14 @@ public class Api extends ResourceConfig {
             protected void configure() {
                 bind(ServiceLocator.class).toInstance(locator);
 
-                bind(Datastore.class).toInstance(datastore());
-                bind(Session.class).toInstance(new Session(jedisPool()));
                 bind(new TypeLiteral<Repository<? extends Record>>() {
                 }).to(MongoUserRepository.class);
                 bind(new TypeLiteral<Repository<User>>() {
                 }).to(MongoUserRepository.class);
                 bind(new TypeLiteral<ConfirmationRegistry>() {
                 }).to(MongoConfirmationRegistry.class);
-
-                bind(RequestFactory.class).to(MongoRequestFactory.class);
-
-                bindDefinitionRepositories();
-
-                registerConcern("format").to(new TypeLiteral<FormatConcern>() {
-                });
-                registerConcern("email").to(new TypeLiteral<EmailConcern>() {
-                });
-                registerConcern("required").to(new TypeLiteral<RequiredConcern>() {
-                });
-                registerConcern("uniqueness").to(new TypeLiteral<UniquenessConcern>() {
-                });
-                registerConcern("identity").to(new TypeLiteral<IdentityConcern>() {
-                });
-                registerConcern("credential").to(new TypeLiteral<CredentialConcern>() {
-                });
-                registerConcern("immutable").to(new TypeLiteral<ImmutableConcern>() {
-                });
-                registerConcern("transient").to(new TypeLiteral<TransientConcern>() {
-                });
-
-                registerRequestFactory("authentication").to(new TypeLiteral<AuthenticationRequest>() {
-                });
-                registerRequestFactory("recovery").to(new TypeLiteral<RecoveryRequest>() {
-                });
-            }
-
-            private void bindDefinitionRepositories() {
-                bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
-                }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
-                });
-
-                bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
-                }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
-                });
-
-                bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.ChangeLog>>>() {
-                }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.ChangeLog>>() {
-                });
-            }
-
-            private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {
-                return bind(new TypeLiteral<Record.Property.Concern>() {
-                }).annotatedWith(Names.named("property." + type + ".concern"));
-            }
-
-            private LinkedBindingBuilder<User.Request> registerRequestFactory(String type) {
-                return bind(new TypeLiteral<User.Request>() {
-                }).annotatedWith(Names.named("request." + type + ".factory"));
             }
         };
-    }
-
-    private Pool<Jedis> jedisPool() {
-        if (jedisPool == null) {
-            if (Env.getRedisPassword() != null) {
-                jedisPool = new JedisPool(new GenericObjectPoolConfig(),
-                        Env.getRedisHost(),
-                        Env.getRedisPort(),
-                        Protocol.DEFAULT_TIMEOUT,
-                        Env.getRedisPassword());
-            } else {
-                jedisPool = new JedisPool(Env.getRedisHost(), Env.getRedisPort());
-            }
-        }
-        return jedisPool;
-    }
-
-    private Datastore datastore() {
-        if (datastore == null) {
-            morphia = new Morphia();
-            morphia.mapPackage("com.github.ucluster.mongo");
-            morphia.getMapper().getConverters().addConverter(JodaDateTimeConverter.class);
-
-            datastore = morphia.createDatastore(new MongoClient("127.0.0.1", 47017), "ucluster");
-            datastore.ensureIndexes();
-        }
-
-        return datastore;
     }
 
     protected List<Module> overrideModules() {

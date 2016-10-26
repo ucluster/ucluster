@@ -8,14 +8,14 @@ function Record() {
         action_definition[type] = action;
         return target;
     };
-    this.confirm = function(property) {
+    this.confirm = function (property) {
         confirmation_definition[property] = property;
         return {
-           confirming: property,
-           using: function(method) {
-             confirmation_definition[this.confirming] = method;
-             return target;
-           }
+            confirming: property,
+            using: function (method) {
+                confirmation_definition[this.confirming] = method;
+                return target;
+            }
         }
     };
 }

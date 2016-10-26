@@ -148,7 +148,7 @@ public class DSLCompiler {
 
             public ConfirmationDSL(String confirmingProperty, Object usingMethod) {
                 this.confirmingProperty = confirmingProperty;
-                this.usingMethod = (String)usingMethod;
+                this.usingMethod = (String) usingMethod;
             }
 
             public Definition.Confirmation load() {
