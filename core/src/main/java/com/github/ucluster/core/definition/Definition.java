@@ -25,11 +25,4 @@ public interface Definition<D extends Record> {
 
         void effect(Record.Property.Point point, T record);
     }
-
-    interface Confirmation {
-
-        String target();
-
-        String method();
-    }
 }

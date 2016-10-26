@@ -131,18 +131,4 @@ public class DefaultRecordDefinitionTest {
 
         definition.effect(Record.Property.Point.VALIDATE, record);
     }
-
-    private Definition.Confirmation getConfirmation() {
-        return new Definition.Confirmation() {
-            @Override
-            public String target() {
-                return "email";
-            }
-
-            @Override
-            public String method() {
-                return "email";
-            }
-        };
-    }
 }
