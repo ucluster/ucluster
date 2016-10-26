@@ -17,8 +17,6 @@ public interface Definition<D extends Record> {
 
     Map<String, Object> definition();
 
-    Collection<Confirmation> confirmations();
-
     interface PropertyDefinition<T extends Record> {
 
         String path();

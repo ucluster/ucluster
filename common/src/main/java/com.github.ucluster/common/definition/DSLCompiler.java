@@ -22,9 +22,7 @@ public class DSLCompiler {
     private static String DSL_COMPILER = ResourceReader.read("dsl_compiler.js");
 
     public static <T extends Record> DefaultRecordDefinition<T> load(Injector injector, String script) {
-        return new RecordDSL<T>(injector, loadRecordJsonDefinition(script))
-                .withConfirmation(loadConfirmationDefinition(script))
-                .load();
+        return new RecordDSL<T>(injector, loadRecordJsonDefinition(script)).load();
     }
 
     public static <T extends Record> DefaultRecordDefinition<T> load_action(Injector injector, String script, String action) {
@@ -57,19 +55,6 @@ public class DSLCompiler {
         }
     }
 
-    private static Map<String, Object> loadConfirmationDefinition(String definition) {
-        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
-        try {
-            engine.eval(DSL_COMPILER);
-            engine.eval(definition);
-            String recordDefinition = (String) engine.eval("JSON.stringify(confirmation_definition)");
-            return Json.fromJson(recordDefinition);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     private static class RecordDSL<R extends Record> {
         private final Injector injector;
         private final Map<String, Object> recordJson;
@@ -86,20 +71,7 @@ public class DSLCompiler {
                             .map(propertyPath -> mapPropertyDSL(propertyPath).load())
                             .collect(Collectors.toList());
 
-            List<Definition.Confirmation> confirmations = confirmationJson.keySet().stream()
-                    .map(confirmingProperty -> mapConfirmationDSL(confirmingProperty).load())
-                    .collect(Collectors.toList());
-
-            return new DefaultRecordDefinition<>(propertyDefinitions, confirmations);
-        }
-
-        private ConfirmationDSL mapConfirmationDSL(String confirmation) {
-            return new ConfirmationDSL(confirmation, confirmationJson.get(confirmation));
-        }
-
-        RecordDSL<R> withConfirmation(Map<String, Object> confirmationDefinitions) {
-            this.confirmationJson = confirmationDefinitions;
-            return this;
+            return new DefaultRecordDefinition<>(propertyDefinitions);
         }
 
         private PropertyDSL<R> mapPropertyDSL(String propertyPath) {
@@ -139,30 +111,6 @@ public class DSLCompiler {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            }
-        }
-
-        private class ConfirmationDSL {
-            private final String confirmingProperty;
-            private final String usingMethod;
-
-            public ConfirmationDSL(String confirmingProperty, Object usingMethod) {
-                this.confirmingProperty = confirmingProperty;
-                this.usingMethod = (String) usingMethod;
-            }
-
-            public Definition.Confirmation load() {
-                return new Definition.Confirmation() {
-                    @Override
-                    public String target() {
-                        return confirmingProperty;
-                    }
-
-                    @Override
-                    public String method() {
-                        return usingMethod;
-                    }
-                };
             }
         }
     }

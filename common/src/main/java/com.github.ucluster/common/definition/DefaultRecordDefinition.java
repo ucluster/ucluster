@@ -18,10 +18,8 @@ import static java.util.Arrays.asList;
 
 public class DefaultRecordDefinition<T extends Record> implements Definition<T> {
     private Map<String, PropertyDefinition<T>> propertyDefinitions = new HashMap<>();
-    private final List<Confirmation> confirmations;
 
-    public DefaultRecordDefinition(List<PropertyDefinition<T>> propertyDefinitions, List<Confirmation> confirmations) {
-        this.confirmations = confirmations;
+    public DefaultRecordDefinition(List<PropertyDefinition<T>> propertyDefinitions) {
         propertyDefinitions.stream()
                 .forEach(propertyDefinition -> this.propertyDefinitions.put(propertyDefinition.path(), propertyDefinition));
     }
@@ -76,11 +74,6 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                         Map.Entry::getKey,
                         e -> e.getValue().definition()
                 ));
-    }
-
-    @Override
-    public Collection<Confirmation> confirmations() {
-        return this.confirmations;
     }
 
     @Override

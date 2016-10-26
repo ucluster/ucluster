@@ -9,11 +9,11 @@ function Record() {
         return target;
     };
     this.confirm = function (property) {
-        confirmation_definition[property] = property;
+        definition[property] << {"confirm": property}
         return {
             confirming: property,
             using: function (method) {
-                confirmation_definition[this.confirming] = method;
+                definition[this.confirming]["confirm"] = method;
                 return target;
             }
         }

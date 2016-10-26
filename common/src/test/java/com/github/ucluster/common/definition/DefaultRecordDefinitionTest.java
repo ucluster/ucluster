@@ -38,7 +38,7 @@ public class DefaultRecordDefinitionTest {
                                 new FormatConcern("format", ImmutableMap.<String, Object>builder()
                                         .put("pattern", "\\w{6,12}")
                                         .build())))
-        ), asList(getConfirmation()));
+        ));
     }
 
     @Test

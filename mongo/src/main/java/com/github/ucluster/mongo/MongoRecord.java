@@ -1,7 +1,6 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.confirmation.ConfirmationRegistry;
-import com.github.ucluster.confirmation.ConfirmationService;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -18,12 +17,7 @@ import org.mongodb.morphia.query.UpdateOperations;
 import org.mongodb.morphia.query.UpdateResults;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MongoRecord<T extends Record> implements Record, Model {
@@ -131,17 +125,7 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     private void beforeSaveOn(Record.Property.Point point) {
-        definition().confirmations().stream().forEach(this::confirm);
         definition().effect(point, (T) this, dirtyTracker.asArray());
-    }
-
-    private void confirm(Definition.Confirmation confirmation) {
-        Optional<ConfirmationService> confirmationService = registry.find(confirmation.method());
-        confirmationService.ifPresent(service -> service.confirm(
-                (String) this.property(confirmation.target()).get().value(),
-                (String) metadata().get("token")
-        ));
-        //TODO: handle if cannot find a confirmation service
     }
 
     private void doSave() {

@@ -1,12 +1,8 @@
 package com.github.ucluster.common.definition;
 
-import com.github.ucluster.common.concern.CredentialConcern;
-import com.github.ucluster.common.concern.EmailConcern;
-import com.github.ucluster.common.concern.FormatConcern;
-import com.github.ucluster.common.concern.IdentityConcern;
-import com.github.ucluster.common.concern.ImmutableConcern;
-import com.github.ucluster.common.concern.RequiredConcern;
-import com.github.ucluster.common.concern.UniquenessConcern;
+import com.github.ucluster.common.concern.*;
+import com.github.ucluster.confirmation.ConfirmationRegistry;
+import com.github.ucluster.confirmation.ConfirmationService;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
@@ -119,12 +115,16 @@ public class DSLCompilerTest {
 
         when(users.findBy(any())).thenReturn(Optional.empty());
 
+        ConfirmationRegistry registry = mockRegistry();
+
         return new ArrayList<>(asList(new AbstractModule[]{
                 new AbstractModule() {
                     @Override
                     protected void configure() {
                         bind(new TypeLiteral<Repository<? extends Record>>() {
                         }).toInstance(users);
+                        bind(new TypeLiteral<ConfirmationRegistry>() {
+                        }).toInstance(registry);
 
                         registerConcern("format").to(new TypeLiteral<FormatConcern>() {
                         });
@@ -140,6 +140,8 @@ public class DSLCompilerTest {
                         });
                         registerConcern("immutable").to(new TypeLiteral<ImmutableConcern>() {
                         });
+                        registerConcern("confirm").to(new TypeLiteral<ConfirmationConcern>() {
+                        });
                     }
 
                     private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {
@@ -147,6 +149,13 @@ public class DSLCompilerTest {
                         }).annotatedWith(Names.named("property." + type + ".concern"));
                     }
                 }}));
+    }
+
+    private ConfirmationRegistry mockRegistry() {
+        ConfirmationRegistry registry = mock(ConfirmationRegistry.class);
+        ConfirmationService confirmService = mock(ConfirmationService.class);
+        when(registry.find("email")).thenReturn(Optional.of(confirmService));
+        return registry;
     }
 
     private String read(String classpath) {

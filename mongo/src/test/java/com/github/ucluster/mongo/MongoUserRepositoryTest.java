@@ -1,6 +1,5 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.confirmation.ConfirmationException;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
@@ -112,16 +111,16 @@ public class MongoUserRepositoryTest {
 
     @Test
     public void should_failed_to_create_user_when_confirmation_required_but_code_not_match() throws Exception {
-        thrown.expect(ConfirmationException.class);
+        capture(thrown).errors(((path, type) -> path.equals("email") && type.equals("confirm")));
 
         final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "not_match_1102")
                         .build())
                 .properties(ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwiwin")
+                        .put("username", "kiwilose")
                         .put("password", "password")
-                        .put("email", "kiwiwin@qq.com")
+                        .put("email", "kiwilose@qq.com")
                         .build())
                 .get();
 
