@@ -4,7 +4,12 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import org.joda.time.DateTime;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class SimpleRecord implements Record {
     private List<Record.Property> properties = new ArrayList<>();
@@ -65,7 +70,7 @@ public class SimpleRecord implements Record {
         return Optional.ofNullable(metadata.get(key));
     }
 
-    public SimpleRecord withMetadata(String key, Object value) {
+    public SimpleRecord metadata(String key, Object value) {
         metadata.put(key, value);
         return this;
     }

@@ -1,6 +1,14 @@
 package com.github.ucluster.mongo.junit;
 
-import com.github.ucluster.common.concern.*;
+import com.github.ucluster.common.concern.ConfirmationConcern;
+import com.github.ucluster.common.concern.CredentialConcern;
+import com.github.ucluster.common.concern.EmailConcern;
+import com.github.ucluster.common.concern.FormatConcern;
+import com.github.ucluster.common.concern.IdentityConcern;
+import com.github.ucluster.common.concern.ImmutableConcern;
+import com.github.ucluster.common.concern.RequiredConcern;
+import com.github.ucluster.common.concern.TransientConcern;
+import com.github.ucluster.common.concern.UniquenessConcern;
 import com.github.ucluster.confirmation.ConfirmationRegistry;
 import com.github.ucluster.confirmation.ConfirmationService;
 import com.github.ucluster.confirmation.email.EmailConfirmationService;

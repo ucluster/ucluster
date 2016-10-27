@@ -24,7 +24,7 @@ public class ConfirmationConcern implements Record.Property.Concern {
         return type;
     }
 
-    public ConfirmationConcern() {
+    ConfirmationConcern() {
     }
 
     public ConfirmationConcern(String type, Object configuration) {
