@@ -13,7 +13,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -58,7 +57,6 @@ public class DSLCompiler {
     private static class RecordDSL<R extends Record> {
         private final Injector injector;
         private final Map<String, Object> recordJson;
-        private Map<String, Object> confirmationJson = new HashMap<>();
 
         RecordDSL(Injector injector, Map<String, Object> recordJson) {
             this.injector = injector;
