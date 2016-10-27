@@ -273,11 +273,6 @@ In the example above, this means when user want to register, it must be confirme
 
 ## TODO-LIST
 
-###Role Based Access Control(High)
-
-https://github.com/mdarby/restful_acl
-http://stackoverflow.com/questions/190257/best-role-based-access-control-rbac-database-model
-
 ###Jackson Polymorphic Support(High)
 
 easier plugin implementation with less code
@@ -319,6 +314,15 @@ Using patterns like 'registry'
 ###Refactor modules to make it clear for implementation(Medium)
 
 ###Query Object(Low)
+
+
+##Out of Scope
+
+###Role Based Access Control
+using blacklist or whitelist control with nginx or adding a filter to fulfill this requirement
+
+https://github.com/mdarby/restful_acl
+http://stackoverflow.com/questions/190257/best-role-based-access-control-rbac-database-model
 
 ###Blob Support
 
