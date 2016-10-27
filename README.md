@@ -266,6 +266,10 @@ Example:
    
 In the example above, this means when user want to register, it must be confirmed by email. `confirm(<property>)` indicates how the user should be verified/confirmed, `method` can be email, SMS, phone call, etc. `using(<method>)` means validate against which property in case that user have multi property can be confirmed the same way.
 
+## Security
+
+https://www.owasp.org/index.php/REST_Security_Cheat_Sheet
+
 ## Dev-Env
 
     cd dev;
