@@ -11,10 +11,10 @@ public class MongoDSLScript {
     protected ObjectId uuid;
 
     @Property
-    protected String model;
+    protected String userType;
 
     @Property
-    protected String type;
+    protected String scriptType;
 
     @Property
     protected String script;
@@ -22,18 +22,18 @@ public class MongoDSLScript {
     MongoDSLScript() {
     }
 
-    public MongoDSLScript(String model, String type, String script) {
-        this.model = model;
-        this.type = type;
+    public MongoDSLScript(String userType, String scriptType, String script) {
+        this.userType = userType;
+        this.scriptType = scriptType;
         this.script = script;
     }
 
-    public String type() {
-        return type;
+    public MongoDSLScript(String scriptType, String script) {
+        this("default", scriptType, script);
     }
 
-    public String model() {
-        return model;
+    public String type() {
+        return userType;
     }
 
     public String script() {

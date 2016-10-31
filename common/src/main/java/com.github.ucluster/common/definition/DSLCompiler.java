@@ -13,6 +13,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,17 +21,39 @@ import java.util.stream.Collectors;
 public class DSLCompiler {
     private static String DSL_COMPILER = ResourceReader.read("dsl_compiler.js");
 
-    public static <T extends Record> DefaultRecordDefinition<T> load(Injector injector, String script) {
-        return new RecordDSL<T>(injector, loadRecordJsonDefinition(script)).load();
+    public static <T extends Record> DefaultRecordDefinition<T> load_user(Injector injector, String script) {
+        return new RecordDSL<T>(injector, loadUserJsonDefinition(script)).load();
     }
 
-    private static Map<String, Object> loadRecordJsonDefinition(String definition) {
+    public static <T extends Record> DefaultRecordDefinition<T> load_request(Injector injector, String script, String type) {
+        final Map<String, Object> requestDefinitionJson = loadRequestJsonDefinition(script, type);
+        if (requestDefinitionJson == null || requestDefinitionJson.isEmpty()) {
+            return null;
+        }
+
+        return new RecordDSL<T>(injector, requestDefinitionJson).load();
+    }
+
+    private static Map<String, Object> loadUserJsonDefinition(String script) {
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
         try {
             engine.eval(DSL_COMPILER);
-            engine.eval(definition);
+            engine.eval(script);
             String recordDefinition = (String) engine.eval("JSON.stringify(definition)");
             return Json.fromJson(recordDefinition);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Map<String, Object> loadRequestJsonDefinition(String script, String type) {
+        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
+        try {
+            engine.eval(DSL_COMPILER);
+            engine.eval(script);
+            String recordDefinition = (String) engine.eval("JSON.stringify(request_definitions)");
+            return (Map<String, Object>) Json.fromJson(recordDefinition).getOrDefault(type, new HashMap<>());
         } catch (ScriptException e) {
             e.printStackTrace();
             return null;

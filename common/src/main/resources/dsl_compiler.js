@@ -1,5 +1,6 @@
 var definition = {};
-var confirmation_definition = {};
+var feature_name = '';
+var request_definitions = {};
 
 function Record() {
     var target = this;
@@ -15,12 +16,24 @@ function Record() {
     };
 }
 
-var user = function (user) {
-    definition = user;
+var user = function (u) {
+    definition = u;
     return new Record();
 };
 
-var request = function (request) {
-    definition = request;
-    return new Record();
+var feature = function (name) {
+    var target = this;
+    feature_name = name;
+
+    this.user = function (u) {
+        definition = u;
+        return target;
+    };
+
+    this.request = function (type, definition) {
+        request_definitions[type] = definition;
+        return target;
+    };
+
+    return this;
 };

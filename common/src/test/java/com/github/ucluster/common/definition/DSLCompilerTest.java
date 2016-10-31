@@ -54,7 +54,7 @@ public class DSLCompilerTest {
     public void setUp() throws Exception {
         Injector injector = getInjector();
 
-        definition = DSLCompiler.load(injector, read("dsl.js"));
+        definition = DSLCompiler.load_user(injector, read("dsl.js"));
 
         user = mock(User.class);
     }

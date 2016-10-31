@@ -27,14 +27,15 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     public MongoRequest(User user, Map<String, Object> request) {
         this.user = user;
-        loadMetadata(request);
+        loadMetadata(user, request);
         loadProperties(request);
     }
 
-    private void loadMetadata(Map<String, Object> request) {
+    private void loadMetadata(User user, Map<String, Object> request) {
         Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
         //for immutable map
         metadata = new HashMap<>(metadata);
+        metadata.put("user_type", user.metadata("user_type").get());
         metadata.put("model", Constants.Record.REQUEST);
 
         this.metadata = metadata;

@@ -11,6 +11,7 @@ import com.google.inject.Injector;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 
 public class RecordDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
@@ -22,30 +23,51 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
 
     @Override
     public Definition<T> find(Map<String, Object> metadata) {
-        return load(dsl(metadata));
+        if (target_model(metadata).equals(Constants.Record.USER)) {
+            return load_user_definition(user_type(metadata));
+        } else {
+            return load_request_definition(user_type(metadata), type(metadata));
+        }
     }
 
-    private MongoDSLScript dsl(Map<String, Object> metadata) {
-        final MongoDSLScript dsl = datastore.createQuery(MongoDSLScript.class)
-                .field("model").equal(target_model(metadata))
-                .field("type").equal(type(metadata))
+    private Definition<T> load_user_definition(String userType) {
+        final MongoDSLScript script = datastore.createQuery(MongoDSLScript.class)
+                .field("userType").equal(userType)
+                .field("scriptType").equal("user")
                 .get();
 
-        if (dsl == null) {
-            throw new RecordTypeNotSupportedException(type(metadata));
+        if (script == null) {
+            throw new RecordTypeNotSupportedException(userType);
         }
-        return dsl;
+
+        return DSLCompiler.load_user(injector, script.script());
+    }
+
+    private Definition<T> load_request_definition(String userType, String type) {
+        final List<MongoDSLScript> scripts = datastore.createQuery(MongoDSLScript.class)
+                .field("userType").equal(userType)
+                .field("scriptType").equal("feature")
+                .asList();
+
+        for (MongoDSLScript script : scripts) {
+            final Definition<T> definition = DSLCompiler.load_request(injector, script.script(), type);
+            if (definition != null) {
+                return definition;
+            }
+        }
+
+        throw new RecordTypeNotSupportedException(type);
     }
 
     private String target_model(Map<String, Object> metadata) {
         return (String) metadata.getOrDefault("model", Constants.Record.USER);
     }
 
-    private String type(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("type", "default");
+    private String user_type(Map<String, Object> metadata) {
+        return (String) metadata.getOrDefault("user_type", "default");
     }
 
-    private Definition<T> load(MongoDSLScript dsl) {
-        return DSLCompiler.load(injector, dsl.script());
+    private String type(Map<String, Object> metadata) {
+        return (String) metadata.getOrDefault("type", "default");
     }
 }

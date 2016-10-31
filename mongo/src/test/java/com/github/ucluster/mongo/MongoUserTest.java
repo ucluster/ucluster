@@ -29,13 +29,13 @@ public class MongoUserTest {
     @Inject
     MongoUserRepository users;
 
+    @Inject
+    private Session session;
+
     private User user;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @Inject
-    private Session session;
 
     @Before
     public void setUp() throws Exception {

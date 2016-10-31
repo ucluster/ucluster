@@ -110,6 +110,9 @@ public class MongoUserRepository implements Repository<User> {
             if (!metadata.containsKey("type")) {
                 metadata.put("type", "default");
             }
+            if (!metadata.containsKey("user_type")) {
+                metadata.put("user_type", metadata.get("type"));
+            }
 
             return metadata;
         }
