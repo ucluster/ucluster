@@ -1,6 +1,6 @@
 # UCluster (IN-DEV)
 
-user authentication framework
+plugin enabled user activation framework
 
 ## User Definition DSL
     
@@ -23,25 +23,28 @@ Example:
         }
     });     
     
-User can be updated by request, requests DSL example:
+## Feature DSL
 
-    request({
-        id_number: {
-            required: true,
-            format: {
-                pattern: "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$"
+using user dsl alone does not get much power, contributors can contribute to the user activation process.
+
+    feature('nickname')
+        .user({
+            nickname: {
+                format: {
+                    pattern: "\\w{6,16}"
+                }
             }
-        },
-        id_name: {
-            required: true
-        }
-    })
-    .on("approve", {})
-    .on("reject", {
-        reason: {
-            required: true
-        }
-    });
+        })
+        .request('update_nickname', {
+            nickname: {
+                required: true,
+                format: {
+                    pattern: "\\w{6,16}"
+                }
+            }
+        });
+        
+In the example above, we define a `feature` which name is `nickname`, and we also add property `nickname` into user definition, based on the `nickname` property, we have request whose type is `update_nickname`, which allows user to update their nickname        
     
     
 ### Property Definition
