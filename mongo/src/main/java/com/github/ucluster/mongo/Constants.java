@@ -9,6 +9,5 @@ public interface Constants {
     interface Record {
         String USER = "user";
         String REQUEST = "request";
-        String CHANGE_LOG = "change_log";
     }
 }

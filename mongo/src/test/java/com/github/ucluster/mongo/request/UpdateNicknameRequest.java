@@ -6,12 +6,12 @@ import com.github.ucluster.mongo.MongoRequest;
 import java.util.Map;
 import java.util.Optional;
 
-public class AutoApprovableRequest extends MongoRequest {
-    AutoApprovableRequest() {
+public class UpdateNicknameRequest extends MongoRequest {
+    UpdateNicknameRequest() {
         super();
     }
 
-    public AutoApprovableRequest(User user, Map<String, Object> request) {
+    public UpdateNicknameRequest(User user, Map<String, Object> request) {
         super(user, request);
     }
 

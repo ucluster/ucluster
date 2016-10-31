@@ -60,7 +60,7 @@ public class MongoUserTest {
     public void should_user_apply_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "auto_approvable")
+                        .put("type", "update_nickname")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
@@ -84,7 +84,7 @@ public class MongoUserTest {
 
         user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "auto_approvable")
+                        .put("type", "update_nickname")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "a")
@@ -99,7 +99,7 @@ public class MongoUserTest {
         for (int count = 0; count < 11; count++) {
             users.uuid(user.uuid()).get().apply(ImmutableMap.<String, Object>builder()
                     .put("metadata", ImmutableMap.<String, Object>builder()
-                            .put("type", "auto_approvable")
+                            .put("type", "update_nickname")
                             .build())
                     .put("properties", ImmutableMap.<String, Object>builder()
                             .put("nickname", "newnickname" + count)
