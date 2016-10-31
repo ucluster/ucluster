@@ -1,13 +1,8 @@
 var definition = {};
-var action_definition = {};
 var confirmation_definition = {};
 
 function Record() {
     var target = this;
-    this.on = function (type, action) {
-        action_definition[type] = action;
-        return target;
-    };
     this.confirm = function (property) {
         definition[property] << {"confirm": property}
         return {
