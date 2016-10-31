@@ -34,9 +34,9 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     }
 
     @Override
-    public Optional<User.Request> request(String requestUuid) {
+    public Optional<User.Request> request(String uuid) {
         try {
-            final MongoRequest request = datastore.get(MongoRequest.class, new ObjectId(requestUuid));
+            final MongoRequest request = datastore.get(MongoRequest.class, new ObjectId(uuid));
 
             if (request == null || !request.user.uuid().equals(uuid())) {
                 return Optional.empty();

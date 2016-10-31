@@ -11,7 +11,7 @@ public interface User extends Record {
 
     User.Request apply(Map<String, Object> request);
 
-    Optional<Request> request(String requestUuid);
+    Optional<Request> request(String uuid);
 
     PaginatedList<Request> requests(Criteria criteria);
 
