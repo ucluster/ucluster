@@ -31,13 +31,10 @@ public class AuthenticationRequest extends MongoRequest implements Model {
 
     @Override
     public User.Request.Response approve(Map<String, Object> detail) {
-        ensurePending();
-
         final JsonRequest request = JsonRequest.of(detail);
         ensureIdentityMatched(request);
         ensurePasswordMatched(request);
 
-        status(Status.APPROVED);
         update();
 
         final String token = generateToken();
@@ -95,7 +92,6 @@ public class AuthenticationRequest extends MongoRequest implements Model {
     }
 
     private void failed() {
-        status(Status.REJECTED);
         throw new RequestException();
     }
 

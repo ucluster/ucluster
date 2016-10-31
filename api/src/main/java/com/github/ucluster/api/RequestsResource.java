@@ -49,8 +49,10 @@ public class RequestsResource {
         return user.requests(Criteria.empty()).toPage(page, perPage);
     }
 
+    @GET
     @Path("{uuid}")
-    public RequestResource request(@PathParam("uuid") String uuid) {
-        return new RequestResource(user.request(uuid).orElseThrow(NotFoundException::new));
+    @Produces(MediaType.APPLICATION_JSON)
+    public User.Request request(@PathParam("uuid") String uuid) {
+        return user.request(uuid).orElseThrow(NotFoundException::new);
     }
 }

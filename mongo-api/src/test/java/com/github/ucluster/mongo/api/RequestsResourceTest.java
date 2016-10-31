@@ -75,7 +75,6 @@ public class RequestsResourceTest extends ApiSupport {
         assertThat(json.path("uri"), is(createdResponse.getLocation().getPath()));
         assertThat(json.metadata("model"), is("request"));
         assertThat(json.metadata("type"), is("authentication"));
-        assertThat(json.property("status"), is("APPROVED"));
     }
 
     @Test
@@ -83,34 +82,6 @@ public class RequestsResourceTest extends ApiSupport {
         final Response response = get(userPath + "/requests/not_exist");
 
         assertThat(response.getStatus(), is(404));
-    }
-
-    @Test
-    public void should_failed_to_approve_non_pending_request() {
-        final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
-                        .build())
-                .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity_property", "username")
-                        .put("identity_value", "kiwiwin")
-                        .put("credential_property", "password")
-                        .put("credential_value", "password")
-                        .build())
-                .build());
-
-        final Response response = put(createdResponse.getLocation().getPath() + "/approved", ImmutableMap.<String, Object>builder()
-                .put("type", "authentication")
-                .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity_property", "username")
-                        .put("identity_value", "kiwiwin")
-                        .put("credential_property", "password")
-                        .put("credential_value", "password")
-                        .build())
-                .build()
-        );
-
-        assertThat(response.getStatus(), is(400));
     }
 
     @Test

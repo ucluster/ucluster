@@ -68,7 +68,6 @@ public class AuthenticationRequestTest {
                         .build())
                 .build());
 
-        assertThat(request.status(), is(User.Request.Status.APPROVED));
         final User.Request.Response response = request.response().get();
         final List<User.Request.Response.Attribute> attributes = new ArrayList<>(response.attributes());
         assertThat(attributes.size(), is(1));
@@ -80,7 +79,7 @@ public class AuthenticationRequestTest {
     public void should_failed_to_authenticate_using_username_with_wrong_password() {
         thrown.expect(RequestException.class);
 
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "authentication")
                         .build())
@@ -91,13 +90,11 @@ public class AuthenticationRequestTest {
                         .put("credential_value", "wrong")
                         .build())
                 .build());
-
-        assertThat(request.status(), is(User.Request.Status.REJECTED));
     }
 
     @Test
     public void should_success_to_authenticate_using_identity_field() {
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "authentication")
                         .build())
@@ -108,15 +105,13 @@ public class AuthenticationRequestTest {
                         .put("credential_value", "password")
                         .build())
                 .build());
-
-        assertThat(request.status(), is(User.Request.Status.APPROVED));
     }
 
     @Test
     public void should_failed_to_authenticate_using_non_identity_field() {
         thrown.expect(RequestException.class);
 
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "authentication")
                         .build())
@@ -127,7 +122,5 @@ public class AuthenticationRequestTest {
                         .put("credential_value", "password")
                         .build())
                 .build());
-
-        assertThat(request.status(), is(User.Request.Status.REJECTED));
     }
 }

@@ -58,7 +58,7 @@ public class MongoUserTest {
 
     @Test
     public void should_user_apply_request() {
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "update_nickname")
                         .build())
@@ -67,13 +67,8 @@ public class MongoUserTest {
                         .build())
                 .build());
 
-        assertThat(request.status(), is(User.Request.Status.APPROVED));
-
         final Optional<User> userFound = users.uuid(user.uuid());
         assertThat(userFound.get().property("nickname").get().value(), is("newnickname"));
-
-        final Optional<User.Request> requestFound = user.request(request.uuid());
-        assertThat(requestFound.get().status(), is(User.Request.Status.APPROVED));
     }
 
     @Test

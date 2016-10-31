@@ -16,9 +16,6 @@ import org.junit.runner.RunWith;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
 @RunWith(UClusterTestRunner.class)
 public class RecoveryRequestTest {
     @Inject
@@ -55,7 +52,7 @@ public class RecoveryRequestTest {
     public void should_success_recover_credential_when_ott_matched() {
         session.setex(user.uuid() + ":ott", "123456", 1);
 
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "recovery")
                         .build())
@@ -66,9 +63,7 @@ public class RecoveryRequestTest {
                         .build())
                 .build());
 
-        assertThat(request.status(), is(User.Request.Status.APPROVED));
-
-        final User.Request authRequest = user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "authentication")
                         .build())
@@ -79,8 +74,6 @@ public class RecoveryRequestTest {
                         .put("credential_value", "recovered")
                         .build())
                 .build());
-
-        assertThat(authRequest.status(), is(User.Request.Status.APPROVED));
     }
 
     @Test
@@ -100,9 +93,7 @@ public class RecoveryRequestTest {
                         .build())
                 .build());
 
-        assertThat(request.status(), is(User.Request.Status.REJECTED));
-
-        final User.Request authRequest = user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "authentication")
                         .build())
@@ -113,7 +104,5 @@ public class RecoveryRequestTest {
                         .put("credential_value", "password")
                         .build())
                 .build());
-
-        assertThat(authRequest.status(), is(User.Request.Status.APPROVED));
     }
 }

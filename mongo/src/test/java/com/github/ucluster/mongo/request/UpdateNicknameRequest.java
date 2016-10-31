@@ -18,7 +18,6 @@ public class UpdateNicknameRequest extends MongoRequest {
     @Override
     public User.Request.Response approve(Map<String, Object> detail) {
         final Optional<Property> value = property("nickname");
-        status(Status.APPROVED);
         update();
 
         user.property("nickname", value.get().value());

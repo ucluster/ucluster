@@ -27,7 +27,6 @@ public class RecoveryRequest extends MongoRequest implements Model {
 
     @Override
     public User.Request.Response approve(Map<String, Object> detail) {
-        ensurePending();
         final JsonRequest request = JsonRequest.of(detail);
         ensureOttMatched(request);
 
@@ -36,7 +35,6 @@ public class RecoveryRequest extends MongoRequest implements Model {
         user.property((String) request.property("credential_property"), request.property("credential_value"));
         user.update();
 
-        status(Status.APPROVED);
         update();
 
         return Response.empty();
@@ -63,7 +61,6 @@ public class RecoveryRequest extends MongoRequest implements Model {
     }
 
     private void failed() {
-        status(Status.REJECTED);
         throw new RequestException();
     }
 }

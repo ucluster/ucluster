@@ -2,7 +2,6 @@ package com.github.ucluster.mongo;
 
 import com.github.ucluster.api.Routing;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.RequestException;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Transient;
@@ -28,7 +27,6 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     public MongoRequest(User user, Map<String, Object> request) {
         this.user = user;
-        status(Status.PENDING);
         loadMetadata(request);
         loadProperties(request);
     }
@@ -55,12 +53,6 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     @Override
-    public Status status() {
-        final Optional<Property> status = property("status");
-        return Status.valueOf((String) status.get().value());
-    }
-
-    @Override
     public Optional<User.Request.Response> response() {
         return Optional.ofNullable(response);
     }
@@ -68,16 +60,6 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     @Override
     public User.Request.Response approve(Map<String, Object> detail) {
         throw new RuntimeException("need implemented");
-    }
-
-    protected void status(Status status) {
-        property("status", status.toString());
-    }
-
-    protected void ensurePending() {
-        if (status() != Status.PENDING) {
-            throw new RequestException();
-        }
     }
 
     @Override
