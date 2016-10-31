@@ -1,7 +1,6 @@
 package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.common.definition.DSLCompiler;
-import com.github.ucluster.common.definition.DefaultRecordDefinition;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -14,6 +13,7 @@ import org.mongodb.morphia.Datastore;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RecordDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
     @Inject
@@ -24,6 +24,7 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
 
     @Override
     public Definition<T> find(Map<String, Object> metadata) {
+        //TODO: refactor implementation
         if (target_model(metadata).equals(Constants.Record.USER)) {
             return load_user_definition(user_type(metadata));
         } else {
@@ -32,6 +33,15 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
     }
 
     private Definition<T> load_user_definition(String userType) {
+        final Definition<T> definition = load_user_original_definition(userType);
+        for (Definition<T> def : load_user_feature_enhanced_definition(userType)) {
+            definition.merge(def);
+        }
+
+        return definition;
+    }
+
+    private Definition<T> load_user_original_definition(String userType) {
         final MongoDSLScript user_script = datastore.createQuery(MongoDSLScript.class)
                 .field("userType").equal(userType)
                 .field("scriptType").equal("user")
@@ -41,18 +51,17 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
             throw new RecordTypeNotSupportedException(userType);
         }
 
-        final DefaultRecordDefinition<T> definition = DSLCompiler.load_user(injector, user_script.script());
+        return DSLCompiler.load_user(injector, user_script.script());
+    }
 
-        final List<MongoDSLScript> scripts = datastore.createQuery(MongoDSLScript.class)
+    private List<Definition<T>> load_user_feature_enhanced_definition(String userType) {
+        return datastore.createQuery(MongoDSLScript.class)
                 .field("userType").equal(userType)
                 .field("scriptType").equal("feature")
-                .asList();
-
-        for (MongoDSLScript script : scripts) {
-            definition.merge(DSLCompiler.load_user(injector, script.script()));
-        }
-
-        return definition;
+                .asList()
+                .stream()
+                .map(script -> (Definition<T>) DSLCompiler.load_user(injector, script.script()))
+                .collect(Collectors.toList());
     }
 
     private Definition<T> load_request_definition(String userType, String type) {
