@@ -11,6 +11,8 @@ public interface Definition<D extends Record> {
 
     void effect(Record.Property.Point point, D record, String... paths);
 
+    void merge(Definition<D> definition);
+
     PropertyDefinition<D> property(String path);
 
     Collection<PropertyDefinition<D>> properties();

@@ -17,10 +17,5 @@ user({
     email: {
         email: true,
         identity: true
-    },
-    nickname: {
-        format: {
-            pattern: "\\w{6,16}"
-        }
     }
 }).confirm("email").using("email");

@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.common.definition.DSLCompiler;
+import com.github.ucluster.common.definition.DefaultRecordDefinition;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -31,16 +32,27 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
     }
 
     private Definition<T> load_user_definition(String userType) {
-        final MongoDSLScript script = datastore.createQuery(MongoDSLScript.class)
+        final MongoDSLScript user_script = datastore.createQuery(MongoDSLScript.class)
                 .field("userType").equal(userType)
                 .field("scriptType").equal("user")
                 .get();
 
-        if (script == null) {
+        if (user_script == null) {
             throw new RecordTypeNotSupportedException(userType);
         }
 
-        return DSLCompiler.load_user(injector, script.script());
+        final DefaultRecordDefinition<T> definition = DSLCompiler.load_user(injector, user_script.script());
+
+        final List<MongoDSLScript> scripts = datastore.createQuery(MongoDSLScript.class)
+                .field("userType").equal(userType)
+                .field("scriptType").equal("feature")
+                .asList();
+
+        for (MongoDSLScript script : scripts) {
+            definition.merge(DSLCompiler.load_user(injector, script.script()));
+        }
+
+        return definition;
     }
 
     private Definition<T> load_request_definition(String userType, String type) {

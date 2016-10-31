@@ -40,6 +40,13 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
         }
     }
 
+    @Override
+    public void merge(Definition<T> definition) {
+        definition.properties().forEach(property -> {
+            propertyDefinitions.put(property.path(), property);
+        });
+    }
+
     private EffectResult effectOnPropertyDefinition(Record.Property.Point point, T record, String... paths) {
         return asList(paths).stream()
                 .filter(path -> {
