@@ -24,10 +24,6 @@ public class DSLCompiler {
         return new RecordDSL<T>(injector, loadRecordJsonDefinition(script)).load();
     }
 
-    public static <T extends Record> DefaultRecordDefinition<T> load_action(Injector injector, String script, String action) {
-        return new RecordDSL<T>(injector, loadRecordActionJsonDefinition(script, action)).load();
-    }
-
     private static Map<String, Object> loadRecordJsonDefinition(String definition) {
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
         try {
@@ -35,19 +31,6 @@ public class DSLCompiler {
             engine.eval(definition);
             String recordDefinition = (String) engine.eval("JSON.stringify(definition)");
             return Json.fromJson(recordDefinition);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static Map<String, Object> loadRecordActionJsonDefinition(String definition, String action) {
-        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
-        try {
-            engine.eval(DSL_COMPILER);
-            engine.eval(definition);
-            String recordDefinition = (String) engine.eval("JSON.stringify(action_definition)");
-            return (Map<String, Object>) Json.fromJson(recordDefinition).get(action);
         } catch (ScriptException e) {
             e.printStackTrace();
             return null;

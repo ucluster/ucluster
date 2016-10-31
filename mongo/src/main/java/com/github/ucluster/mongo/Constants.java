@@ -4,7 +4,6 @@ public interface Constants {
     interface Collection {
         String USERS = "users";
         String REQUESTS = "requests";
-        String CHANGE_LOGS = "change_logs";
     }
 
     interface Record {

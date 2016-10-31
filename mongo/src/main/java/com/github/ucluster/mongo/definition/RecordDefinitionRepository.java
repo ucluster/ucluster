@@ -13,8 +13,6 @@ import org.mongodb.morphia.Datastore;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.github.ucluster.mongo.Constants.Record.CHANGE_LOG;
-
 public class RecordDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
     @Inject
     Injector injector;
@@ -24,7 +22,7 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
 
     @Override
     public Definition<T> find(Map<String, Object> metadata) {
-        return load(dsl(metadata), metadata);
+        return load(dsl(metadata));
     }
 
     private MongoDSLScript dsl(Map<String, Object> metadata) {
@@ -39,34 +37,15 @@ public class RecordDefinitionRepository<T extends Record> implements DefinitionR
         return dsl;
     }
 
-    private String action(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("action", "approve");
-    }
-
-    private boolean isAction(Map<String, Object> metadata) {
-        return CHANGE_LOG.equals(origin_model(metadata));
-    }
-
-    private String origin_model(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("model", Constants.Record.USER);
-    }
-
     private String target_model(Map<String, Object> metadata) {
-        if (isAction(metadata)) {
-            return "request";
-        }
-        return origin_model(metadata);
+        return (String) metadata.getOrDefault("model", Constants.Record.USER);
     }
 
     private String type(Map<String, Object> metadata) {
         return (String) metadata.getOrDefault("type", "default");
     }
 
-    private Definition<T> load(MongoDSLScript dsl, Map<String, Object> metadata) {
-        if (isAction(metadata)) {
-            return DSLCompiler.load_action(injector, dsl.script(), action(metadata));
-        } else {
-            return DSLCompiler.load(injector, dsl.script());
-        }
+    private Definition<T> load(MongoDSLScript dsl) {
+        return DSLCompiler.load(injector, dsl.script());
     }
 }
