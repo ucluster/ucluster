@@ -119,30 +119,6 @@ public class MongoUserTest {
     }
 
     @Test
-    public void should_user_apply_non_auto_approvable_request_and_reject_it_later() {
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "non_auto_approvable")
-                        .build())
-                .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("nickname", "newnickname")
-                        .build())
-                .build());
-
-        final User userFound = users.uuid(user.uuid()).get();
-
-        final User.Request pendingRequest = userFound.request(request.uuid()).get();
-        pendingRequest.reject(new HashMap<>());
-        assertThat(pendingRequest.status(), is(User.Request.Status.REJECTED));
-
-        final User.Request rejectedRequest = userFound.request(request.uuid()).get();
-        assertThat(rejectedRequest.status(), is(User.Request.Status.REJECTED));
-
-        final User userAfterRejected = users.uuid(user.uuid()).get();
-        assertThat(userAfterRejected.property("nickname").get().value(), is("kiwinickname"));
-    }
-
-    @Test
     public void should_failed_to_apply_request_when_request_validation_failed() {
         capture(thrown).errors(
                 (path, type) -> path.equals("nickname") && type.equals("format")

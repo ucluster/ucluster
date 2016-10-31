@@ -32,12 +32,4 @@ public class RequestResource {
         request.approve(detail);
         return Response.ok().build();
     }
-
-    @PUT
-    @Path("rejected")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response reject(Map<String, Object> detail) {
-        request.reject(detail);
-        return Response.ok().build();
-    }
 }

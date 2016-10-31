@@ -29,8 +29,6 @@ public interface User extends Record {
 
         Response approve(Map<String, Object> detail);
 
-        Response reject(Map<String, Object> detail);
-
         enum Status {
             PENDING,
             APPROVED,

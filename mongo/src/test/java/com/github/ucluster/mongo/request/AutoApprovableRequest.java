@@ -32,12 +32,4 @@ public class AutoApprovableRequest extends MongoRequest {
         return Response.empty();
     }
 
-    @Override
-    public User.Request.Response reject(Map<String, Object> detail) {
-        //do nothing
-        status(Status.REJECTED);
-        update();
-
-        return Response.empty();
-    }
 }

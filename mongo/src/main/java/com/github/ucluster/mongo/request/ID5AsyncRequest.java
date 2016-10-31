@@ -34,14 +34,6 @@ public class ID5AsyncRequest extends MongoRequest implements Model {
         return Response.empty();
     }
 
-    @Override
-    public User.Request.Response reject(Map<String, Object> detail) {
-        status(Status.REJECTED);
-        update();
-
-        return Response.empty();
-    }
-
     private Object reason(Map<String, Object> detail) {
         return JsonRequest.of(detail).property("reason");
     }

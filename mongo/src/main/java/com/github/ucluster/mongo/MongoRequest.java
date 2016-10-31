@@ -75,11 +75,6 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
         throw new RuntimeException("need implemented");
     }
 
-    @Override
-    public User.Request.Response reject(Map<String, Object> detail) {
-        throw new RuntimeException("need implemented");
-    }
-
     protected void status(Status status) {
         property("status", status.toString());
     }
