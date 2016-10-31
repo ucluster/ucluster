@@ -29,7 +29,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     public User.Request apply(Map<String, Object> request) {
         final MongoRequest req = saveRequest(request);
         //TODO: merge into request
-        req.response = req.approve(request);
+        req.execute(request);
         return req;
     }
 

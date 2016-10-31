@@ -58,7 +58,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     @Override
-    public User.Request.Response approve(Map<String, Object> detail) {
+    public void execute(Map<String, Object> detail) {
         throw new RuntimeException("need implemented");
     }
 

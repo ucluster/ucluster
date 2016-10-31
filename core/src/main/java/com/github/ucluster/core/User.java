@@ -23,7 +23,7 @@ public interface User extends Record {
 
         Optional<Response> response();
 
-        Response approve(Map<String, Object> detail);
+        void execute(Map<String, Object> detail);
 
         interface Response {
 

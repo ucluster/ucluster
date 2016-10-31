@@ -16,13 +16,11 @@ public class UpdateNicknameRequest extends MongoRequest {
     }
 
     @Override
-    public User.Request.Response approve(Map<String, Object> detail) {
+    public void execute(Map<String, Object> detail) {
         final Optional<Property> value = property("nickname");
         update();
 
         user.property("nickname", value.get().value());
         user.update();
-
-        return Response.empty();
     }
 }
