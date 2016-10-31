@@ -48,10 +48,6 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                         return false;
                     }
 
-                    if (record instanceof User.Request.ChangeLog && (path.equals("old_status") || path.equals("new_status"))) {
-                        return false;
-                    }
-
                     return true;
                 })
                 .map(path -> propertyDefinitions.get(path))
@@ -92,10 +88,6 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
         for (String path : mergePaths(record, propertyPaths)) {
             //TODO: for request to store status
             if (record instanceof User.Request && path.equals("status")) {
-                continue;
-            }
-
-            if (record instanceof User.Request.ChangeLog && (path.equals("old_status") || path.equals("new_status"))) {
                 continue;
             }
 

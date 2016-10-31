@@ -2,7 +2,6 @@ package com.github.ucluster.mongo.request;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.Model;
-import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.mongo.MongoRequest;
 import com.github.ucluster.mongo.json.JsonRequest;
 
@@ -37,7 +36,7 @@ public class ID5AsyncRequest extends MongoRequest implements Model {
 
     @Override
     public User.Request.Response reject(Map<String, Object> detail) {
-        status(Status.REJECTED, new MongoProperty<>("reason", reason(detail)));
+        status(Status.REJECTED);
         update();
 
         return Response.empty();

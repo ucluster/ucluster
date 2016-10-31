@@ -74,12 +74,6 @@ public class AuthenticationRequestTest {
         assertThat(attributes.size(), is(1));
         assertThat(attributes.get(0).key(), is("$TOKEN"));
         assertThat(session.hgetall(attributes.get(0).value()), is(notNullValue()));
-
-        final List<User.Request.ChangeLog> changeLogs = request.changeLogs();
-        assertThat(changeLogs.size(), is(1));
-
-        assertThat(changeLogs.get(0).oldStatus(), is(User.Request.Status.PENDING));
-        assertThat(changeLogs.get(0).newStatus(), is(User.Request.Status.APPROVED));
     }
 
     @Test

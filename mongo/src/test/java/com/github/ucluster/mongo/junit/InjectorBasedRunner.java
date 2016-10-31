@@ -169,10 +169,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
                         }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
                         });
-
-                        bind(new TypeLiteral<DefinitionRepository<Definition<User.Request.ChangeLog>>>() {
-                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request.ChangeLog>>() {
-                        });
                     }
 
                     private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {

@@ -3,7 +3,6 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.api.Routing;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RequestException;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.annotations.Transient;
@@ -11,10 +10,8 @@ import org.mongodb.morphia.annotations.Transient;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.github.ucluster.mongo.Constants.Collection.REQUESTS;
 
@@ -83,36 +80,8 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
         throw new RuntimeException("need implemented");
     }
 
-    @Override
-    public List<ChangeLog> changeLogs() {
-        return datastore.createQuery(MongoChangeLog.class)
-                .disableValidation()
-                .field("request").equal(new Key<>(MongoRequest.class, REQUESTS, uuid))
-                .order("-createdAt")
-                .asList().stream()
-                .collect(Collectors.toList());
-    }
-
-    protected void status(Status status, Property... properties) {
-        if (status != Status.PENDING) {
-            recordChangeLog(status, properties);
-        }
+    protected void status(Status status) {
         property("status", status.toString());
-    }
-
-    protected void recordChangeLog(Status newStatus, Property... properties) {
-        final MongoChangeLog changeLog = MongoChangeLog.of(this).from(status()).to(newStatus);
-        for (Property property : properties) {
-            changeLog.property(property);
-        }
-
-        enhance(changeLog);
-        changeLog.save();
-    }
-
-    private void enhance(MongoChangeLog changeLog) {
-        changeLog.request = this;
-        injector.injectMembers(changeLog);
     }
 
     protected void ensurePending() {

@@ -114,33 +114,6 @@ public class ID5AsyncRequestTest {
     }
 
     @Test
-    public void should_failed_reject_request_if_change_log_definition_not_matched_and_status_unchanged() {
-        capture(thrown).errors(
-                (path, type) -> path.equals("reason") && type.equals("required")
-        );
-
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "id5_async")
-                        .build())
-                .put("properties", ImmutableMap.<String, String>builder()
-                        .put("id_number", "510108197806101318")
-                        .put("id_name", "张三")
-                        .build())
-                .build());
-
-        request.reject(ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "id5_async")
-                        .build())
-                .put("properties", ImmutableMap.<String, String>builder()
-                        .build())
-                .build());
-
-        assertThat(request.status(), is(User.Request.Status.PENDING));
-    }
-
-    @Test
     public void should_success_approve_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
