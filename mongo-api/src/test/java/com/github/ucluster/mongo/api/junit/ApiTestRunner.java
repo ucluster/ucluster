@@ -28,9 +28,6 @@ public class ApiTestRunner extends InjectorBasedRunner {
                 datastore().save(new MongoDSLScript("user", "default", read("user_dsl.js")));
                 datastore().save(new MongoDSLScript("request", "default", read("request_dsl.js")));
                 datastore().save(new MongoDSLScript("request", "update_nickname", read("request_dsl.js")));
-                datastore().save(new MongoDSLScript("request", "default", read("request_dsl.js")));
-                datastore().save(new MongoDSLScript("request", "authentication", read("requests/authentication.js")));
-                datastore().save(new MongoDSLScript("request", "recovery", read("requests/recovery.js")));
                 base.evaluate();
             } finally {
                 final MongoDatabase database = mongoClient().getDatabase("ucluster");

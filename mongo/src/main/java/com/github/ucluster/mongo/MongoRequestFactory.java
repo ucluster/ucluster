@@ -33,7 +33,7 @@ public class MongoRequestFactory implements RequestFactory {
     private Class<? extends User.Request> getRequestClass(User user, Map<String, Object> request) {
         try {
             return injector.getInstance(Key.get(new TypeLiteral<User.Request>() {
-            }, Names.named("request." + type(request) + ".factory"))).getClass();
+            }, Names.named("request." + type(request) + ".class"))).getClass();
         } catch (Exception e) {
             throw new RecordTypeNotSupportedException((String) type(request));
         }

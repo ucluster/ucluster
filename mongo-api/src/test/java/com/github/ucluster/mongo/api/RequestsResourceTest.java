@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(ApiTestRunner.class)
 public class RequestsResourceTest extends ApiSupport {
@@ -39,31 +38,24 @@ public class RequestsResourceTest extends ApiSupport {
     public void should_create_request() {
         final Response response = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
+                        .put("type", "update_nickname")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity_property", "username")
-                        .put("identity_value", "kiwiwin")
-                        .put("credential_property", "password")
-                        .put("credential_value", "password")
+                        .put("nickname", "newnickname")
                         .build())
                 .build());
 
         assertThat(response.getStatus(), is(201));
-        assertThat(response.getHeaderString("TOKEN"), is(notNullValue()));
     }
 
     @Test
     public void should_get_request() {
         final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
+                        .put("type", "update_nickname")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity_property", "username")
-                        .put("identity_value", "kiwiwin")
-                        .put("credential_property", "password")
-                        .put("credential_value", "password")
+                        .put("nickname", "newnickname")
                         .build())
                 .build());
 
@@ -74,7 +66,7 @@ public class RequestsResourceTest extends ApiSupport {
         final JsonContext json = JsonContext.json(response);
         assertThat(json.path("uri"), is(createdResponse.getLocation().getPath()));
         assertThat(json.metadata("model"), is("request"));
-        assertThat(json.metadata("type"), is("authentication"));
+        assertThat(json.metadata("type"), is("update_nickname"));
     }
 
     @Test
@@ -88,13 +80,10 @@ public class RequestsResourceTest extends ApiSupport {
     public void should_get_requests() {
         final Response createdResponse = post(userPath + "/requests", ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
+                        .put("type", "update_nickname")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("identity_property", "username")
-                        .put("identity_value", "kiwiwin")
-                        .put("credential_property", "password")
-                        .put("credential_value", "password")
+                        .put("nickname", "newnickname")
                         .build())
                 .build());
 

@@ -23,8 +23,6 @@ import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
-import com.github.ucluster.mongo.request.AuthenticationRequest;
-import com.github.ucluster.mongo.request.RecoveryRequest;
 import com.github.ucluster.mongo.request.UpdateNicknameRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
@@ -143,11 +141,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         registerRequestFactory("update_nickname").to(new TypeLiteral<UpdateNicknameRequest>() {
                         });
-
-                        registerRequestFactory("authentication").to(new TypeLiteral<AuthenticationRequest>() {
-                        });
-                        registerRequestFactory("recovery").to(new TypeLiteral<RecoveryRequest>() {
-                        });
                     }
 
                     private LinkedBindingBuilder<ConfirmationService> registerConfirmationService(String type) {
@@ -172,7 +165,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                     private LinkedBindingBuilder<User.Request> registerRequestFactory(String type) {
                         return bind(new TypeLiteral<User.Request>() {
-                        }).annotatedWith(Names.named("request." + type + ".factory"));
+                        }).annotatedWith(Names.named("request." + type + ".class"));
                     }
                 }}));
     }
