@@ -9,4 +9,4 @@ request({
         transient: true,
         required: true
     }
-}).on('approve', {}).on('reject', {});
+});

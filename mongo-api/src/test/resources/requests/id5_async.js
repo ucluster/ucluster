@@ -8,9 +8,4 @@ request({
     id_name: {
         required: true
     }
-}).on("approve", {})
-    .on("reject", {
-        reason: {
-            required: true
-        }
-    });
+});

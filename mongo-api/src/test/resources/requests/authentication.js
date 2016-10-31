@@ -11,5 +11,4 @@ request({
     credential_value: {
         required: true
     }
-}).on('approve', {})
-    .on('reject', {});
+});
