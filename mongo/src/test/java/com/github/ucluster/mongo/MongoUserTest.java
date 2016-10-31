@@ -16,7 +16,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -40,7 +39,7 @@ public class MongoUserTest {
 
     @Before
     public void setUp() throws Exception {
-        session.set("confirm:kiwiwin@qq.com", "3102");
+        session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
         final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
@@ -50,7 +49,7 @@ public class MongoUserTest {
                         .put("username", "kiwiwin")
                         .put("nickname", "kiwinickname")
                         .put("password", "password")
-                        .put("email", "kiwiwin@qq.com")
+                        .put("email", "kiwi.swhite.coder@gmail.com")
                         .build())
                 .get();
 
@@ -78,30 +77,6 @@ public class MongoUserTest {
     }
 
     @Test
-    public void should_user_apply_non_auto_approvable_request_and_approve_it_later() {
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "non_auto_approvable")
-                        .build())
-                .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("nickname", "newnickname")
-                        .build())
-                .build());
-
-        final User userFound = users.uuid(user.uuid()).get();
-
-        final User.Request pendingRequest = userFound.request(request.uuid()).get();
-        pendingRequest.approve(new HashMap<>());
-        assertThat(pendingRequest.status(), is(User.Request.Status.APPROVED));
-
-        final User.Request approvedRequest = userFound.request(request.uuid()).get();
-        assertThat(approvedRequest.status(), is(User.Request.Status.APPROVED));
-
-        final User userAfterApproved = users.uuid(user.uuid()).get();
-        assertThat(userAfterApproved.property("nickname").get().value(), is("newnickname"));
-    }
-
-    @Test
     public void should_failed_to_apply_request_when_request_validation_failed() {
         capture(thrown).errors(
                 (path, type) -> path.equals("nickname") && type.equals("format")
@@ -109,7 +84,7 @@ public class MongoUserTest {
 
         user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "non_auto_approvable")
+                        .put("type", "auto_approvable")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "a")

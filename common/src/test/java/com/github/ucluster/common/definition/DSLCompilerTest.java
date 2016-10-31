@@ -71,7 +71,7 @@ public class DSLCompilerTest {
 
         final Record.Property emailProperty = mock(Record.Property.class);
         when(emailProperty.path()).thenReturn("email");
-        when(emailProperty.value()).thenReturn("kiwiwin@qq.com");
+        when(emailProperty.value()).thenReturn("kiwi.swhite.coder@gmail.com");
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));
@@ -96,7 +96,7 @@ public class DSLCompilerTest {
 
         final Record.Property emailProperty = mock(Record.Property.class);
         when(emailProperty.path()).thenReturn("email");
-        when(emailProperty.value()).thenReturn("kiwiwin@qq.com");
+        when(emailProperty.value()).thenReturn("kiwi.swhite.coder@gmail.com");
 
         when(user.property(eq("username"))).thenReturn(Optional.of(usernameProperty));
         when(user.property(eq("password"))).thenReturn(Optional.of(passwordProperty));

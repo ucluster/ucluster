@@ -45,7 +45,7 @@ public class MongoUserRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        session.set("confirm:kiwiwin@qq.com", "3102");
+        session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
         final Map<String, Object> request = CreateUserRequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
@@ -54,7 +54,7 @@ public class MongoUserRepositoryTest {
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
-                        .put("email", "kiwiwin@qq.com")
+                        .put("email", "kiwi.swhite.coder@gmail.com")
                         .build())
                 .get();
 
@@ -181,7 +181,7 @@ public class MongoUserRepositoryTest {
     @Test
     public void should_find_all_users() {
         for (int count = 0; count < 10; count++) {
-            session.set("confirm:kiwiwin@qq.com" + count, "3102");
+            session.set("confirm:kiwi.swhite.coder@gmail.com" + count, "3102");
             users.create(CreateUserRequestBuilder.of()
                     .metadata(ImmutableMap.<String, Object>builder()
                             .put("token", "3102")
@@ -189,7 +189,7 @@ public class MongoUserRepositoryTest {
                     .properties(ImmutableMap.<String, Object>builder()
                             .put("username", "kiwiwin" + count)
                             .put("password", "password" + count)
-                            .put("email", "kiwiwin@qq.com" + count)
+                            .put("email", "kiwi.swhite.coder@gmail.com" + count)
                             .build())
                     .get());
         }
@@ -201,7 +201,7 @@ public class MongoUserRepositoryTest {
     @Test
     public void should_find_by_criteria() {
         for (int count = 0; count < 10; count++) {
-            session.set("confirm:kiwiwin@qq.com" + count, "3102");
+            session.set("confirm:kiwi.swhite.coder@gmail.com" + count, "3102");
             users.create(CreateUserRequestBuilder.of()
                     .metadata(ImmutableMap.<String, Object>builder()
                             .put("token", "3102")
@@ -209,7 +209,7 @@ public class MongoUserRepositoryTest {
                     .properties(ImmutableMap.<String, Object>builder()
                             .put("username", "kiwiwin" + count)
                             .put("password", "password" + count)
-                            .put("email", "kiwiwin@qq.com" + count)
+                            .put("email", "kiwi.swhite.coder@gmail.com" + count)
                             .build())
                     .get());
         }

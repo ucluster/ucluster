@@ -25,7 +25,6 @@ import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AuthenticationRequest;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
-import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
 import com.github.ucluster.mongo.request.RecoveryRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
@@ -143,8 +142,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
 
                         registerRequestFactory("auto_approvable").to(new TypeLiteral<AutoApprovableRequest>() {
-                        });
-                        registerRequestFactory("non_auto_approvable").to(new TypeLiteral<NonAutoApprovableRequest>() {
                         });
 
                         registerRequestFactory("authentication").to(new TypeLiteral<AuthenticationRequest>() {
