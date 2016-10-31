@@ -25,7 +25,6 @@ import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
 import com.github.ucluster.mongo.request.AuthenticationRequest;
 import com.github.ucluster.mongo.request.AutoApprovableRequest;
-import com.github.ucluster.mongo.request.ID5AsyncRequest;
 import com.github.ucluster.mongo.request.NonAutoApprovableRequest;
 import com.github.ucluster.mongo.request.RecoveryRequest;
 import com.github.ucluster.session.Session;
@@ -151,8 +150,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         registerRequestFactory("authentication").to(new TypeLiteral<AuthenticationRequest>() {
                         });
                         registerRequestFactory("recovery").to(new TypeLiteral<RecoveryRequest>() {
-                        });
-                        registerRequestFactory("id5_async").to(new TypeLiteral<ID5AsyncRequest>() {
                         });
                     }
 

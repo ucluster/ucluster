@@ -28,11 +28,8 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     @Override
     public User.Request apply(Map<String, Object> request) {
         final MongoRequest req = saveRequest(request);
-
-        if (req.auto()) {
-            req.response = req.approve(request);
-        }
-
+        //TODO: merge into request
+        req.response = req.approve(request);
         return req;
     }
 

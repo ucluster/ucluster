@@ -13,9 +13,4 @@ public class NonAutoApprovableRequest extends AutoApprovableRequest {
         super(user, request);
     }
 
-    @Override
-    public boolean auto() {
-        return false;
-    }
-
 }

@@ -23,8 +23,6 @@ public interface User extends Record {
 
         Status status();
 
-        boolean auto();
-
         Optional<Response> response();
 
         Response approve(Map<String, Object> detail);

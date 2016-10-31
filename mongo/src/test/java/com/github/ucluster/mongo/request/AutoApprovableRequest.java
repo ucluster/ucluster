@@ -16,11 +16,6 @@ public class AutoApprovableRequest extends MongoRequest {
     }
 
     @Override
-    public boolean auto() {
-        return true;
-    }
-
-    @Override
     public User.Request.Response approve(Map<String, Object> detail) {
         final Optional<Property> value = property("nickname");
         status(Status.APPROVED);
@@ -31,5 +26,4 @@ public class AutoApprovableRequest extends MongoRequest {
 
         return Response.empty();
     }
-
 }

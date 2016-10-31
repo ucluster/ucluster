@@ -58,7 +58,7 @@ public class MongoUserTest {
     }
 
     @Test
-    public void should_user_apply_auto_approvable_request() {
+    public void should_user_apply_request() {
         final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "auto_approvable")
@@ -75,23 +75,6 @@ public class MongoUserTest {
 
         final Optional<User.Request> requestFound = user.request(request.uuid());
         assertThat(requestFound.get().status(), is(User.Request.Status.APPROVED));
-    }
-
-    @Test
-    public void should_user_apply_non_auto_approvable_request() {
-        final User.Request request = user.apply(ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.<String, Object>builder()
-                        .put("type", "non_auto_approvable")
-                        .build())
-                .put("properties", ImmutableMap.<String, Object>builder()
-                        .put("nickname", "newnickname")
-                        .build())
-                .build());
-
-        assertThat(request.status(), is(User.Request.Status.PENDING));
-
-        final User userFound = users.uuid(user.uuid()).get();
-        assertThat(userFound.property("nickname").get().value(), is("kiwinickname"));
     }
 
     @Test
@@ -139,12 +122,12 @@ public class MongoUserTest {
     @Test
     public void should_get_all_requests() {
         for (int count = 0; count < 11; count++) {
-            user.apply(ImmutableMap.<String, Object>builder()
+            users.uuid(user.uuid()).get().apply(ImmutableMap.<String, Object>builder()
                     .put("metadata", ImmutableMap.<String, Object>builder()
-                            .put("type", "non_auto_approvable")
+                            .put("type", "auto_approvable")
                             .build())
                     .put("properties", ImmutableMap.<String, Object>builder()
-                            .put("nickname", "newnickname")
+                            .put("nickname", "newnickname" + count)
                             .build())
                     .build());
         }

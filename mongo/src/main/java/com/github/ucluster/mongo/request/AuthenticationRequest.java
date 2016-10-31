@@ -30,11 +30,6 @@ public class AuthenticationRequest extends MongoRequest implements Model {
     }
 
     @Override
-    public boolean auto() {
-        return true;
-    }
-
-    @Override
     public User.Request.Response approve(Map<String, Object> detail) {
         ensurePending();
 
