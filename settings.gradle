@@ -9,3 +9,5 @@ include 'mongo-api'
 include 'confirmation'
 include 'email-confirmation'
 include 'test-framework'
+
+include 'features:password-authentication'
