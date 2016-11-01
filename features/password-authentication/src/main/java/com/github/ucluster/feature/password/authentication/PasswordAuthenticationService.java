@@ -17,7 +17,6 @@ public class PasswordAuthenticationService implements AuthenticationService {
     @Inject
     UserRepository users;
 
-    //TODO: load configuration by injection
     private Object configuration;
 
     PasswordAuthenticationService() {

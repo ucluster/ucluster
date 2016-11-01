@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class RecordDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
+public class MongoDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
     @Inject
     Injector injector;
 

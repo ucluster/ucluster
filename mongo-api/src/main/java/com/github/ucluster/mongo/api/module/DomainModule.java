@@ -3,7 +3,9 @@ package com.github.ucluster.mongo.api.module;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
@@ -15,5 +17,7 @@ public class DomainModule extends AbstractModule {
         }).to(MongoUserRepository.class);
 
         bind(UserRepository.class).to(MongoUserRepository.class);
+
+        bind(ConfigurationRepository.class).to(MongoConfigurationRepository.class);
     }
 }

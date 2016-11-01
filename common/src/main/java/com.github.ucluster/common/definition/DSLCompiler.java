@@ -34,6 +34,19 @@ public class DSLCompiler {
         return new RecordDSL<T>(injector, requestDefinitionJson).load();
     }
 
+    public static Map<String, Object> load_auth_config(String script, String type) {
+        ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
+        try {
+            engine.eval(DSL_COMPILER);
+            engine.eval(script);
+            String config = (String) engine.eval("JSON.stringify(auth_methods)");
+            return (Map<String, Object>) Json.fromJson(config).getOrDefault(type, new HashMap<>());
+        } catch (ScriptException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private static Map<String, Object> loadUserJsonDefinition(String script) {
         ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
         try {

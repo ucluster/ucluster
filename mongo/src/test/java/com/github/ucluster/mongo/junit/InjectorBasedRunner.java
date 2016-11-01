@@ -17,13 +17,15 @@ import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
-import com.github.ucluster.mongo.definition.RecordDefinitionRepository;
+import com.github.ucluster.mongo.definition.MongoDefinitionRepository;
 import com.github.ucluster.mongo.request.UpdateNicknameRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
@@ -117,6 +119,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         bindDefinitionRepositories();
 
+                        bind(ConfigurationRepository.class).to(MongoConfigurationRepository.class);
+
                         registerConcern("format").to(new TypeLiteral<FormatConcern>() {
                         });
                         registerConcern("email").to(new TypeLiteral<EmailConcern>() {
@@ -150,11 +154,11 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                     private void bindDefinitionRepositories() {
                         bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
-                        }).to(new TypeLiteral<RecordDefinitionRepository<User>>() {
+                        }).to(new TypeLiteral<MongoDefinitionRepository<User>>() {
                         });
 
                         bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
-                        }).to(new TypeLiteral<RecordDefinitionRepository<User.Request>>() {
+                        }).to(new TypeLiteral<MongoDefinitionRepository<User.Request>>() {
                         });
                     }
 
