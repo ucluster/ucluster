@@ -2,8 +2,8 @@ package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.common.concern.Encryption;
 import com.github.ucluster.core.AuthenticationService;
-import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.mongo.MongoProperty;
 
@@ -15,10 +15,13 @@ import java.util.stream.Collectors;
 
 public class PasswordAuthenticationService implements AuthenticationService {
     @Inject
-    Repository<User> users;
+    UserRepository users;
 
     //TODO: load configuration by injection
-    private final Object configuration;
+    private Object configuration;
+
+    PasswordAuthenticationService() {
+    }
 
     public PasswordAuthenticationService(Object configuration) {
         this.configuration = configuration;

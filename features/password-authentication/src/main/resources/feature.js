@@ -1,12 +1,14 @@
 feature('password-authentication')
-    .configuration({
-        identities: ['username'],
-        password: ['password']
-    })
     .user({
         password: {
             required: true,
-            credential: true
+            credential: true,
+            format: {
+                pattern: "\\w{6,16}"
+            }
         }
     })
-    .auth_method('password');
+    .auth('password', {
+        identities: ['username'],
+        password: 'password'
+    });

@@ -1,6 +1,7 @@
 var definition = {};
 var feature_name = '';
 var request_definitions = {};
+var auth_methods = {};
 
 function Record() {
     var target = this;
@@ -32,6 +33,11 @@ var feature = function (name) {
 
     this.request = function (type, definition) {
         request_definitions[type] = definition;
+        return target;
+    };
+
+    this.auth = function (method, configuration) {
+        auth_methods[method] = configuration;
         return target;
     };
 

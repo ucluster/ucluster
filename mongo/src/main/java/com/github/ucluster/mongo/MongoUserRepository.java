@@ -1,13 +1,18 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.core.AuthenticationService;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
@@ -18,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MongoUserRepository implements Repository<User> {
+public class MongoUserRepository implements UserRepository {
     @Inject
     protected Datastore datastore;
 
@@ -92,6 +97,22 @@ public class MongoUserRepository implements Repository<User> {
 
         injector.injectMembers(user);
         return Optional.of(user);
+    }
+
+    @Override
+    public User authenticate(Map<String, Object> request) {
+        try {
+            final AuthenticationService service = injector.getInstance(Key.get(new TypeLiteral<AuthenticationService>() {
+            }, Names.named(getAuthMethod(request))));
+
+            return service.authenticate(request);
+        } catch (Exception e) {
+            throw new AuthenticationException();
+        }
+    }
+
+    private String getAuthMethod(Map<String, Object> request) {
+        return "authentication." + String.valueOf(request.getOrDefault("method", "password")) + ".method";
     }
 
     private static class CreateUserRequest {
