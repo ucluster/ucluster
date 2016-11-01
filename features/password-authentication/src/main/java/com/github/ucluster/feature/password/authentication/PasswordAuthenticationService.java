@@ -40,6 +40,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
 
     private User findUserByIdentity(Map<String, Object> request) {
         final Optional<User> user = identitiesOfRequest(request).stream()
+                //TODO: hide the MongoProperty, and can be used no matter which kind of db is used
                 .map(identity -> users.findBy(new MongoProperty<>(identity, request.get(identity))))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
