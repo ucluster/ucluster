@@ -1,7 +1,7 @@
 package com.github.ucluster.api;
 
-import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.Page;
 
@@ -23,7 +23,7 @@ import java.util.Map;
 @Path("users")
 public class UsersResource {
     @Inject
-    Repository<User> users;
+    UserRepository users;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
