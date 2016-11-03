@@ -33,7 +33,7 @@ public class ApiTestRunner extends InjectorBasedRunner {
                 if (database != null) {
                     final MongoCollection<Document> dsl = database.getCollection("dsl");
                     if (dsl != null) {
-                        dsl.deleteMany(new Document());
+                        dsl.drop();
                     }
                 }
             }
@@ -50,12 +50,12 @@ public class ApiTestRunner extends InjectorBasedRunner {
                 if (database != null) {
                     final MongoCollection<Document> users = database.getCollection(USERS);
                     if (users != null) {
-                        users.deleteMany(new Document());
+                        users.drop();
                     }
 
                     final MongoCollection<Document> requests = database.getCollection(REQUESTS);
                     if (requests != null) {
-                        requests.deleteMany(new Document());
+                        requests.drop();
                     }
                 }
             }
