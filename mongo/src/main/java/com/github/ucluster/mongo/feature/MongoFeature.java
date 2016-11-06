@@ -2,6 +2,7 @@ package com.github.ucluster.mongo.feature;
 
 import com.github.ucluster.common.definition.DSLCompiler;
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.feature.Feature;
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
@@ -14,7 +15,9 @@ import java.util.Optional;
 
 public class MongoFeature extends MongoDSLScript implements Feature {
     @Inject
-    Injector injector;
+    protected Injector injector;
+
+    protected Map<String, Class<? extends User.Request>> requestBindings = new HashMap<>();
 
     MongoFeature() {
         super();
@@ -46,5 +49,16 @@ public class MongoFeature extends MongoDSLScript implements Feature {
     @Override
     public <D extends Record> Optional<Definition<D>> definition(Class<D> klass, String name, Map<String, Object> configuration) {
         return Optional.ofNullable(DSLCompiler.load_request(injector, script, name));
+    }
+
+    @Override
+    public <D extends Record> Optional<Class<? extends D>> bindingOf(Class<D> klass, String name) {
+        final Class<? extends D> aClass = (Class<? extends D>) requestBindings.get(name);
+        return Optional.ofNullable(aClass);
+    }
+
+    public MongoFeature bind(Class<? extends User.Request> klass, String name) {
+        requestBindings.put(name, klass);
+        return this;
     }
 }

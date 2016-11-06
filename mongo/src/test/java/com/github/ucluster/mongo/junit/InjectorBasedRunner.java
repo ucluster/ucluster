@@ -28,7 +28,6 @@ import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.MongoDefinitionRepository;
 import com.github.ucluster.mongo.feature.MongoFeatureRepository;
-import com.github.ucluster.mongo.request.UpdateNicknameRequest;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -143,9 +142,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
 
                         registerConfirmationService("email").to(new TypeLiteral<EmailConfirmationService>() {
-                        });
-
-                        registerRequestFactory("update_nickname").to(new TypeLiteral<UpdateNicknameRequest>() {
                         });
                     }
 

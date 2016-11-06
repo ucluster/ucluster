@@ -3,19 +3,22 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
+import com.github.ucluster.core.feature.FeatureRepository;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 
 import javax.inject.Inject;
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class MongoRequestFactory implements RequestFactory {
 
     @Inject
-    Injector injector;
+    protected Injector injector;
+
+    @Inject
+    protected FeatureRepository features;
 
     @Override
     public User.Request create(User user, Map<String, Object> request) {
@@ -31,16 +34,19 @@ public class MongoRequestFactory implements RequestFactory {
     }
 
     private Class<? extends User.Request> getRequestClass(User user, Map<String, Object> request) {
-        try {
-            return injector.getInstance(Key.get(new TypeLiteral<User.Request>() {
-            }, Names.named("request." + type(request) + ".class"))).getClass();
-        } catch (Exception e) {
-            throw new RecordTypeNotSupportedException((String) type(request));
-        }
+        //TODO: filter by user metadata
+        final Optional<? extends Class<? extends User.Request>> klass = features.features(new HashMap<>())
+                .stream()
+                .map(feature -> feature.bindingOf(User.Request.class, type(request)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst();
+
+        return klass.orElseThrow(() -> new RecordTypeNotSupportedException(type(request)));
     }
 
-    private Object type(Map<String, Object> request) {
+    private String type(Map<String, Object> request) {
         final Map<String, Object> metadata = (Map<String, Object>) request.get("metadata");
-        return metadata.get("type");
+        return (String) metadata.get("type");
     }
 }
