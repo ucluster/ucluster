@@ -2,25 +2,32 @@ package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.common.definition.DSLCompiler;
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
+import com.github.ucluster.core.feature.FeatureRepository;
 import com.github.ucluster.mongo.Constants;
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
 import com.google.inject.Injector;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MongoDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
     @Inject
-    Injector injector;
+    protected Injector injector;
 
     @Inject
     protected Datastore datastore;
+
+    @Inject
+    protected FeatureRepository features;
 
     @Override
     public Definition<T> find(Map<String, Object> metadata) {
@@ -55,29 +62,30 @@ public class MongoDefinitionRepository<T extends Record> implements DefinitionRe
     }
 
     private List<Definition<T>> load_user_feature_enhanced_definition(String userType) {
-        return datastore.createQuery(MongoDSLScript.class)
-                .field("userType").equal(userType)
-                .field("scriptType").equal("feature")
-                .asList()
+        final Map<String, Object> metadata = new HashMap<>();
+        metadata.put("user_type", userType);
+
+        return features.features(metadata)
                 .stream()
-                .map(script -> (Definition<T>) DSLCompiler.load_user(injector, script.script()))
+                .map(feature -> feature.definition(User.class))
+                .filter(Optional::isPresent)
+                .map(op -> (Definition<T>) op.get())
                 .collect(Collectors.toList());
     }
 
     private Definition<T> load_request_definition(String userType, String type) {
-        final List<MongoDSLScript> scripts = datastore.createQuery(MongoDSLScript.class)
-                .field("userType").equal(userType)
-                .field("scriptType").equal("feature")
-                .asList();
+        final Map<String, Object> metadata = new HashMap<>();
+        metadata.put("user_type", userType);
+        metadata.put("type", type);
 
-        for (MongoDSLScript script : scripts) {
-            final Definition<T> definition = DSLCompiler.load_request(injector, script.script(), type);
-            if (definition != null) {
-                return definition;
-            }
-        }
+        final Optional<Definition<User.Request>> definition = features.features(metadata)
+                .stream()
+                .map(feature -> feature.definition(User.Request.class, type))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst();
 
-        throw new RecordTypeNotSupportedException(type);
+        return (Definition<T>) definition.orElseThrow(() -> new RecordTypeNotSupportedException(type));
     }
 
     private String target_model(Map<String, Object> metadata) {

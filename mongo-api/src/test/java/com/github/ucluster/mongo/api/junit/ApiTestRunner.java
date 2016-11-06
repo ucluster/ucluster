@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo.api.junit;
 
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
+import com.github.ucluster.mongo.feature.MongoFeature;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -26,7 +27,7 @@ public class ApiTestRunner extends InjectorBasedRunner {
         public void evaluate() throws Throwable {
             try {
                 datastore().save(new MongoDSLScript("user", read("user.js")));
-                datastore().save(new MongoDSLScript("feature", read("feature.js")));
+                datastore().save(new MongoFeature("feature", read("feature.js")));
                 base.evaluate();
             } finally {
                 final MongoDatabase database = mongoClient().getDatabase("ucluster");

@@ -18,6 +18,7 @@ import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
+import com.github.ucluster.core.feature.FeatureRepository;
 import com.github.ucluster.feature.password.authentication.PasswordAuthenticationService;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
@@ -25,6 +26,7 @@ import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.mongo.definition.MongoDefinitionRepository;
+import com.github.ucluster.mongo.feature.MongoFeatureRepository;
 import com.github.ucluster.session.Session;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -148,6 +150,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
                         }).to(new TypeLiteral<MongoDefinitionRepository<User.Request>>() {
                         });
+
+                        bind(FeatureRepository.class).to(MongoFeatureRepository.class);
                     }
 
                     private LinkedBindingBuilder<Record.Property.Concern> registerConcern(String type) {

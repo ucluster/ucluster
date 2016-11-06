@@ -19,7 +19,7 @@ public class MongoDSLScript {
     @Property
     protected String script;
 
-    MongoDSLScript() {
+    protected MongoDSLScript() {
     }
 
     public MongoDSLScript(String userType, String scriptType, String script) {
