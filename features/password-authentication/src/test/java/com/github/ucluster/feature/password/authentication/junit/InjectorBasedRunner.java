@@ -15,6 +15,9 @@ import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.Authentication;
+import com.github.ucluster.core.authentication.AuthenticationRepository;
+import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -22,6 +25,8 @@ import com.github.ucluster.core.feature.FeatureRepository;
 import com.github.ucluster.feature.password.authentication.PasswordAuthenticationService;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
+import com.github.ucluster.mongo.authentication.MongoAuthenticationRepository;
+import com.github.ucluster.mongo.authentication.MongoAuthenticationServiceRegistry;
 import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
@@ -117,6 +122,9 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         bind(RequestFactory.class).to(MongoRequestFactory.class);
 
+                        bind(AuthenticationServiceRegistry.class).to(MongoAuthenticationServiceRegistry.class);
+                        bind(AuthenticationRepository.class).to(MongoAuthenticationRepository.class);
+
                         bindDefinitionRepositories();
 
                         bind(ConfigurationRepository.class).to(MongoConfigurationRepository.class);
@@ -149,6 +157,10 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         bind(new TypeLiteral<DefinitionRepository<Definition<User.Request>>>() {
                         }).to(new TypeLiteral<MongoDefinitionRepository<User.Request>>() {
+                        });
+
+                        bind(new TypeLiteral<DefinitionRepository<Definition<Authentication>>>() {
+                        }).to(new TypeLiteral<MongoDefinitionRepository<Authentication>>() {
                         });
 
                         bind(FeatureRepository.class).to(MongoFeatureRepository.class);

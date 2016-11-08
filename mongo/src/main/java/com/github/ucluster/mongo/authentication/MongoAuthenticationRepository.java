@@ -45,6 +45,6 @@ public class MongoAuthenticationRepository implements AuthenticationRepository {
 
     private String methodOf(Map<String, Object> request) {
         Map<String, Object> metadata = (Map<String, Object>) request.get("metadata");
-        return (String) metadata.get("method");
+        return (String) metadata.getOrDefault("method", "password");
     }
 }
