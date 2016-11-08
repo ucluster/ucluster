@@ -3,7 +3,7 @@ package com.github.ucluster.mongo.api;
 import com.github.ucluster.mongo.api.junit.ApiSupport;
 import com.github.ucluster.mongo.api.junit.ApiTestRunner;
 import com.github.ucluster.test.framework.json.JsonContext;
-import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
+import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class RequestsResourceTest extends ApiSupport {
     public void setUp() throws Exception {
         super.setUp();
         userPath = post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("nickname", "kiwinickname")

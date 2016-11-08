@@ -1,5 +1,6 @@
 package com.github.ucluster.common.definition;
 
+import com.github.ucluster.core.authentication.Authentication;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
@@ -55,6 +56,10 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                         return false;
                     }
 
+                    if (record instanceof Authentication) {
+                        return false;
+                    }
+
                     return true;
                 })
                 .map(path -> propertyDefinitions.get(path))
@@ -95,6 +100,10 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
         for (String path : mergePaths(record, propertyPaths)) {
             //TODO: for request to store status
             if (record instanceof User.Request && path.equals("status")) {
+                continue;
+            }
+
+            if (record instanceof Authentication) {
                 continue;
             }
 

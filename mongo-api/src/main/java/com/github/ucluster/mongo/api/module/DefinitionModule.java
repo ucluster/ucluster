@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo.api.module;
 
+import com.github.ucluster.core.authentication.Authentication;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -12,6 +13,10 @@ import com.google.inject.TypeLiteral;
 public class DefinitionModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(new TypeLiteral<DefinitionRepository<Definition<Authentication>>>() {
+        }).to(new TypeLiteral<MongoDefinitionRepository<Authentication>>() {
+        });
+
         bind(new TypeLiteral<DefinitionRepository<Definition<User>>>() {
         }).to(new TypeLiteral<MongoDefinitionRepository<User>>() {
         });

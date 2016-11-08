@@ -3,7 +3,7 @@ package com.github.ucluster.feature.password.authentication;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
-import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
+import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,7 +24,7 @@ public class PasswordAuthenticationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")

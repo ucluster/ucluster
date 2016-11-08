@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.common.definition.DSLCompiler;
+import com.github.ucluster.common.definition.DefaultRecordDefinition;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
@@ -19,6 +20,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 public class MongoDefinitionRepository<T extends Record> implements DefinitionRepository<Definition<T>> {
     @Inject
     protected Injector injector;
@@ -34,9 +37,12 @@ public class MongoDefinitionRepository<T extends Record> implements DefinitionRe
         //TODO: refactor implementation
         if (target_model(metadata).equals(Constants.Record.USER)) {
             return load_user_definition(user_type(metadata));
+        } else if (target_model(metadata).equals(Constants.Record.AUTHENTICATION)) {
+            return new DefaultRecordDefinition<>(newArrayList());
         } else {
             return load_request_definition(user_type(metadata), type(metadata));
         }
+
     }
 
     private Definition<T> load_user_definition(String userType) {

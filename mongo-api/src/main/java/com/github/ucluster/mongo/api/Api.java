@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo.api;
 
+import com.github.ucluster.mongo.api.module.AuthenticationModule;
 import com.github.ucluster.mongo.api.module.ConcernModule;
 import com.github.ucluster.mongo.api.module.ConfirmModule;
 import com.github.ucluster.mongo.api.module.DefinitionModule;
@@ -47,7 +48,8 @@ public class Api extends ResourceConfig {
                             new SessionModule(),
                             new MongoModule(),
                             new ConfirmModule(),
-                            new DomainModule()
+                            new DomainModule(),
+                            new AuthenticationModule()
                     ).with(overrideModules())
             );
 

@@ -23,7 +23,7 @@ public class MongoConfigurationRepository implements ConfigurationRepository {
 
         for (MongoDSLScript script : scripts) {
             final Map<String, Object> definition = DSLCompiler.load_auth_config(script.script(), type(metadata));
-            if (definition != null) {
+            if (definition != null && definition.size() != 0) {
                 return definition;
             }
         }

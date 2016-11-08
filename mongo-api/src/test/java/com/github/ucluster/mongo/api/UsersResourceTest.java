@@ -3,7 +3,7 @@ package com.github.ucluster.mongo.api;
 import com.github.ucluster.mongo.api.junit.ApiSupport;
 import com.github.ucluster.mongo.api.junit.ApiTestRunner;
 import com.github.ucluster.test.framework.json.JsonContext;
-import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
+import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_create_user() {
         final Response response = post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("nickname", "kiwinickname")
@@ -35,7 +35,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_failed_to_create_user_with_duplicate_identity_property() {
         post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("password", "password")
@@ -44,7 +44,7 @@ public class UsersResourceTest extends ApiSupport {
         );
 
         final Response response = post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("password", "password")
@@ -64,7 +64,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_failed_to_create_user_with_illegal_property() {
         final Response response = post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "k")
                                 .put("password", "p")
@@ -87,7 +87,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_failed_to_create_user_with_not_suppported_type() {
         final Response response = post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .metadata(ImmutableMap.<String, Object>builder()
                                 .put("type", "unsupported")
                                 .build())
@@ -110,7 +110,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_get_user() {
         final Response createdResponse = post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("nickname", "kiwinickname")
@@ -146,7 +146,7 @@ public class UsersResourceTest extends ApiSupport {
     @Test
     public void should_get_users() {
         final Response createdResponse = post("users",
-                CreateUserRequestBuilder.of()
+                RequestBuilder.of()
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
                                 .put("nickname", "kiwinickname")

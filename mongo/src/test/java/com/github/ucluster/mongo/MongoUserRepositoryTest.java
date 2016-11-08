@@ -7,7 +7,7 @@ import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.github.ucluster.session.Session;
-import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
+import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -47,7 +47,7 @@ public class MongoUserRepositoryTest {
     public void setUp() throws Exception {
         session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -67,7 +67,7 @@ public class MongoUserRepositoryTest {
                 (path, type) -> path.equals("username") && type.equals("format")
         );
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")
@@ -83,7 +83,7 @@ public class MongoUserRepositoryTest {
                 (path, type) -> path.equals("username") && type.equals("required")
         );
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("password", "password")
                         .build())
@@ -96,7 +96,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_when_type_not_supported() {
         thrown.expect(RecordTypeNotSupportedException.class);
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("type", "not_supported")
                         .build())
@@ -113,7 +113,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_when_confirmation_required_but_code_not_match() throws Exception {
         capture(thrown).errors(((path, type) -> path.equals("email") && type.equals("confirm")));
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "not_match_1102")
                         .build())
@@ -182,7 +182,7 @@ public class MongoUserRepositoryTest {
     public void should_find_all_users() {
         for (int count = 0; count < 10; count++) {
             session.set("confirm:kiwi.swhite.coder@gmail.com" + count, "3102");
-            users.create(CreateUserRequestBuilder.of()
+            users.create(RequestBuilder.of()
                     .metadata(ImmutableMap.<String, Object>builder()
                             .put("token", "3102")
                             .build())
@@ -202,7 +202,7 @@ public class MongoUserRepositoryTest {
     public void should_find_by_criteria() {
         for (int count = 0; count < 10; count++) {
             session.set("confirm:kiwi.swhite.coder@gmail.com" + count, "3102");
-            users.create(CreateUserRequestBuilder.of()
+            users.create(RequestBuilder.of()
                     .metadata(ImmutableMap.<String, Object>builder()
                             .put("token", "3102")
                             .build())

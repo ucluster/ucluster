@@ -7,7 +7,7 @@ import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.github.ucluster.session.Session;
-import com.github.ucluster.test.framework.request.CreateUserRequestBuilder;
+import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,7 +41,7 @@ public class MongoUserTest {
     public void setUp() throws Exception {
         session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -112,7 +112,7 @@ public class MongoUserTest {
     public void should_not_get_requests_from_other_users() {
         session.set("confirm:kiwiwin@qq1.com", "3102");
 
-        final Map<String, Object> request = CreateUserRequestBuilder.of()
+        final Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())

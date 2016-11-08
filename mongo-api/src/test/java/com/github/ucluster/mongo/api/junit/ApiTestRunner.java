@@ -29,6 +29,7 @@ public class ApiTestRunner extends InjectorBasedRunner {
             try {
                 datastore().save(new MongoDSLScript("user", read("user.js")));
                 datastore().save(new MongoFeature("feature", read("feature.js")).bind(UpdateNicknameRequest.class, "update_nickname"));
+                datastore().save(new MongoFeature("feature", read("auth.js")));
                 base.evaluate();
             } finally {
                 final MongoDatabase database = mongoClient().getDatabase("ucluster");

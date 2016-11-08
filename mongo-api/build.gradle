@@ -1,6 +1,7 @@
 dependencies {
     compile project(":api")
     compile project(":mongo")
+    compile project(":features:password-authentication")
 
     compile "org.glassfish.hk2:guice-bridge:$guice_bridge"
 
