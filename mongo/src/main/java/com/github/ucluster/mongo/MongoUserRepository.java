@@ -1,11 +1,8 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.configuration.ConfigurationRepository;
-import com.github.ucluster.core.definition.Definition;
-import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.google.inject.Injector;
@@ -19,15 +16,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MongoUserRepository implements UserRepository {
+public class MongoUserRepository implements Repository<User> {
     @Inject
     protected Datastore datastore;
-
-    @Inject
-    protected DefinitionRepository<Definition<User>> definitions;
-
-    @Inject
-    protected ConfigurationRepository configurations;
 
     @Inject
     protected Injector injector;

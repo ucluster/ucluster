@@ -1,6 +1,7 @@
 package com.github.ucluster.feature.password.authentication;
 
-import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.Repository;
+import com.github.ucluster.core.User;
 import com.github.ucluster.core.authentication.Authentication;
 import com.github.ucluster.core.authentication.AuthenticationRepository;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(UClusterFeatureTestRunner.class)
 public class PasswordAuthenticationServiceTest {
     @Inject
-    UserRepository users;
+    Repository<User> users;
 
     @Inject
     AuthenticationRepository auth;
