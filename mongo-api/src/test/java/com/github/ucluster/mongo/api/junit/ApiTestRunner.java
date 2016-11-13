@@ -14,6 +14,7 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.ucluster.mongo.Constants.Collection.AUTHENTICATIONS;
 import static com.github.ucluster.mongo.Constants.Collection.REQUESTS;
 import static com.github.ucluster.mongo.Constants.Collection.USERS;
 import static com.github.ucluster.mongo.api.util.ResourceReader.read;
@@ -59,6 +60,11 @@ public class ApiTestRunner extends InjectorBasedRunner {
                     final MongoCollection<Document> requests = database.getCollection(REQUESTS);
                     if (requests != null) {
                         requests.drop();
+                    }
+
+                    final MongoCollection<Document> authenticationRequests = database.getCollection(AUTHENTICATIONS);
+                    if (authenticationRequests != null) {
+                        authenticationRequests.drop();
                     }
                 }
             }
