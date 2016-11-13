@@ -3,6 +3,7 @@ package com.github.ucluster.mongo.authentication;
 import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.mongo.Model;
 import com.github.ucluster.mongo.MongoRecord;
+import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 
 import java.util.Map;
@@ -15,6 +16,7 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
 
     private String method;
 
+    @Embedded
     private AuthenticationResponse response;
 
     MongoAuthenticationRequest() {

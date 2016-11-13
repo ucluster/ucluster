@@ -40,14 +40,14 @@ public class PasswordAuthenticationService implements AuthenticationService {
             return fail(Optional.empty());
         }
 
-        if (ensurePasswordMatched(request, user.get())) {
+        if (passwordMatched(request, user.get())) {
             return success(user);
         }
 
         return fail(user);
     }
 
-    private boolean ensurePasswordMatched(AuthenticationRequest request, User user) {
+    private boolean passwordMatched(AuthenticationRequest request, User user) {
         final String storedPassword = String.valueOf(user.property(passwordProperty()).get().value());
         return Encryption.BCRYPT.check(String.valueOf(request.property("password").get().value()), storedPassword);
     }
