@@ -1,11 +1,11 @@
 package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.common.concern.Encryption;
-import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.mongo.MongoProperty;
 
 import javax.inject.Inject;
@@ -49,7 +49,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
 
     private boolean passwordMatched(AuthenticationRequest request, User user) {
         final String storedPassword = String.valueOf(user.property(passwordProperty()).get().value());
-        return Encryption.BCRYPT.check(String.valueOf(request.property("password").get().value()), storedPassword);
+        return Encryption.BCRYPT.check(String.valueOf(request.property(passwordProperty()).get().value()), storedPassword);
     }
 
     private Optional<User> findUserByIdentity(AuthenticationRequest request) {
