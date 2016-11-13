@@ -4,7 +4,8 @@ import com.github.ucluster.common.concern.Encryption;
 import com.github.ucluster.core.AuthenticationService;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.exception.AuthenticationException;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
+import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;
 import com.github.ucluster.mongo.MongoProperty;
 
 import javax.inject.Inject;
@@ -12,6 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.FAILED;
+import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.SUCCEEDED;
+import static com.github.ucluster.feature.password.authentication.PasswordAuthenticationService.PasswordAuthenticationResponse.fail;
+import static com.github.ucluster.feature.password.authentication.PasswordAuthenticationService.PasswordAuthenticationResponse.success;
 
 public class PasswordAuthenticationService implements AuthenticationService {
     @Inject
@@ -27,32 +33,32 @@ public class PasswordAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public User authenticate(Map<String, Object> request) {
-        final User user = findUserByIdentity(request);
-        ensurePasswordMatched(request, user);
-        return user;
-    }
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        final Optional<User> user = findUserByIdentity(request);
 
-    private void ensurePasswordMatched(Map<String, Object> request, User user) {
-        final String storedPassword = String.valueOf(user.property(passwordProperty()).get().value());
-        if (!Encryption.BCRYPT.check(String.valueOf(request.get("password")), storedPassword)) {
-            throw new AuthenticationException();
+        if (!user.isPresent()) {
+            return fail(Optional.empty());
         }
+
+        if (ensurePasswordMatched(request, user.get())) {
+            return success(user);
+        }
+
+        return fail(user);
     }
 
-    private User findUserByIdentity(Map<String, Object> request) {
-        final Optional<User> user = identitiesOfRequest(request).stream()
+    private boolean ensurePasswordMatched(AuthenticationRequest request, User user) {
+        final String storedPassword = String.valueOf(user.property(passwordProperty()).get().value());
+        return Encryption.BCRYPT.check(String.valueOf(request.property("password").get().value()), storedPassword);
+    }
+
+    private Optional<User> findUserByIdentity(AuthenticationRequest request) {
+        return identitiesOfRequest(request).stream()
                 //TODO: hide the MongoProperty, and can be used no matter which kind of db is used
-                .map(identity -> users.findBy(new MongoProperty<>(identity, request.get(identity))))
+                .map(identity -> users.findBy(new MongoProperty<>(identity, request.property(identity).get().value())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findFirst();
-
-        if (!user.isPresent()) {
-            throw new AuthenticationException();
-        }
-
-        return user.get();
     }
 
     private List<String> identityProperties() {
@@ -63,9 +69,37 @@ public class PasswordAuthenticationService implements AuthenticationService {
         return (String) ((Map<String, Object>) configuration).get("password");
     }
 
-    private List<String> identitiesOfRequest(Map<String, Object> request) {
+    private List<String> identitiesOfRequest(AuthenticationRequest request) {
         return identityProperties().stream()
-                .filter(request::containsKey)
+                .filter(property -> request.property(property).isPresent())
                 .collect(Collectors.toList());
+    }
+
+    static class PasswordAuthenticationResponse implements AuthenticationResponse {
+        private Status status = FAILED;
+        private Optional<User> user = Optional.empty();
+
+        public PasswordAuthenticationResponse(Optional<User> user, Status status) {
+            this.user = user;
+            this.status = status;
+        }
+
+        static PasswordAuthenticationResponse success(Optional<User> user) {
+            return new PasswordAuthenticationResponse(user, SUCCEEDED);
+        }
+
+        static PasswordAuthenticationResponse fail(Optional<User> user) {
+            return new PasswordAuthenticationResponse(user, FAILED);
+        }
+
+        @Override
+        public Status status() {
+            return status;
+        }
+
+        @Override
+        public Optional<User> candidate() {
+            return user;
+        }
     }
 }

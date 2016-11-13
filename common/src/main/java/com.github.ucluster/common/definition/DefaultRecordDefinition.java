@@ -1,8 +1,8 @@
 package com.github.ucluster.common.definition;
 
-import com.github.ucluster.core.authentication.Authentication;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.EffectResult;
 import com.github.ucluster.core.exception.ConcernEffectException;
@@ -56,7 +56,7 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                         return false;
                     }
 
-                    if (record instanceof Authentication) {
+                    if (record instanceof AuthenticationRequest) {
                         return false;
                     }
 
@@ -103,7 +103,7 @@ public class DefaultRecordDefinition<T extends Record> implements Definition<T> 
                 continue;
             }
 
-            if (record instanceof Authentication) {
+            if (record instanceof AuthenticationRequest) {
                 continue;
             }
 

@@ -1,8 +1,8 @@
 package com.github.ucluster.core;
 
-import java.util.Map;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
+import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;
 
 public interface AuthenticationService {
-
-    User authenticate(Map<String, Object> request);
+    AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
 }

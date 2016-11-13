@@ -34,28 +34,35 @@ public class AuthenticationsResourceTest extends ApiSupport {
 
     @Test
     public void should_authenticate_use_username_and_password() throws Exception {
-        Response response = post("authentications", ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.of(
-                        "type", "authentication",
-                        "method", "password",
-                        "model", "authentication"))
-                .put("username", "kiwiwin")
-                .put("password", "password")
-                .build()
-        );
+
+        Response response = post("authentications", RequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("type", "authentication")
+                        .put("method", "password")
+                        .put("model", "authentication")
+                        .build())
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("username", "kiwiwin")
+                        .put("password", "password")
+                        .build())
+                .get());
+
         assertThat(response.getStatus(), is(200));
     }
 
     @Test
     public void should_authenticate_fail_use_username_and_password() throws Exception {
-        Response response = post("authentications", ImmutableMap.<String, Object>builder()
-                .put("metadata", ImmutableMap.of(
-                        "type", "authentication",
-                        "method", "password",
-                        "model", "authentication"))
-                .put("username", "kiwiwin")
-                .put("password", "wrong")
-                .build()
+        Response response = post("authentications", RequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("type", "authentication")
+                        .put("method", "password")
+                        .put("model", "authentication")
+                        .build())
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("username", "kiwiwin")
+                        .put("password", "wrongpassword")
+                        .build())
+                .get()
         );
         assertThat(response.getStatus(), is(401));
     }
