@@ -1,13 +1,19 @@
 package com.github.ucluster.mongo.authentication;
 
 import com.github.ucluster.core.authentication.AuthenticationRequest;
+import com.github.ucluster.core.authentication.AuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
+import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.mongo.Model;
 import com.github.ucluster.mongo.MongoRecord;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Transient;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.github.ucluster.mongo.Constants.Collection.AUTHENTICATIONS;
 import static com.google.common.collect.Maps.newHashMap;
@@ -16,6 +22,10 @@ import static com.google.common.collect.Maps.newHashMap;
 public class MongoAuthenticationRequest extends MongoRecord<AuthenticationRequest> implements AuthenticationRequest, Model {
 
     private String method;
+
+    @Inject
+    @Transient
+    AuthenticationServiceRegistry registry;
 
     @Embedded
     private AuthenticationResponse response;
@@ -32,8 +42,18 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
     }
 
     @Override
-    public void response(AuthenticationResponse response) {
-       this.response = response;
+    public AuthenticationResponse execute() {
+        Optional<AuthenticationService> service = registry.find(method);
+
+        if (!service.isPresent()) {
+            throw new AuthenticationException();
+        }
+
+        AuthenticationResponse response = service.get().authenticate(this);
+
+        audit(response);
+
+        return response;
     }
 
     private void setMethod(Map<String, Object> request) {
@@ -54,5 +74,10 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
         properties.entrySet().forEach(entry -> {
             property(entry.getKey(), entry.getValue());
         });
+    }
+
+    private void audit(AuthenticationResponse response) {
+        this.response = response;
+        save();
     }
 }

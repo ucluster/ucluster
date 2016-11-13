@@ -2,8 +2,8 @@ package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.AuthenticationRepository;
 import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;
+import com.github.ucluster.core.authentication.AuthenticationRequestFactory;
 import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -29,7 +29,7 @@ public class PasswordAuthenticationServiceTest {
     Repository<User> users;
 
     @Inject
-    AuthenticationRepository auth;
+    AuthenticationRequestFactory requestFactory;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -61,7 +61,7 @@ public class PasswordAuthenticationServiceTest {
                 .get();
 
 
-        AuthenticationResponse response = auth.authenticate(request);
+        AuthenticationResponse response = requestFactory.create(request).execute();
 
         assertThat(response.status(), is(SUCCEEDED));
         assertThat(response.candidate().isPresent(), is(true));
@@ -82,7 +82,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        AuthenticationResponse response = auth.authenticate(request);
+        AuthenticationResponse response = requestFactory.create(request).execute();
 
         assertThat(response.status(), is(FAILED));
         assertThat(response.candidate(), is(Optional.empty()));
@@ -102,7 +102,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        AuthenticationResponse response = auth.authenticate(request);
+        AuthenticationResponse response = requestFactory.create(request).execute();
 
         assertThat(response.status(), is(FAILED));
         assertThat(response.candidate().isPresent(), is(true));
@@ -125,6 +125,6 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        auth.authenticate(request);
+        requestFactory.create(request).execute();
     }
 }

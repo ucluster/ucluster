@@ -1,7 +1,8 @@
 package com.github.ucluster.api;
 
-import com.github.ucluster.core.authentication.AuthenticationRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;
+import com.github.ucluster.core.authentication.AuthenticationRequestFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -17,12 +18,13 @@ import static com.github.ucluster.core.authentication.AuthenticationRequest.Auth
 public class AuthenticationsResource {
 
     @Inject
-    AuthenticationRepository authenticationRepository;
+    AuthenticationRequestFactory authenticationRequestFactory;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response authenticate(Map<String, Object> request) {
-        AuthenticationResponse response = authenticationRepository.authenticate(request);
+        AuthenticationRequest authenticationRequest = authenticationRequestFactory.create(request);
+        AuthenticationResponse response = authenticationRequest.execute();
 
         if (response.status() == SUCCEEDED) {
             return Response.ok().build();

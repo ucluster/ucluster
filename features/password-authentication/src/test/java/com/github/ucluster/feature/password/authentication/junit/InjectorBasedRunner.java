@@ -9,14 +9,13 @@ import com.github.ucluster.common.concern.ImmutableConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.common.concern.TransientConcern;
 import com.github.ucluster.confirmation.ConfirmationRegistry;
-import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.AuthenticationRepository;
 import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationRequestFactory;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.github.ucluster.core.definition.Definition;
@@ -25,7 +24,6 @@ import com.github.ucluster.core.feature.FeatureRepository;
 import com.github.ucluster.feature.password.authentication.PasswordAuthenticationService;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.authentication.MongoAuthenticationRepository;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationRequestFactory;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationServiceRegistry;
 import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
@@ -123,7 +121,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(RequestFactory.class).to(MongoRequestFactory.class);
 
                         bind(AuthenticationServiceRegistry.class).to(MongoAuthenticationServiceRegistry.class);
-                        bind(AuthenticationRepository.class).to(MongoAuthenticationRepository.class);
 
                         bindDefinitionRepositories();
 

@@ -9,7 +9,7 @@ public interface AuthenticationRequest extends Record {
 
     String method();
 
-    void response(AuthenticationResponse response);
+    AuthenticationResponse execute();
 
     interface AuthenticationResponse {
 
