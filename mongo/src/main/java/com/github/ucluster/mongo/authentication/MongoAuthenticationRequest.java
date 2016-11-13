@@ -6,6 +6,7 @@ import com.github.ucluster.mongo.MongoRecord;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.ucluster.mongo.Constants.Collection.AUTHENTICATIONS;
@@ -45,7 +46,11 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
     }
 
     private void loadMetadata(Map<String, Object> request) {
-        this.metadata = (Map<String, Object>) request.getOrDefault("metadata", newHashMap());
+        Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", newHashMap());
+        metadata = new HashMap<>(metadata);
+        metadata.put("type", "authentication");
+        metadata.put("model", "authentication");
+        this.metadata = metadata;
     }
 
     private void loadProperties(Map<String, Object> request) {

@@ -37,9 +37,7 @@ public class AuthenticationsResourceTest extends ApiSupport {
 
         Response response = post("authentications", RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
                         .put("method", "password")
-                        .put("model", "authentication")
                         .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
@@ -54,9 +52,7 @@ public class AuthenticationsResourceTest extends ApiSupport {
     public void should_authenticate_fail_use_username_and_password() throws Exception {
         Response response = post("authentications", RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
                         .put("method", "password")
-                        .put("model", "authentication")
                         .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")

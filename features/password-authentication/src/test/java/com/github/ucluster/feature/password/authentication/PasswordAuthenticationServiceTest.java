@@ -51,7 +51,6 @@ public class PasswordAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
                         .put("method", "password")
                         .build()
                 )
@@ -74,7 +73,6 @@ public class PasswordAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
                         .put("method", "password")
                         .build()
                 )
@@ -95,7 +93,6 @@ public class PasswordAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
                         .put("method", "password")
                         .build()
                 )
@@ -119,7 +116,6 @@ public class PasswordAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("type", "authentication")
                         .put("method", "nomethod")
                         .build()
                 )
