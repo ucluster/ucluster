@@ -15,7 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
-import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.SUCCEEDED;
+import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.FAILED;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @Path("authentications")
 public class AuthenticationsResource {
@@ -29,11 +30,11 @@ public class AuthenticationsResource {
         AuthenticationRequest authenticationRequest = authenticationRequestFactory.create(request);
         AuthenticationResponse response = authenticationRequest.execute();
 
-        if (response.status() == SUCCEEDED) {
-            return Response.ok(issueToken(response)).build();
+        if (response.status() == FAILED) {
+            return Response.status(UNAUTHORIZED).build();
         }
 
-        return Response.status(401).build();
+        return Response.ok(issueToken(response)).build();
     }
 
     private String issueToken(AuthenticationResponse response) {
