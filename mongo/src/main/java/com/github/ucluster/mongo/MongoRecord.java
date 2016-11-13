@@ -1,6 +1,5 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.confirmation.ConfirmationRegistry;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -52,10 +51,6 @@ public class MongoRecord<T extends Record> implements Record, Model {
     @Inject
     @Transient
     protected Injector injector;
-
-    @Inject
-    @Transient
-    protected ConfirmationRegistry registry;
 
     @Override
     public String uuid() {
