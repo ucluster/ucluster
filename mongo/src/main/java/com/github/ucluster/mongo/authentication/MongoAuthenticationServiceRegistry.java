@@ -1,6 +1,6 @@
 package com.github.ucluster.mongo.authentication;
 
-import com.github.ucluster.core.AuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.google.common.collect.ImmutableMap;

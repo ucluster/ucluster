@@ -1,6 +1,6 @@
 package com.github.ucluster.mongo.authentication;
 
-import com.github.ucluster.core.AuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationRepository;
 import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;

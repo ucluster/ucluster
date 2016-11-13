@@ -1,7 +1,7 @@
 package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.common.concern.Encryption;
-import com.github.ucluster.core.AuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.authentication.AuthenticationRequest;

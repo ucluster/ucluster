@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo.api.module;
 
 import com.github.ucluster.core.authentication.AuthenticationRepository;
-import com.github.ucluster.core.AuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationRequestFactory;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.feature.password.authentication.PasswordAuthenticationService;

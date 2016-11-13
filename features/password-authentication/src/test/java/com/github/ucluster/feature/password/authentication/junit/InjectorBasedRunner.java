@@ -9,7 +9,7 @@ import com.github.ucluster.common.concern.ImmutableConcern;
 import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.common.concern.TransientConcern;
 import com.github.ucluster.confirmation.ConfirmationRegistry;
-import com.github.ucluster.core.AuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
