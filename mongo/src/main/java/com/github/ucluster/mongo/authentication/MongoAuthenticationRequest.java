@@ -20,10 +20,6 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
     @Embedded
     private AuthenticationResponse response;
 
-    MongoAuthenticationRequest() {
-
-    }
-
     public MongoAuthenticationRequest(Map<String, Object> request) {
         setMethod(request);
         loadMetadata(request);
