@@ -37,11 +37,6 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
     }
 
     @Override
-    public String method() {
-        return this.method;
-    }
-
-    @Override
     public AuthenticationResponse execute() {
         Optional<AuthenticationService> service = registry.find(method);
 

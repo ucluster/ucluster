@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface AuthenticationRequest extends Record {
 
-    String method();
-
     AuthenticationResponse execute();
 
     interface AuthenticationResponse {

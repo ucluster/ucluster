@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo.authentication;
 
 import com.github.ucluster.core.authentication.AuthenticationRequest;
+import com.github.ucluster.core.authentication.AuthenticationRequestFactory;
 import com.github.ucluster.mongo.junit.UClusterTestRunner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertThat;
 public class MongoAuthenticationRequestFactoryTest {
 
     @Inject
-    private MongoAuthenticationRequestFactory factory;
+    private AuthenticationRequestFactory factory;
 
     @Test
     public void should_create_authentication_request_with_correct_method() throws Exception {
@@ -25,7 +26,6 @@ public class MongoAuthenticationRequestFactoryTest {
                 .put("properties", ImmutableMap.of("username", "kiwiwin", "password", "password"))
                 .build());
 
-        assertThat(request.method(), is("password"));
         assertThat(request.property("username").get().value(), is("kiwiwin"));
         assertThat(request.property("password").get().value(), is("password"));
     }
