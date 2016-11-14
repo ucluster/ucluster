@@ -13,8 +13,7 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.AuthenticationRequest;
-import com.github.ucluster.core.authentication.AuthenticationRequestFactory;
+import com.github.ucluster.core.authentication.AuthenticationLog;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
@@ -24,7 +23,7 @@ import com.github.ucluster.core.feature.FeatureRepository;
 import com.github.ucluster.feature.password.authentication.PasswordAuthenticationService;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.authentication.MongoAuthenticationRequestFactory;
+import com.github.ucluster.mongo.authentication.MongoAuthenticationService;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationServiceRegistry;
 import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
@@ -125,7 +124,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bindDefinitionRepositories();
 
                         bind(ConfigurationRepository.class).to(MongoConfigurationRepository.class);
-                        bind(AuthenticationRequestFactory.class).to(MongoAuthenticationRequestFactory.class);
 
                         registerConcern("format").to(new TypeLiteral<FormatConcern>() {
                         });
@@ -146,6 +144,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         registerAuthenticationService("password").to(new TypeLiteral<PasswordAuthenticationService>() {
                         });
+                        registerAuthenticationService("mongo").to(new TypeLiteral<MongoAuthenticationService>() {
+                        });
                     }
 
                     private void bindDefinitionRepositories() {
@@ -157,8 +157,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(new TypeLiteral<MongoDefinitionRepository<User.Request>>() {
                         });
 
-                        bind(new TypeLiteral<DefinitionRepository<Definition<AuthenticationRequest>>>() {
-                        }).to(new TypeLiteral<MongoDefinitionRepository<AuthenticationRequest>>() {
+                        bind(new TypeLiteral<DefinitionRepository<Definition<AuthenticationLog>>>() {
+                        }).to(new TypeLiteral<MongoDefinitionRepository<AuthenticationLog>>() {
                         });
 
                         bind(FeatureRepository.class).to(MongoFeatureRepository.class);

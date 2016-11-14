@@ -3,7 +3,7 @@ package com.github.ucluster.feature.password.authentication;
 import com.github.ucluster.common.concern.Encryption;
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;
+import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.mongo.MongoProperty;
 
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.FAILED;
-import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.SUCCEEDED;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
 import static com.github.ucluster.feature.password.authentication.PasswordAuthenticationService.PasswordAuthenticationResponse.fail;
 import static com.github.ucluster.feature.password.authentication.PasswordAuthenticationService.PasswordAuthenticationResponse.success;
 
@@ -75,7 +75,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
     }
 
     private Map<String, Object> properties(Map<String, Object> request) {
-        return (Map<String, Object>)request.get("properties");
+        return (Map<String, Object>) request.get("properties");
     }
 
     static class PasswordAuthenticationResponse implements AuthenticationResponse {

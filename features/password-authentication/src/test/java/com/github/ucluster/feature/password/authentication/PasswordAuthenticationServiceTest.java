@@ -2,8 +2,8 @@ package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse;
-import com.github.ucluster.core.authentication.AuthenticationRequestFactory;
+import com.github.ucluster.core.authentication.AuthenticationResponse;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -15,11 +15,12 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.FAILED;
-import static com.github.ucluster.core.authentication.AuthenticationRequest.AuthenticationResponse.Status.SUCCEEDED;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -29,7 +30,8 @@ public class PasswordAuthenticationServiceTest {
     Repository<User> users;
 
     @Inject
-    AuthenticationRequestFactory requestFactory;
+    @Named("authentication.mongo.method")
+    AuthenticationService authenticationService;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -61,7 +63,7 @@ public class PasswordAuthenticationServiceTest {
                 .get();
 
 
-        AuthenticationResponse response = requestFactory.create(request).execute();
+        AuthenticationResponse response = authenticationService.authenticate(request);
 
         assertThat(response.status(), is(SUCCEEDED));
         assertThat(response.candidate().isPresent(), is(true));
@@ -82,7 +84,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        AuthenticationResponse response = requestFactory.create(request).execute();
+        AuthenticationResponse response = authenticationService.authenticate(request);
 
         assertThat(response.status(), is(FAILED));
         assertThat(response.candidate(), is(Optional.empty()));
@@ -102,7 +104,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        AuthenticationResponse response = requestFactory.create(request).execute();
+        AuthenticationResponse response = authenticationService.authenticate(request);
 
         assertThat(response.status(), is(FAILED));
         assertThat(response.candidate().isPresent(), is(true));
@@ -125,6 +127,6 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        requestFactory.create(request).execute();
+        authenticationService.authenticate(request);
     }
 }
