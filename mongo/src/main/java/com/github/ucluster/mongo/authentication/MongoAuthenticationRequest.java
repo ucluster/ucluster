@@ -30,7 +30,11 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
     @Embedded
     private AuthenticationResponse response;
 
+    @Transient
+    private Map<String, Object> request;
+
     public MongoAuthenticationRequest(Map<String, Object> request) {
+        this.request = request;
         setMethod(request);
         loadMetadata(request);
         loadProperties(request);
@@ -44,7 +48,7 @@ public class MongoAuthenticationRequest extends MongoRecord<AuthenticationReques
             throw new AuthenticationException();
         }
 
-        AuthenticationResponse response = service.get().authenticate(this);
+        AuthenticationResponse response = service.get().authenticate(request);
 
         audit(response);
 
