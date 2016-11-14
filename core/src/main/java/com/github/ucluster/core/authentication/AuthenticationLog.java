@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface AuthenticationLog extends Record {
     Optional<User> candidate();
+
     Status status();
 }
