@@ -18,6 +18,8 @@ public interface User extends Record {
 
     Token generateToken();
 
+    Optional<Token> currentToken();
+
     interface Token {
         String accessToken();
 

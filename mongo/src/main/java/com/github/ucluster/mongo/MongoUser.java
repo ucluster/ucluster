@@ -83,6 +83,17 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         return createNewToken();
     }
 
+    @Override
+    public Optional<Token> currentToken() {
+        final Optional<Object> o = session.get(Keys.user_token(this));
+
+        if (!o.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new UserToken((Map<String, Object>) o.get()));
+    }
+
     private Token createNewToken() {
         return store(new UserToken(generateRandomToken(), generateRandomToken()));
     }
@@ -91,7 +102,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         session.setex(token.accessToken, super.toJson(), Constants.Token.ACCESS_EXPIRE_SECONDS);
         session.setex(token.refreshToken, ImmutableMap.<String, Object>builder()
                 .put("access_token", token.accessToken)
-                .put("uuid", uuid())
+                .put("id", uuid())
                 .build(), Constants.Token.REFRESH_EXPIRE_SECONDS);
         session.setex(Keys.user_token(this), ImmutableMap.<String, Object>builder()
                 .put("access_token", token.accessToken)
@@ -138,6 +149,11 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     private class UserToken implements User.Token, Model {
         private final String accessToken;
         private final String refreshToken;
+
+        UserToken(Map<String, Object> tokens) {
+            this.accessToken = (String) tokens.get("access_token");
+            this.refreshToken = (String) tokens.get("refresh_token");
+        }
 
         UserToken(String accessToken, String refreshToken) {
             this.accessToken = accessToken;

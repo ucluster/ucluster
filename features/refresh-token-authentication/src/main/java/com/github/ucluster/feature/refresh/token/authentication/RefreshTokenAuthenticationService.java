@@ -19,9 +19,6 @@ import static com.github.ucluster.feature.refresh.token.authentication.RefreshTo
 public class RefreshTokenAuthenticationService implements AuthenticationService {
 
     @Inject
-    Session session;
-
-    @Inject
     private UserRepository users;
 
     public RefreshTokenAuthenticationService() {
@@ -29,29 +26,22 @@ public class RefreshTokenAuthenticationService implements AuthenticationService 
 
     @Override
     public AuthenticationResponse authenticate(Map<String, Object> request) {
-        Optional<Map<String, Object>> refreshToken = refreshTokenInSession(refreshToken(request));
+        final Optional<User> user = users.findByAccessToken(accessToken(request));
 
-        if (!refreshToken.isPresent()) {
+        if (!user.isPresent()) {
             return fail(Optional.empty());
         }
 
-        if (!Objects.equals(refreshToken.get().get("access_token"), accessToken(request))) {
+        final Optional<User.Token> token = user.get().currentToken();
+        if (!token.isPresent()) {
             return fail(Optional.empty());
         }
 
-        Map<String, Object> user = (Map<String, Object>) session.get((String) refreshToken.get().get("access_token")).get();
-
-        return RefreshTokenAuthenticationResponse.success(users.uuid((String) user.get("id")));
-    }
-
-    private Optional<Map<String, Object>> refreshTokenInSession(String refreshToken) {
-        final Optional<Object> json = session.get(refreshToken);
-
-        if (!json.isPresent()) {
-            return Optional.empty();
+        if (!Objects.equals(token.get().refreshToken(), refreshToken(request))) {
+            return fail(Optional.empty());
         }
 
-        return Optional.of((Map<String, Object>) json.get());
+        return RefreshTokenAuthenticationResponse.success(user);
     }
 
     private String refreshToken(Map<String, Object> request) {

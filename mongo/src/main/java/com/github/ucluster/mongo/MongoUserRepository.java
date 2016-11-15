@@ -10,6 +10,7 @@ import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationLog;
+import com.github.ucluster.session.Session;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
@@ -29,6 +30,9 @@ public class MongoUserRepository implements UserRepository {
 
     @Inject
     protected Injector injector;
+
+    @Inject
+    protected Session session;
 
     @Inject
     AuthenticationServiceRegistry registry;
@@ -116,6 +120,17 @@ public class MongoUserRepository implements UserRepository {
         }
 
         return response.candidate();
+    }
+
+    @Override
+    public Optional<User> findByAccessToken(String accessToken) {
+        final Optional<Object> o = session.get(accessToken);
+
+        if (!o.isPresent()) {
+            return Optional.empty();
+        }
+
+        return uuid((String) ((Map<String, Object>) o.get()).get("id"));
     }
 
     private static class CreateUserRequest {
