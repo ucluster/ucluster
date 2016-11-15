@@ -16,7 +16,7 @@ public interface User extends Record {
 
     PaginatedList<Request> requests(Criteria criteria);
 
-    String generateToken();
+    Map<String, Object> generateToken();
 
     interface Request extends Record {
 

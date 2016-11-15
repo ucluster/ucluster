@@ -153,7 +153,7 @@ public class MongoUserRepository implements UserRepository {
     }
 
     private String methodOf(Map<String, Object> request) {
-        Map<String, Object> metadata = (Map<String, Object>) request.get("metadata");
+        Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
         return (String) metadata.getOrDefault("method", "password");
     }
 }

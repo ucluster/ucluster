@@ -4,7 +4,6 @@ import com.github.ucluster.mongo.api.junit.ApiSupport;
 import com.github.ucluster.mongo.api.junit.ApiTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
-import io.jsonwebtoken.Jwts;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import javax.ws.rs.core.Response;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(ApiTestRunner.class)
 public class AuthenticationsResourceTest extends ApiSupport {
@@ -48,7 +46,6 @@ public class AuthenticationsResourceTest extends ApiSupport {
                 .get());
 
         assertThat(response.getStatus(), is(200));
-        assertSignedTokenPresent(response);
     }
 
     @Test
@@ -79,10 +76,5 @@ public class AuthenticationsResourceTest extends ApiSupport {
                 .get()
         );
         assertThat(response.getStatus(), is(401));
-    }
-
-    private void assertSignedTokenPresent(Response response) {
-        String token = response.readEntity(String.class);
-        assertTrue(Jwts.parser().isSigned(token));
     }
 }
