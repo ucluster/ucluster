@@ -1,4 +1,4 @@
-package com.github.ucluster.feature.refresh.token;
+package com.github.ucluster.feature.refresh.token.authentication;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
