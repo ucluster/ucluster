@@ -3,7 +3,6 @@ dependencies {
 
     compile "javax.servlet:javax.servlet-api:$servlet_api"
     compile "javax.ws.rs:javax.ws.rs-api:$jaxrs"
-    compile "io.jsonwebtoken:jjwt:$jjwt"
 
     compile project(':core')
     compile project(':confirmation')
