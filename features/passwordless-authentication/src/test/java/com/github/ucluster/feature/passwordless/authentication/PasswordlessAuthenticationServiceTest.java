@@ -3,6 +3,7 @@ package com.github.ucluster.feature.passwordless.authentication;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.feature.passwordless.authentication.junit.UClusterFeatureTestRunner;
+import com.github.ucluster.mongo.Keys;
 import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.session.Session;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -42,7 +43,7 @@ public class PasswordlessAuthenticationServiceTest {
 
         user = users.findBy(new MongoProperty<>("username", "kiwiwin")).get();
 
-        session.set(user.uuid(), ImmutableMap.of("confirmation_code", "1234"));
+        session.set(Keys.user_code(user), ImmutableMap.of("confirmation_code", "1234"));
     }
 
     @Test

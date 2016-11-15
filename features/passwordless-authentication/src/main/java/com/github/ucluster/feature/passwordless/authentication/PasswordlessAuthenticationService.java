@@ -4,6 +4,7 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
+import com.github.ucluster.mongo.Keys;
 import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.session.Session;
 
@@ -23,7 +24,7 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
     Session session;
 
     private Object configuration;
-    
+
     @Inject
     private UserRepository users;
 
@@ -42,7 +43,7 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
             return fail(Optional.empty());
         }
 
-        Optional<Object> confirmationCode = session.get(user.get().uuid());
+        Optional<Object> confirmationCode = session.get(Keys.user_code(user.get()));
 
         if (!confirmationCode.isPresent()) {
             return fail(Optional.empty());
@@ -68,17 +69,17 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
     private List<String> identityProperties() {
         return (List<String>) ((Map<String, Object>) configuration).get("identities");
     }
-    
+
     private List<String> identitiesOfRequest(Map<String, Object> request) {
         return identityProperties().stream()
                 .filter(properties(request)::containsKey)
                 .collect(Collectors.toList());
     }
-    
+
     private Map<String, Object> properties(Map<String, Object> request) {
         return (Map<String, Object>) request.get("properties");
     }
-    
+
     static class PasswordlessAuthenticationResponse implements AuthenticationResponse {
         private Status status = FAILED;
         private Optional<User> user = Optional.empty();
