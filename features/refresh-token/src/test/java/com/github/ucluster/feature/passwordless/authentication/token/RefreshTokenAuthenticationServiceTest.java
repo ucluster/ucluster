@@ -1,8 +1,8 @@
-package com.github.ucluster.feature.refresh.token;
+package com.github.ucluster.feature.passwordless.authentication.token;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.feature.refresh.token.junit.UClusterFeatureTestRunner;
+import com.github.ucluster.feature.passwordless.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;

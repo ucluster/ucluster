@@ -1,4 +1,4 @@
-package com.github.ucluster.feature.refresh.token.junit;
+package com.github.ucluster.feature.passwordless.authentication.junit;
 
 import com.github.ucluster.common.concern.ConfirmationConcern;
 import com.github.ucluster.common.concern.CredentialConcern;
@@ -20,7 +20,7 @@ import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
 import com.github.ucluster.core.feature.FeatureRepository;
-import com.github.ucluster.feature.refresh.token.RefreshTokenAuthenticationService;
+import com.github.ucluster.feature.passwordless.authentication.PasswordlessAuthenticationService;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationServiceRegistry;
@@ -142,7 +142,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         registerConcern("confirm").to(new TypeLiteral<ConfirmationConcern>() {
                         });
 
-                        registerAuthenticationService("refresh").to(new TypeLiteral<RefreshTokenAuthenticationService>() {
+                        registerAuthenticationService("phone").to(new TypeLiteral<PasswordlessAuthenticationService>() {
                         });
                     }
 

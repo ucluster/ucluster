@@ -1,4 +1,4 @@
-package com.github.ucluster.feature.refresh.token;
+package com.github.ucluster.feature.passwordless.authentication.token;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
 import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
-import static com.github.ucluster.feature.refresh.token.RefreshTokenAuthenticationService.RefreshTokenAuthenticationResponse.fail;
+import static com.github.ucluster.feature.passwordless.authentication.token.RefreshTokenAuthenticationService.RefreshTokenAuthenticationResponse.fail;
 
 public class RefreshTokenAuthenticationService implements AuthenticationService {
     

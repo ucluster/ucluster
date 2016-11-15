@@ -1,4 +1,4 @@
-package com.github.ucluster.feature.refresh.token.junit;
+package com.github.ucluster.feature.passwordless.authentication.junit;
 
 import com.github.ucluster.mongo.dsl.MongoDSLScript;
 import com.github.ucluster.mongo.feature.MongoFeature;
@@ -13,7 +13,7 @@ import redis.clients.jedis.Jedis;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.ucluster.feature.refresh.token.junit.ResourceReader.read;
+import static com.github.ucluster.feature.passwordless.authentication.junit.ResourceReader.read;
 import static com.github.ucluster.mongo.Constants.Collection.REQUESTS;
 import static com.github.ucluster.mongo.Constants.Collection.USERS;
 

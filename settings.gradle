@@ -12,3 +12,4 @@ include 'test-framework'
 
 include 'features:password-authentication'
 include 'features:refresh-token'
+include 'features:passwordless-authentication'
