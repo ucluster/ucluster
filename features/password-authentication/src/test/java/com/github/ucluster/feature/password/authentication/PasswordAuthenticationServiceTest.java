@@ -2,7 +2,8 @@ package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.TokenAuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationResponse;
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -14,9 +15,14 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Map;
+import java.util.Optional;
 
-import static org.junit.Assert.assertNotNull;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(UClusterFeatureTestRunner.class)
 public class PasswordAuthenticationServiceTest {
@@ -24,7 +30,8 @@ public class PasswordAuthenticationServiceTest {
     Repository<User> users;
 
     @Inject
-    TokenAuthenticationService authenticationService;
+    @Named("authentication.mongo.method")
+    AuthenticationService authenticationService;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -56,13 +63,15 @@ public class PasswordAuthenticationServiceTest {
                 .get();
 
 
-        String token = authenticationService.authenticate(request);
-        assertNotNull(token);
+        AuthenticationResponse response = authenticationService.authenticate(request);
+
+        assertThat(response.status(), is(SUCCEEDED));
+        assertThat(response.candidate().isPresent(), is(true));
+        assertThat(response.candidate().get().property("username").get().value(), is("kiwiwin"));
     }
 
     @Test
     public void should_failed_authenticate_user_when_no_identity_matched() {
-        thrown.expect(AuthenticationException.class);
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
@@ -75,13 +84,14 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        authenticationService.authenticate(request);
+        AuthenticationResponse response = authenticationService.authenticate(request);
+
+        assertThat(response.status(), is(FAILED));
+        assertThat(response.candidate(), is(Optional.empty()));
     }
 
     @Test
     public void should_failed_authenticate_user_when_password_not_matched() {
-
-        thrown.expect(AuthenticationException.class);
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
@@ -94,7 +104,11 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        authenticationService.authenticate(request);
+        AuthenticationResponse response = authenticationService.authenticate(request);
+
+        assertThat(response.status(), is(FAILED));
+        assertThat(response.candidate().isPresent(), is(true));
+        assertThat(response.candidate().get().property("username").get().value(), is("kiwiwin"));
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.github.ucluster.feature.password.authentication.junit;
 
-import com.github.ucluster.common.authentication.JWTAuthenticationService;
 import com.github.ucluster.common.concern.ConfirmationConcern;
 import com.github.ucluster.common.concern.CredentialConcern;
 import com.github.ucluster.common.concern.EmailConcern;
@@ -17,7 +16,6 @@ import com.github.ucluster.core.User;
 import com.github.ucluster.core.authentication.AuthenticationLog;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
-import com.github.ucluster.core.authentication.TokenAuthenticationService;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -25,7 +23,7 @@ import com.github.ucluster.core.feature.FeatureRepository;
 import com.github.ucluster.feature.password.authentication.PasswordAuthenticationService;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.authentication.MongoAuthenticationLog;
+import com.github.ucluster.mongo.authentication.MongoAuthenticationService;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationServiceRegistry;
 import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
@@ -127,9 +125,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
 
                         bind(ConfigurationRepository.class).to(MongoConfigurationRepository.class);
 
-                        bind(TokenAuthenticationService.class).to(JWTAuthenticationService.class);
-                        bind(AuthenticationLog.class).to(MongoAuthenticationLog.class);
-
                         registerConcern("format").to(new TypeLiteral<FormatConcern>() {
                         });
                         registerConcern("email").to(new TypeLiteral<EmailConcern>() {
@@ -148,6 +143,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
 
                         registerAuthenticationService("password").to(new TypeLiteral<PasswordAuthenticationService>() {
+                        });
+                        registerAuthenticationService("mongo").to(new TypeLiteral<MongoAuthenticationService>() {
                         });
                     }
 

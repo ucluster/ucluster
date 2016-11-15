@@ -22,10 +22,6 @@ public class MongoAuthenticationLog extends MongoRecord<AuthenticationLog> imple
     @Embedded
     private AuthenticationResponse response;
 
-    MongoAuthenticationLog() {
-
-    }
-
     public MongoAuthenticationLog(Map<String, Object> request, AuthenticationResponse response) {
         this.response = response;
         loadMetadata(request);
