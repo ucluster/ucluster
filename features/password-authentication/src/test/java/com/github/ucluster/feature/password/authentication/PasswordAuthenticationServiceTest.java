@@ -41,7 +41,6 @@ public class PasswordAuthenticationServiceTest {
 
     @Test
     public void should_success_authenticate_user() {
-
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("method", "password")
@@ -62,7 +61,6 @@ public class PasswordAuthenticationServiceTest {
 
     @Test
     public void should_failed_authenticate_user_when_no_identity_matched() {
-
         thrown.expect(AuthenticationException.class);
 
         Map<String, Object> request = RequestBuilder.of()
@@ -99,7 +97,6 @@ public class PasswordAuthenticationServiceTest {
 
     @Test
     public void should_throw_authentication_exception_when_method_not_found() {
-
         thrown.expect(AuthenticationException.class);
 
         Map<String, Object> request = RequestBuilder.of()
