@@ -1,7 +1,6 @@
 package com.github.ucluster.mongo.authentication;
 
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.AuthenticationLog;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationResponse.Status;
 import com.github.ucluster.mongo.Model;
@@ -17,7 +16,7 @@ import static com.github.ucluster.mongo.Constants.Collection.AUTHENTICATIONS;
 import static com.google.common.collect.Maps.newHashMap;
 
 @Entity(AUTHENTICATIONS)
-public class MongoAuthenticationLog extends MongoRecord<AuthenticationLog> implements AuthenticationLog, Model {
+public class MongoAuthenticationLog extends MongoRecord<User.AuthenticationLog> implements User.AuthenticationLog, Model {
 
     @Embedded
     private AuthenticationResponse response;

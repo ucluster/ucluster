@@ -13,7 +13,6 @@ import com.github.ucluster.core.Record;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.authentication.AuthenticationLog;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
@@ -153,8 +152,8 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         }).to(new TypeLiteral<MongoDefinitionRepository<User.Request>>() {
                         });
 
-                        bind(new TypeLiteral<DefinitionRepository<Definition<AuthenticationLog>>>() {
-                        }).to(new TypeLiteral<MongoDefinitionRepository<AuthenticationLog>>() {
+                        bind(new TypeLiteral<DefinitionRepository<Definition<User.AuthenticationLog>>>() {
+                        }).to(new TypeLiteral<MongoDefinitionRepository<User.AuthenticationLog>>() {
                         });
 
                         bind(FeatureRepository.class).to(MongoFeatureRepository.class);

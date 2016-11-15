@@ -3,7 +3,6 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.authentication.AuthenticationLog;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
@@ -148,7 +147,7 @@ public class MongoUserRepository implements UserRepository {
     }
 
     private void audit(Map<String, Object> request, AuthenticationResponse response) {
-        AuthenticationLog authenticationLog = new MongoAuthenticationLog(request, response);
+        User.AuthenticationLog authenticationLog = new MongoAuthenticationLog(request, response);
         injector.injectMembers(authenticationLog);
         authenticationLog.save();
     }

@@ -1,5 +1,6 @@
 package com.github.ucluster.core;
 
+import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 
@@ -36,5 +37,11 @@ public interface User extends Record {
                 String value();
             }
         }
+    }
+
+    interface AuthenticationLog extends Record {
+        Optional<User> candidate();
+
+        AuthenticationResponse.Status status();
     }
 }
