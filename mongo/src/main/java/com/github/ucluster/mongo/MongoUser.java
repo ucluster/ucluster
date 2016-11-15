@@ -78,45 +78,39 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     }
 
     @Override
-    public Map<String, Object> generateToken() {
+    public Token generateToken() {
         clearExistToken();
-
-        String accessToken = doGenerateToken();
-        String refreshToken = doGenerateToken();
-        generateNewToken(accessToken, refreshToken);
-
-        return ImmutableMap.<String, Object>builder()
-                .put("access_token", accessToken)
-                .put("refresh_token", refreshToken)
-                .build();
+        return createNewToken();
     }
 
-    private void generateNewToken(String accessToken, String refreshToken) {
-        session.setex(accessToken, super.toJson(), 30 * 60);
-        session.setex(refreshToken, ImmutableMap.<String, Object>builder()
-                .put("access_token", accessToken)
+    private Token createNewToken() {
+        return store(new UserToken(generateRandomToken(), generateRandomToken()));
+    }
+
+    private Token store(UserToken token) {
+        session.setex(token.accessToken, super.toJson(), Constants.Token.ACCESS_EXPIRE_SECONDS);
+        session.setex(token.refreshToken, ImmutableMap.<String, Object>builder()
+                .put("access_token", token.accessToken)
                 .put("uuid", uuid())
-                .build(), 7 * 24 * 60 * 60);
-        session.setex(currentUserTokenKey(), ImmutableMap.<String, Object>builder()
-                .put("access_token", accessToken)
-                .put("refresh_token", refreshToken)
-                .build(), 7 * 24 * 60 * 60);
+                .build(), Constants.Token.REFRESH_EXPIRE_SECONDS);
+        session.setex(Keys.user_token(this), ImmutableMap.<String, Object>builder()
+                .put("access_token", token.accessToken)
+                .put("refresh_token", token.refreshToken)
+                .build(), Constants.Token.REFRESH_EXPIRE_SECONDS);
+
+        return token;
     }
 
     private void clearExistToken() {
-        session.get(currentUserTokenKey()).ifPresent(currentToken -> {
+        session.get(Keys.user_token(this)).ifPresent(currentToken -> {
             Map<String, Object> current = (Map<String, Object>) currentToken;
             session.del((String) current.get("access_token"));
             session.del((String) current.get("refresh_token"));
-            session.del(currentUserTokenKey());
+            session.del(Keys.user_token(this));
         });
     }
 
-    private String currentUserTokenKey() {
-        return uuid();
-    }
-
-    private String doGenerateToken() {
+    private String generateRandomToken() {
         return UUID.randomUUID().toString();
     }
 
@@ -139,5 +133,38 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         json.put("uri", Routing.user(this));
 
         return json;
+    }
+
+    private class UserToken implements User.Token, Model {
+        private final String accessToken;
+        private final String refreshToken;
+
+        UserToken(String accessToken, String refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+        }
+
+        @Override
+        public String accessToken() {
+            return accessToken;
+        }
+
+        @Override
+        public String refreshToken() {
+            return refreshToken;
+        }
+
+        @Override
+        public Map<String, Object> toJson() {
+            return ImmutableMap.<String, Object>builder()
+                    .put("access_token", accessToken())
+                    .put("refresh_token", refreshToken())
+                    .build();
+        }
+
+        @Override
+        public Map<String, Object> toReferenceJson() {
+            return toJson();
+        }
     }
 }

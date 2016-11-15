@@ -12,4 +12,9 @@ public interface Constants {
         String REQUEST = "request";
         String AUTHENTICATION = "authentication";
     }
+
+    interface Token {
+        Integer ACCESS_EXPIRE_SECONDS = 30 * 60;
+        Integer REFRESH_EXPIRE_SECONDS = 7 * 24 * 60 * 60;
+    }
 }

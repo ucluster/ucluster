@@ -1,4 +1,4 @@
-package com.github.ucluster.feature.passwordless.authentication.junit;
+package com.github.ucluster.feature.refresh.token.junit;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;

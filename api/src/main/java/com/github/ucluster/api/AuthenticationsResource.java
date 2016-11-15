@@ -21,7 +21,7 @@ public class AuthenticationsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> authenticate(Map<String, Object> request) {
+    public User.Token authenticate(Map<String, Object> request) {
         Optional<User> user = users.authenticate(request);
         return user.get().generateToken();
     }
