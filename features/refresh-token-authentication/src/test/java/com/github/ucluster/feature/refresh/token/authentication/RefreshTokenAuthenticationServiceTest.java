@@ -28,7 +28,7 @@ public class RefreshTokenAuthenticationServiceTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private Map<String, Object> token;
+    private User.Token token;
 
     @Before
     public void setUp() throws Exception {
@@ -51,7 +51,10 @@ public class RefreshTokenAuthenticationServiceTest {
                         .put("method", "refresh")
                         .build()
                 )
-                .properties(token)
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("access_token", token.accessToken())
+                        .put("refresh_token", token.refreshToken())
+                        .build())
                 .get();
 
         Optional<User> user = users.authenticate(request);
@@ -88,7 +91,7 @@ public class RefreshTokenAuthenticationServiceTest {
                 )
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("access_token", "invalid")
-                        .put("refresh_token", token.get("refresh_token"))
+                        .put("refresh_token", token.refreshToken())
                         .build())
                 .get();
 

@@ -78,17 +78,14 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     }
 
     @Override
-    public Map<String, Object> generateToken() {
+    public Token generateToken() {
         clearExistToken();
 
         String accessToken = doGenerateToken();
         String refreshToken = doGenerateToken();
         generateNewToken(accessToken, refreshToken);
 
-        return ImmutableMap.<String, Object>builder()
-                .put("access_token", accessToken)
-                .put("refresh_token", refreshToken)
-                .build();
+        return new UserToken(accessToken, refreshToken);
     }
 
     private void generateNewToken(String accessToken, String refreshToken) {
@@ -113,7 +110,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     }
 
     private String currentUserTokenKey() {
-        return uuid();
+        return Keys.user_token(this);
     }
 
     private String doGenerateToken() {
@@ -139,5 +136,38 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         json.put("uri", Routing.user(this));
 
         return json;
+    }
+
+    class UserToken implements User.Token, Model {
+        private final String accessToken;
+        private final String refreshToken;
+
+        UserToken(String accessToken, String refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+        }
+
+        @Override
+        public String accessToken() {
+            return accessToken;
+        }
+
+        @Override
+        public String refreshToken() {
+            return refreshToken;
+        }
+
+        @Override
+        public Map<String, Object> toJson() {
+            return ImmutableMap.<String, Object>builder()
+                    .put("access_token", accessToken())
+                    .put("refresh_token", refreshToken())
+                    .build();
+        }
+
+        @Override
+        public Map<String, Object> toReferenceJson() {
+            return toJson();
+        }
     }
 }
