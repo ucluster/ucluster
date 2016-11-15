@@ -6,7 +6,6 @@ import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
-import com.github.ucluster.mongo.MongoProperty;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -48,8 +47,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
 
     private Optional<User> findUserByIdentity(AuthenticationRequest request) {
         return identitiesOfRequest(request).stream()
-                //TODO: hide the MongoProperty, and can be used no matter which kind of db is used
-                .map(identity -> users.findBy(new MongoProperty<>(identity, request.property(identity))))
+                .map(identity -> users.findBy(identity, request.property(identity)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findFirst();

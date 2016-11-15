@@ -76,6 +76,11 @@ public class MongoUserRepository implements UserRepository {
     }
 
     @Override
+    public <V> Optional<User> findBy(String propertyPath, V value) {
+        return findBy(new MongoProperty<>(propertyPath, value));
+    }
+
+    @Override
     public PaginatedList<User> find(Criteria criteria) {
         final Query<MongoUser> query = datastore.createQuery(MongoUser.class)
                 .disableValidation();

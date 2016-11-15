@@ -12,6 +12,8 @@ public interface Repository<T extends Record> {
 
     Optional<T> findBy(Record.Property property);
 
+    <V> Optional<T> findBy(String propertyPath, V value);
+
     PaginatedList<T> find(Criteria criteria);
 
     T create(Map<String, Object> request);
