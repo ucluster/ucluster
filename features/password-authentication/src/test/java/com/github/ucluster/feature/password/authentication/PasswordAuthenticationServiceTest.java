@@ -63,6 +63,8 @@ public class PasswordAuthenticationServiceTest {
     @Test
     public void should_failed_authenticate_user_when_no_identity_matched() {
 
+        thrown.expect(AuthenticationException.class);
+
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("method", "password")
@@ -74,13 +76,12 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        Optional<User> user = users.authenticate(request);
-
-        assertThat(user.isPresent(), is(false));
+        users.authenticate(request);
     }
 
     @Test
     public void should_failed_authenticate_user_when_password_not_matched() {
+        thrown.expect(AuthenticationException.class);
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
@@ -93,9 +94,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        Optional<User> user = users.authenticate(request);
-
-        assertThat(user.isPresent(), is(false));
+        users.authenticate(request);
     }
 
     @Test

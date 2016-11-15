@@ -16,6 +16,8 @@ public interface User extends Record {
 
     PaginatedList<Request> requests(Criteria criteria);
 
+    String generateToken();
+
     interface Request extends Record {
 
         String uuid();

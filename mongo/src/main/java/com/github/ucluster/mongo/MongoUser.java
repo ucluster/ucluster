@@ -5,6 +5,9 @@ import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.annotations.Entity;
@@ -68,6 +71,14 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
                         .map(this::enhance)
                         .collect(Collectors.toList())
         );
+    }
+
+    @Override
+    public String generateToken() {
+        return Jwts.builder()
+                .setSubject(uuid())
+                .signWith(SignatureAlgorithm.HS512, MacProvider.generateKey())
+                .compact();
     }
 
     private MongoRequest enhance(MongoRequest request) {

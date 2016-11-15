@@ -109,10 +109,10 @@ public class MongoUserRepository implements UserRepository {
 
         AuthenticationResponse response = service.get().authenticate(request);
 
-        audit(request, response);
+        auditAuthenticationLog(request, response);
 
         if (response.status() == FAILED) {
-            return Optional.empty();
+            throw new AuthenticationException();
         }
 
         return response.candidate();
@@ -146,7 +146,7 @@ public class MongoUserRepository implements UserRepository {
         }
     }
 
-    private void audit(Map<String, Object> request, AuthenticationResponse response) {
+    private void auditAuthenticationLog(Map<String, Object> request, AuthenticationResponse response) {
         User.AuthenticationLog authenticationLog = new MongoAuthenticationLog(request, response);
         injector.injectMembers(authenticationLog);
         authenticationLog.save();

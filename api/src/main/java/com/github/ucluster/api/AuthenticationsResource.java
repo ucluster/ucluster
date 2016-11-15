@@ -3,9 +3,6 @@ package com.github.ucluster.api;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.AuthenticationException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.crypto.MacProvider;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -35,16 +32,9 @@ public class AuthenticationsResource {
                 return Response.status(UNAUTHORIZED).build();
             }
 
-            return Response.ok(issueToken(user)).build();
+            return Response.ok(user.get().generateToken()).build();
         } catch (AuthenticationException ex) {
             return Response.status(UNAUTHORIZED).build();
         }
-    }
-
-    private String issueToken(Optional<User> user) {
-        return Jwts.builder()
-                .setSubject((String) user.get().property("username").get().value())
-                .signWith(SignatureAlgorithm.HS512, MacProvider.generateKey())
-                .compact();
     }
 }
