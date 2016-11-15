@@ -1,13 +1,16 @@
 package com.github.ucluster.mongo.api.junit;
 
+import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.mongo.api.Api;
 import com.github.ucluster.mongo.api.Env;
 import com.github.ucluster.mongo.api.module.RequestModule;
 import com.github.ucluster.mongo.converter.JodaDateTimeConverter;
 import com.github.ucluster.session.Session;
+import com.github.ucluster.test.framework.authentication.SimplePasswordAuthenticationService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import com.mongodb.MongoClient;
@@ -133,6 +136,9 @@ public class InjectorBasedRunner extends BlockJUnit4ClassRunner {
     private static class TestRequestModule extends RequestModule {
         @Override
         protected void configure() {
+            bind(new TypeLiteral<AuthenticationService>() {
+            }).annotatedWith(Names.named("authentication.password.method")).to(new TypeLiteral<SimplePasswordAuthenticationService>() {
+            });
             super.configure();
         }
     }

@@ -1,4 +1,5 @@
 dependencies {
+    compile project(':mongo')
     compile project(':core')
 
     compile "junit:junit:$junit"
