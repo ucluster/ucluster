@@ -1,9 +1,7 @@
 package com.github.ucluster.feature.password.authentication;
 
-import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
-import com.github.ucluster.core.authentication.AuthenticationResponse;
-import com.github.ucluster.core.authentication.AuthenticationService;
+import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -15,23 +13,16 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(UClusterFeatureTestRunner.class)
 public class PasswordAuthenticationServiceTest {
     @Inject
-    Repository<User> users;
-
-    @Inject
-    @Named("authentication.mongo.method")
-    AuthenticationService authenticationService;
+    UserRepository users;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -63,11 +54,10 @@ public class PasswordAuthenticationServiceTest {
                 .get();
 
 
-        AuthenticationResponse response = authenticationService.authenticate(request);
+        Optional<User> user = users.authenticate(request);
 
-        assertThat(response.status(), is(SUCCEEDED));
-        assertThat(response.candidate().isPresent(), is(true));
-        assertThat(response.candidate().get().property("username").get().value(), is("kiwiwin"));
+        assertThat(user.isPresent(), is(true));
+        assertThat(user.get().property("username").get().value(), is("kiwiwin"));
     }
 
     @Test
@@ -84,10 +74,9 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        AuthenticationResponse response = authenticationService.authenticate(request);
+        Optional<User> user = users.authenticate(request);
 
-        assertThat(response.status(), is(FAILED));
-        assertThat(response.candidate(), is(Optional.empty()));
+        assertThat(user.isPresent(), is(false));
     }
 
     @Test
@@ -104,11 +93,9 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        AuthenticationResponse response = authenticationService.authenticate(request);
+        Optional<User> user = users.authenticate(request);
 
-        assertThat(response.status(), is(FAILED));
-        assertThat(response.candidate().isPresent(), is(true));
-        assertThat(response.candidate().get().property("username").get().value(), is("kiwiwin"));
+        assertThat(user.isPresent(), is(false));
     }
 
     @Test
@@ -127,6 +114,6 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        authenticationService.authenticate(request);
+        users.authenticate(request);
     }
 }

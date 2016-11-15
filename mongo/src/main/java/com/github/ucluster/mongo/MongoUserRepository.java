@@ -1,10 +1,16 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationLog;
+import com.github.ucluster.core.authentication.AuthenticationResponse;
+import com.github.ucluster.core.authentication.AuthenticationService;
+import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
+import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
+import com.github.ucluster.mongo.authentication.MongoAuthenticationLog;
 import com.google.inject.Injector;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
@@ -16,12 +22,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MongoUserRepository implements Repository<User> {
+import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
+
+public class MongoUserRepository implements UserRepository {
     @Inject
     protected Datastore datastore;
 
     @Inject
     protected Injector injector;
+
+    @Inject
+    AuthenticationServiceRegistry registry;
 
     @Override
     public User create(Map<String, Object> request) {
@@ -89,6 +100,25 @@ public class MongoUserRepository implements Repository<User> {
         return Optional.of(user);
     }
 
+    @Override
+    public Optional<User> authenticate(Map<String, Object> request) {
+        Optional<AuthenticationService> service = registry.find(methodOf(request));
+
+        if (!service.isPresent()) {
+            throw new AuthenticationException();
+        }
+
+        AuthenticationResponse response = service.get().authenticate(request);
+
+        audit(request, response);
+
+        if (response.status() == FAILED) {
+            return Optional.empty();
+        }
+
+        return response.candidate();
+    }
+
     private static class CreateUserRequest {
 
         private final Map<String, Object> request;
@@ -115,5 +145,16 @@ public class MongoUserRepository implements Repository<User> {
         Map<String, Object> properties() {
             return (Map<String, Object>) request.getOrDefault("properties", new HashMap<>());
         }
+    }
+
+    private void audit(Map<String, Object> request, AuthenticationResponse response) {
+        AuthenticationLog authenticationLog = new MongoAuthenticationLog(request, response);
+        injector.injectMembers(authenticationLog);
+        authenticationLog.save();
+    }
+
+    private String methodOf(Map<String, Object> request) {
+        Map<String, Object> metadata = (Map<String, Object>) request.get("metadata");
+        return (String) metadata.getOrDefault("method", "password");
     }
 }

@@ -10,9 +10,9 @@ import com.github.ucluster.common.concern.RequiredConcern;
 import com.github.ucluster.common.concern.TransientConcern;
 import com.github.ucluster.confirmation.ConfirmationRegistry;
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
+import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.authentication.AuthenticationLog;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
@@ -23,7 +23,6 @@ import com.github.ucluster.core.feature.FeatureRepository;
 import com.github.ucluster.feature.password.authentication.PasswordAuthenticationService;
 import com.github.ucluster.mongo.MongoRequestFactory;
 import com.github.ucluster.mongo.MongoUserRepository;
-import com.github.ucluster.mongo.authentication.MongoAuthenticationService;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationServiceRegistry;
 import com.github.ucluster.mongo.configuration.MongoConfigurationRepository;
 import com.github.ucluster.mongo.confirmation.MongoConfirmationRegistry;
@@ -112,8 +111,7 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         bind(Datastore.class).toInstance(datastore());
                         bind(Session.class).toInstance(session());
 
-                        bind(new TypeLiteral<Repository<User>>() {
-                        }).to(MongoUserRepository.class);
+                        bind(UserRepository.class).to(MongoUserRepository.class);
                         bind(new TypeLiteral<ConfirmationRegistry>() {
                         }).to(MongoConfirmationRegistry.class);
 
@@ -143,8 +141,6 @@ class InjectorBasedRunner extends BlockJUnit4ClassRunner {
                         });
 
                         registerAuthenticationService("password").to(new TypeLiteral<PasswordAuthenticationService>() {
-                        });
-                        registerAuthenticationService("mongo").to(new TypeLiteral<MongoAuthenticationService>() {
                         });
                     }
 
