@@ -1,10 +1,11 @@
 package com.github.ucluster.core;
 
-import java.util.Map;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
+
 import java.util.Optional;
 
 public interface UserRepository extends Repository<User> {
-    Optional<User> authenticate(Map<String, Object> request);
+    Optional<User> authenticate(AuthenticationRequest request);
 
     Optional<User> findByAccessToken(String accessToken);
 }

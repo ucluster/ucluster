@@ -3,12 +3,12 @@ package com.github.ucluster.test.framework.authentication;
 import com.github.ucluster.common.concern.Encryption;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.mongo.MongoProperty;
 
 import javax.inject.Inject;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
@@ -25,9 +25,9 @@ public class SimplePasswordAuthenticationService implements AuthenticationServic
     }
 
     @Override
-    public AuthenticationResponse authenticate(Map<String, Object> request) {
-        String username = getProperty(request, "username");
-        String password = getProperty(request, "password");
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        String username = String.valueOf(request.property("username"));
+        String password = String.valueOf(request.property("password"));
 
         Optional<User> user = users.findBy(new MongoProperty<>("username", username));
 
@@ -45,11 +45,6 @@ public class SimplePasswordAuthenticationService implements AuthenticationServic
     private boolean passwordMatched(User user, String password) {
         final String storedPassword = String.valueOf(user.property("password").get().value());
         return Encryption.BCRYPT.check(password, storedPassword);
-    }
-
-    private String getProperty(Map<String, Object> request, String key) {
-        Map<String, Object> properties = (Map<String, Object>) request.get("properties");
-        return (String) properties.get(key);
     }
 
     static class PasswordAuthenticationResponse implements AuthenticationResponse {

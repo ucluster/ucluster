@@ -2,13 +2,11 @@ package com.github.ucluster.feature.refresh.token.authentication;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
-import com.github.ucluster.session.Session;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,8 +23,8 @@ public class RefreshTokenAuthenticationService implements AuthenticationService 
     }
 
     @Override
-    public AuthenticationResponse authenticate(Map<String, Object> request) {
-        final Optional<User> user = users.findByAccessToken(accessToken(request));
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        final Optional<User> user = users.findByAccessToken(String.valueOf(request.property("access_token")));
 
         if (!user.isPresent()) {
             return fail(Optional.empty());
@@ -37,23 +35,11 @@ public class RefreshTokenAuthenticationService implements AuthenticationService 
             return fail(Optional.empty());
         }
 
-        if (!Objects.equals(token.get().refreshToken(), refreshToken(request))) {
+        if (!Objects.equals(token.get().refreshToken(), String.valueOf(request.property("refresh_token")))) {
             return fail(Optional.empty());
         }
 
         return RefreshTokenAuthenticationResponse.success(user);
-    }
-
-    private String refreshToken(Map<String, Object> request) {
-        return (String) properties(request).get("refresh_token");
-    }
-
-    private String accessToken(Map<String, Object> request) {
-        return (String) properties(request).get("access_token");
-    }
-
-    private Map<String, Object> properties(Map<String, Object> request) {
-        return (Map<String, Object>) request.getOrDefault("properties", new HashMap<>());
     }
 
     static class RefreshTokenAuthenticationResponse implements AuthenticationResponse {

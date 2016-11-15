@@ -3,6 +3,7 @@ package com.github.ucluster.feature.password.authentication;
 import com.github.ucluster.common.concern.Encryption;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.mongo.MongoProperty;
@@ -29,7 +30,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse authenticate(Map<String, Object> request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         final Optional<User> user = findUserByIdentity(request);
 
         if (!user.isPresent()) {
@@ -43,23 +44,23 @@ public class PasswordAuthenticationService implements AuthenticationService {
         return fail(user);
     }
 
-    private boolean passwordMatched(Map<String, Object> request, User user) {
+    private boolean passwordMatched(AuthenticationRequest request, User user) {
         final String storedPassword = String.valueOf(user.property(password).get().value());
-        return Encryption.BCRYPT.check(String.valueOf(properties(request).get(password)), storedPassword);
+        return Encryption.BCRYPT.check(String.valueOf(request.property(password)), storedPassword);
     }
 
-    private Optional<User> findUserByIdentity(Map<String, Object> request) {
+    private Optional<User> findUserByIdentity(AuthenticationRequest request) {
         return identitiesOfRequest(request).stream()
                 //TODO: hide the MongoProperty, and can be used no matter which kind of db is used
-                .map(identity -> users.findBy(new MongoProperty<>(identity, properties(request).get(identity))))
+                .map(identity -> users.findBy(new MongoProperty<>(identity, request.property(identity))))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findFirst();
     }
 
-    private List<String> identitiesOfRequest(Map<String, Object> request) {
+    private List<String> identitiesOfRequest(AuthenticationRequest request) {
         return identities.stream()
-                .filter(properties(request)::containsKey)
+                .filter(identity -> request.properties().containsKey(identity))
                 .collect(Collectors.toList());
     }
 

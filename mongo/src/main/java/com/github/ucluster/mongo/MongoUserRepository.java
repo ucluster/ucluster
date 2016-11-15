@@ -3,6 +3,7 @@ package com.github.ucluster.mongo;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
@@ -104,8 +105,8 @@ public class MongoUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> authenticate(Map<String, Object> request) {
-        Optional<AuthenticationService> service = registry.find(methodOf(request));
+    public Optional<User> authenticate(AuthenticationRequest request) {
+        Optional<AuthenticationService> service = registry.find(request.metadata("method"));
 
         if (!service.isPresent()) {
             throw new AuthenticationException();
@@ -113,7 +114,7 @@ public class MongoUserRepository implements UserRepository {
 
         AuthenticationResponse response = service.get().authenticate(request);
 
-        auditAuthenticationLog(request, response);
+        auditAuthenticationLog(request.request(), response);
 
         if (response.status() == FAILED) {
             throw new AuthenticationException();

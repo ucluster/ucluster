@@ -2,6 +2,7 @@ package com.github.ucluster.api;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -22,7 +23,7 @@ public class AuthenticationsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public User.Token authenticate(Map<String, Object> request) {
-        Optional<User> user = users.authenticate(request);
+        Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
         return user.get().generateToken();
     }
 }

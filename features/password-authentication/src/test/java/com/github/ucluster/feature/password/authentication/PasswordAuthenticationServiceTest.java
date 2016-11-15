@@ -2,6 +2,7 @@ package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.exception.AuthenticationException;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -53,7 +54,7 @@ public class PasswordAuthenticationServiceTest {
                 .get();
 
 
-        Optional<User> user = users.authenticate(request);
+        Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
 
         assertThat(user.isPresent(), is(true));
         assertThat(user.get().property("username").get().value(), is("kiwiwin"));
@@ -74,7 +75,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        users.authenticate(request);
+        users.authenticate(AuthenticationRequest.of(request));
     }
 
     @Test
@@ -92,7 +93,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        users.authenticate(request);
+        users.authenticate(AuthenticationRequest.of(request));
     }
 
     @Test
@@ -110,6 +111,6 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .get();
 
-        users.authenticate(request);
+        users.authenticate(AuthenticationRequest.of(request));
     }
 }

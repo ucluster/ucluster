@@ -2,6 +2,7 @@ package com.github.ucluster.feature.passwordless.authentication;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.feature.passwordless.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.mongo.Keys;
 import com.github.ucluster.mongo.MongoProperty;
@@ -59,7 +60,7 @@ public class PasswordlessAuthenticationServiceTest {
                         .build())
                 .get();
 
-        Optional<User> user = users.authenticate(request);
+        Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
         assertThat(user.isPresent(), is(true));
         assertThat(user.get().property("username").get().value(), is("kiwiwin"));
     }
