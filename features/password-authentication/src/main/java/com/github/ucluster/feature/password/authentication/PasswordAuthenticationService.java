@@ -10,7 +10,6 @@ import com.github.ucluster.mongo.MongoProperty;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,10 +61,6 @@ public class PasswordAuthenticationService implements AuthenticationService {
         return identities.stream()
                 .filter(identity -> request.properties().containsKey(identity))
                 .collect(Collectors.toList());
-    }
-
-    private Map<String, Object> properties(Map<String, Object> request) {
-        return (Map<String, Object>) request.get("properties");
     }
 
     static class PasswordAuthenticationResponse implements AuthenticationResponse {
