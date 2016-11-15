@@ -66,6 +66,21 @@ public class AuthenticationsResourceTest extends ApiSupport {
         assertThat(response.getStatus(), is(401));
     }
 
+    @Test
+    public void should_authenticate_fail_when_no_authenticate_provider_found() throws Exception {
+        Response response = post("authentications", RequestBuilder.of()
+                .metadata(ImmutableMap.<String, Object>builder()
+                        .put("method", "not_exit")
+                        .build())
+                .properties(ImmutableMap.<String, Object>builder()
+                        .put("username", "kiwiwin")
+                        .put("password", "password")
+                        .build())
+                .get()
+        );
+        assertThat(response.getStatus(), is(401));
+    }
+
     private void assertSignedTokenPresent(Response response) {
         String token = response.readEntity(String.class);
         assertTrue(Jwts.parser().isSigned(token));

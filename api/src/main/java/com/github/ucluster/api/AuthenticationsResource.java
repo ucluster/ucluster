@@ -2,6 +2,7 @@ package com.github.ucluster.api;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
+import com.github.ucluster.core.exception.AuthenticationException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
@@ -27,13 +28,17 @@ public class AuthenticationsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response authenticate(Map<String, Object> request) {
 
-        Optional<User> user = users.authenticate(request);
+        try {
+            Optional<User> user = users.authenticate(request);
 
-        if (!user.isPresent()) {
+            if (!user.isPresent()) {
+                return Response.status(UNAUTHORIZED).build();
+            }
+
+            return Response.ok(issueToken(user)).build();
+        } catch (AuthenticationException ex) {
             return Response.status(UNAUTHORIZED).build();
         }
-
-        return Response.ok(issueToken(user)).build();
     }
 
     private String issueToken(Optional<User> user) {
