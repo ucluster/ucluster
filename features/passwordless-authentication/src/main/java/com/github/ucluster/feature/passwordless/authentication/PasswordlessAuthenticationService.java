@@ -15,9 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
-import static com.github.ucluster.feature.passwordless.authentication.PasswordlessAuthenticationService.PasswordlessAuthenticationResponse.fail;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.fail;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.success;
 
 public class PasswordlessAuthenticationService implements AuthenticationService {
 
@@ -48,7 +47,7 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
 
         Map<String, Object> confiramtions = (Map<String, Object>) confirmationCode.get();
         if (confiramtions.get("confirmation_code").equals(request.property("confirmation_code"))) {
-            return PasswordlessAuthenticationResponse.success(user);
+            return success(user);
         }
 
         return fail(Optional.empty());
@@ -71,33 +70,5 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
 
     private Map<String, Object> properties(Map<String, Object> request) {
         return (Map<String, Object>) request.get("properties");
-    }
-
-    static class PasswordlessAuthenticationResponse implements AuthenticationResponse {
-        private Status status = FAILED;
-        private Optional<User> user = Optional.empty();
-
-        public PasswordlessAuthenticationResponse(Optional<User> user, Status status) {
-            this.user = user;
-            this.status = status;
-        }
-
-        static PasswordlessAuthenticationResponse success(Optional<User> user) {
-            return new PasswordlessAuthenticationResponse(user, SUCCEEDED);
-        }
-
-        static PasswordlessAuthenticationResponse fail(Optional<User> user) {
-            return new PasswordlessAuthenticationResponse(user, FAILED);
-        }
-
-        @Override
-        public Status status() {
-            return status;
-        }
-
-        @Override
-        public Optional<User> candidate() {
-            return user;
-        }
     }
 }

@@ -10,9 +10,8 @@ import javax.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
-import static com.github.ucluster.feature.refresh.token.authentication.RefreshTokenAuthenticationService.RefreshTokenAuthenticationResponse.fail;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.fail;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.success;
 
 public class RefreshTokenAuthenticationService implements AuthenticationService {
 
@@ -39,34 +38,6 @@ public class RefreshTokenAuthenticationService implements AuthenticationService 
             return fail(Optional.empty());
         }
 
-        return RefreshTokenAuthenticationResponse.success(user);
-    }
-
-    static class RefreshTokenAuthenticationResponse implements AuthenticationResponse {
-        private Status status = FAILED;
-        private Optional<User> user = Optional.empty();
-
-        public RefreshTokenAuthenticationResponse(Optional<User> user, Status status) {
-            this.user = user;
-            this.status = status;
-        }
-
-        static RefreshTokenAuthenticationResponse success(Optional<User> user) {
-            return new RefreshTokenAuthenticationResponse(user, SUCCEEDED);
-        }
-
-        static RefreshTokenAuthenticationResponse fail(Optional<User> user) {
-            return new RefreshTokenAuthenticationResponse(user, FAILED);
-        }
-
-        @Override
-        public Status status() {
-            return status;
-        }
-
-        @Override
-        public Optional<User> candidate() {
-            return user;
-        }
+        return success(user);
     }
 }

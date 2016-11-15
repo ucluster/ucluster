@@ -13,10 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.FAILED;
-import static com.github.ucluster.core.authentication.AuthenticationResponse.Status.SUCCEEDED;
-import static com.github.ucluster.feature.password.authentication.PasswordAuthenticationService.PasswordAuthenticationResponse.fail;
-import static com.github.ucluster.feature.password.authentication.PasswordAuthenticationService.PasswordAuthenticationResponse.success;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.fail;
+import static com.github.ucluster.core.authentication.AuthenticationResponse.success;
 
 public class PasswordAuthenticationService implements AuthenticationService {
     @Inject
@@ -61,33 +59,5 @@ public class PasswordAuthenticationService implements AuthenticationService {
         return identities.stream()
                 .filter(identity -> request.properties().containsKey(identity))
                 .collect(Collectors.toList());
-    }
-
-    static class PasswordAuthenticationResponse implements AuthenticationResponse {
-        private Status status = FAILED;
-        private Optional<User> user = Optional.empty();
-
-        public PasswordAuthenticationResponse(Optional<User> user, Status status) {
-            this.user = user;
-            this.status = status;
-        }
-
-        static PasswordAuthenticationResponse success(Optional<User> user) {
-            return new PasswordAuthenticationResponse(user, SUCCEEDED);
-        }
-
-        static PasswordAuthenticationResponse fail(Optional<User> user) {
-            return new PasswordAuthenticationResponse(user, FAILED);
-        }
-
-        @Override
-        public Status status() {
-            return status;
-        }
-
-        @Override
-        public Optional<User> candidate() {
-            return user;
-        }
     }
 }
