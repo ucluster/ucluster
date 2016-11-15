@@ -80,40 +80,37 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     @Override
     public Token generateToken() {
         clearExistToken();
-
-        String accessToken = doGenerateToken();
-        String refreshToken = doGenerateToken();
-        generateNewToken(accessToken, refreshToken);
-
-        return new UserToken(accessToken, refreshToken);
+        return createNewToken();
     }
 
-    private void generateNewToken(String accessToken, String refreshToken) {
-        session.setex(accessToken, super.toJson(), 30 * 60);
-        session.setex(refreshToken, ImmutableMap.<String, Object>builder()
-                .put("access_token", accessToken)
+    private Token createNewToken() {
+        return store(new UserToken(generateRandomToken(), generateRandomToken()));
+    }
+
+    private Token store(UserToken token) {
+        session.setex(token.accessToken, super.toJson(), 30 * 60);
+        session.setex(token.refreshToken, ImmutableMap.<String, Object>builder()
+                .put("access_token", token.accessToken)
                 .put("uuid", uuid())
                 .build(), 7 * 24 * 60 * 60);
-        session.setex(currentUserTokenKey(), ImmutableMap.<String, Object>builder()
-                .put("access_token", accessToken)
-                .put("refresh_token", refreshToken)
+        session.setex(Keys.user_token(this), ImmutableMap.<String, Object>builder()
+                .put("access_token", token.accessToken)
+                .put("refresh_token", token.refreshToken)
                 .build(), 7 * 24 * 60 * 60);
+
+        return token;
     }
 
     private void clearExistToken() {
-        session.get(currentUserTokenKey()).ifPresent(currentToken -> {
+        session.get(Keys.user_token(this)).ifPresent(currentToken -> {
             Map<String, Object> current = (Map<String, Object>) currentToken;
             session.del((String) current.get("access_token"));
             session.del((String) current.get("refresh_token"));
-            session.del(currentUserTokenKey());
+            session.del(Keys.user_token(this));
         });
     }
 
-    private String currentUserTokenKey() {
-        return Keys.user_token(this);
-    }
-
-    private String doGenerateToken() {
+    private String generateRandomToken() {
         return UUID.randomUUID().toString();
     }
 
