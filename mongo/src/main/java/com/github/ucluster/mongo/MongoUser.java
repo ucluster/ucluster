@@ -88,15 +88,15 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     }
 
     private Token store(UserToken token) {
-        session.setex(token.accessToken, super.toJson(), 30 * 60);
+        session.setex(token.accessToken, super.toJson(), Constants.Token.ACCESS_EXPIRE_SECONDS);
         session.setex(token.refreshToken, ImmutableMap.<String, Object>builder()
                 .put("access_token", token.accessToken)
                 .put("uuid", uuid())
-                .build(), 7 * 24 * 60 * 60);
+                .build(), Constants.Token.REFRESH_EXPIRE_SECONDS);
         session.setex(Keys.user_token(this), ImmutableMap.<String, Object>builder()
                 .put("access_token", token.accessToken)
                 .put("refresh_token", token.refreshToken)
-                .build(), 7 * 24 * 60 * 60);
+                .build(), Constants.Token.REFRESH_EXPIRE_SECONDS);
 
         return token;
     }
@@ -135,7 +135,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         return json;
     }
 
-    class UserToken implements User.Token, Model {
+    private class UserToken implements User.Token, Model {
         private final String accessToken;
         private final String refreshToken;
 
