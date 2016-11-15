@@ -35,13 +35,13 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
         final Optional<User> user = findUserByIdentity(request);
 
         if (!user.isPresent()) {
-            return fail(Optional.empty());
+            return fail();
         }
 
         Optional<Object> confirmationCode = session.get(Keys.user_code(user.get()));
 
         if (!confirmationCode.isPresent()) {
-            return fail(Optional.empty());
+            return fail(user);
         }
 
         Map<String, Object> confiramtions = (Map<String, Object>) confirmationCode.get();
@@ -49,7 +49,7 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
             return success(user);
         }
 
-        return fail(Optional.empty());
+        return fail(user);
     }
 
     private Optional<User> findUserByIdentity(AuthenticationRequest request) {

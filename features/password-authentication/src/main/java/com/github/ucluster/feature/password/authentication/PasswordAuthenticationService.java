@@ -30,7 +30,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
         final Optional<User> user = findUserByIdentity(request);
 
         if (!user.isPresent()) {
-            return fail(Optional.empty());
+            return fail();
         }
 
         if (passwordMatched(request, user.get())) {

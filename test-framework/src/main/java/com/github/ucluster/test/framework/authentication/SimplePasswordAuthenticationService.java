@@ -30,7 +30,7 @@ public class SimplePasswordAuthenticationService implements AuthenticationServic
         Optional<User> user = users.findBy(new MongoProperty<>("username", username));
 
         if (!user.isPresent()) {
-            return fail(Optional.empty());
+            return fail();
         }
 
         if (passwordMatched(user.get(), password)) {

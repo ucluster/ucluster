@@ -24,6 +24,10 @@ public class AuthenticationResponse {
         return new AuthenticationResponse(user, FAILED);
     }
 
+    public static AuthenticationResponse fail() {
+        return new AuthenticationResponse(Optional.empty(), FAILED);
+    }
+
     public Status status() {
         return status;
     }

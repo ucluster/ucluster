@@ -26,16 +26,16 @@ public class RefreshTokenAuthenticationService implements AuthenticationService 
         final Optional<User> user = users.findByAccessToken(String.valueOf(request.property("access_token")));
 
         if (!user.isPresent()) {
-            return fail(Optional.empty());
+            return fail();
         }
 
         final Optional<User.Token> token = user.get().currentToken();
         if (!token.isPresent()) {
-            return fail(Optional.empty());
+            return fail(user);
         }
 
         if (!Objects.equals(token.get().refreshToken(), String.valueOf(request.property("refresh_token")))) {
-            return fail(Optional.empty());
+            return fail(user);
         }
 
         return success(user);
