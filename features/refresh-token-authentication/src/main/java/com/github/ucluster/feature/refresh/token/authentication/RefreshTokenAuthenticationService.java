@@ -24,13 +24,7 @@ public class RefreshTokenAuthenticationService implements AuthenticationService 
     @Inject
     private UserRepository users;
 
-    private Object configuration;
-
-    RefreshTokenAuthenticationService() {
-    }
-
-    public RefreshTokenAuthenticationService(Object configuration) {
-        this.configuration = configuration;
+    public RefreshTokenAuthenticationService() {
     }
 
     @Override

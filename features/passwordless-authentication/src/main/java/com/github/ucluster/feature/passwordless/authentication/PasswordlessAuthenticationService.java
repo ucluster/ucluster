@@ -23,16 +23,12 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
     @Inject
     Session session;
 
-    private Object configuration;
-
     @Inject
     private UserRepository users;
 
-    PasswordlessAuthenticationService() {
-    }
+    private List<String> identities;
 
-    public PasswordlessAuthenticationService(Object configuration) {
-        this.configuration = configuration;
+    public PasswordlessAuthenticationService() {
     }
 
     @Override
@@ -66,12 +62,8 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
                 .findFirst();
     }
 
-    private List<String> identityProperties() {
-        return (List<String>) ((Map<String, Object>) configuration).get("identities");
-    }
-
     private List<String> identitiesOfRequest(Map<String, Object> request) {
-        return identityProperties().stream()
+        return identities.stream()
                 .filter(properties(request)::containsKey)
                 .collect(Collectors.toList());
     }

@@ -22,13 +22,10 @@ public class PasswordAuthenticationService implements AuthenticationService {
     @Inject
     UserRepository users;
 
-    private Object configuration;
+    private List<String> identities;
+    private String password;
 
-    PasswordAuthenticationService() {
-    }
-
-    public PasswordAuthenticationService(Object configuration) {
-        this.configuration = configuration;
+    public PasswordAuthenticationService() {
     }
 
     @Override
@@ -47,8 +44,8 @@ public class PasswordAuthenticationService implements AuthenticationService {
     }
 
     private boolean passwordMatched(Map<String, Object> request, User user) {
-        final String storedPassword = String.valueOf(user.property(passwordProperty()).get().value());
-        return Encryption.BCRYPT.check(String.valueOf(properties(request).get(passwordProperty())), storedPassword);
+        final String storedPassword = String.valueOf(user.property(password).get().value());
+        return Encryption.BCRYPT.check(String.valueOf(properties(request).get(password)), storedPassword);
     }
 
     private Optional<User> findUserByIdentity(Map<String, Object> request) {
@@ -60,16 +57,8 @@ public class PasswordAuthenticationService implements AuthenticationService {
                 .findFirst();
     }
 
-    private List<String> identityProperties() {
-        return (List<String>) ((Map<String, Object>) configuration).get("identities");
-    }
-
-    private String passwordProperty() {
-        return (String) ((Map<String, Object>) configuration).get("password");
-    }
-
     private List<String> identitiesOfRequest(Map<String, Object> request) {
-        return identityProperties().stream()
+        return identities.stream()
                 .filter(properties(request)::containsKey)
                 .collect(Collectors.toList());
     }

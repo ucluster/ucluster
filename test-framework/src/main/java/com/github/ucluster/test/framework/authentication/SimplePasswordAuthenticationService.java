@@ -21,12 +21,7 @@ public class SimplePasswordAuthenticationService implements AuthenticationServic
     @Inject
     UserRepository users;
 
-    SimplePasswordAuthenticationService() {
-
-    }
-
-    public SimplePasswordAuthenticationService(Object configuration) {
-
+    public SimplePasswordAuthenticationService() {
     }
 
     @Override
