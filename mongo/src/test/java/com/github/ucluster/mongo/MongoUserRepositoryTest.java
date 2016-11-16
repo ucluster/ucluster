@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.ApiRequest;
+import com.github.ucluster.core.Repository;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;

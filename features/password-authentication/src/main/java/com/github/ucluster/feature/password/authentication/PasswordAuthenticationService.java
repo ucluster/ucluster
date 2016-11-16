@@ -1,11 +1,11 @@
 package com.github.ucluster.feature.password.authentication;
 
 import com.github.ucluster.common.concern.Encryption;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
-import com.github.ucluster.core.request.AuthenticationRequest;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -26,7 +26,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(ApiRequest request) {
         final Optional<User> user = findUserByIdentity(request);
 
         if (!user.isPresent()) {
@@ -40,12 +40,12 @@ public class PasswordAuthenticationService implements AuthenticationService {
         return fail(user);
     }
 
-    private boolean passwordMatched(AuthenticationRequest request, User user) {
+    private boolean passwordMatched(ApiRequest request, User user) {
         final String storedPassword = String.valueOf(user.property(password).get().value());
         return Encryption.BCRYPT.check(String.valueOf(request.property(password)), storedPassword);
     }
 
-    private Optional<User> findUserByIdentity(AuthenticationRequest request) {
+    private Optional<User> findUserByIdentity(ApiRequest request) {
         return identitiesOfRequest(request).stream()
                 .map(identity -> users.findBy(identity, request.property(identity)))
                 .filter(Optional::isPresent)
@@ -53,7 +53,7 @@ public class PasswordAuthenticationService implements AuthenticationService {
                 .findFirst();
     }
 
-    private List<String> identitiesOfRequest(AuthenticationRequest request) {
+    private List<String> identitiesOfRequest(ApiRequest request) {
         return identities.stream()
                 .filter(identity -> request.properties().containsKey(identity))
                 .collect(Collectors.toList());

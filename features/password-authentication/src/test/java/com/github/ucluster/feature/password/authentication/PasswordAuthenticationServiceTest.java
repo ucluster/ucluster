@@ -4,7 +4,6 @@ import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.AuthenticationException;
-import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
@@ -45,7 +44,7 @@ public class PasswordAuthenticationServiceTest {
     public void should_success_authenticate_user() {
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "password")
+                        .put("type", "password")
                         .build()
                 )
                 .properties(ImmutableMap.<String, Object>builder()
@@ -55,7 +54,7 @@ public class PasswordAuthenticationServiceTest {
                 .request();
 
 
-        Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
+        Optional<User> user = users.authenticate(ApiRequest.of(request));
 
         assertThat(user.isPresent(), is(true));
         assertThat(user.get().property("username").get().value(), is("kiwiwin"));
@@ -67,7 +66,7 @@ public class PasswordAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "password")
+                        .put("type", "password")
                         .build()
                 )
                 .properties(ImmutableMap.<String, Object>builder()
@@ -76,7 +75,7 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .request();
 
-        users.authenticate(AuthenticationRequest.of(request));
+        users.authenticate(ApiRequest.of(request));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class PasswordAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "password")
+                        .put("type", "password")
                         .build()
                 )
                 .properties(ImmutableMap.<String, Object>builder()
@@ -94,24 +93,6 @@ public class PasswordAuthenticationServiceTest {
                         .build())
                 .request();
 
-        users.authenticate(AuthenticationRequest.of(request));
-    }
-
-    @Test
-    public void should_throw_authentication_exception_when_method_not_found() {
-        thrown.expect(AuthenticationException.class);
-
-        Map<String, Object> request = RequestBuilder.of()
-                .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "nomethod")
-                        .build()
-                )
-                .properties(ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwiwin")
-                        .put("password", "wrongpassword")
-                        .build())
-                .request();
-
-        users.authenticate(AuthenticationRequest.of(request));
+        users.authenticate(ApiRequest.of(request));
     }
 }

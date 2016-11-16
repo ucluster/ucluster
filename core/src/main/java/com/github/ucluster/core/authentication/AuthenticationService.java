@@ -1,7 +1,7 @@
 package com.github.ucluster.core.authentication;
 
-import com.github.ucluster.core.request.AuthenticationRequest;
+import com.github.ucluster.core.ApiRequest;
 
 public interface AuthenticationService {
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    AuthenticationResponse authenticate(ApiRequest request);
 }

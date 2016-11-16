@@ -3,7 +3,6 @@ package com.github.ucluster.feature.passwordless.authentication;
 import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.feature.passwordless.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.mongo.Keys;
 import com.github.ucluster.mongo.MongoProperty;
@@ -52,7 +51,7 @@ public class PasswordlessAuthenticationServiceTest {
     public void should_authenticate_use_the_confirmation_code() throws Exception {
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "phone")
+                        .put("type", "phone")
                         .build()
                 )
                 .properties(ImmutableMap.<String, Object>builder()
@@ -61,7 +60,7 @@ public class PasswordlessAuthenticationServiceTest {
                         .build())
                 .request();
 
-        Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
+        Optional<User> user = users.authenticate(ApiRequest.of(request));
         assertThat(user.isPresent(), is(true));
         assertThat(user.get().property("username").get().value(), is("kiwiwin"));
     }

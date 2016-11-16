@@ -1,10 +1,10 @@
 package com.github.ucluster.feature.passwordless.authentication;
 
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
-import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.mongo.Keys;
 import com.github.ucluster.session.Session;
 
@@ -31,7 +31,7 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(ApiRequest request) {
         final Optional<User> user = findUserByIdentity(request);
 
         if (!user.isPresent()) {
@@ -52,7 +52,7 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
         return fail(user);
     }
 
-    private Optional<User> findUserByIdentity(AuthenticationRequest request) {
+    private Optional<User> findUserByIdentity(ApiRequest request) {
         return identitiesOfRequest(request).stream()
                 .map(identity -> users.findBy(identity, request.property(identity)))
                 .filter(Optional::isPresent)
@@ -60,13 +60,9 @@ public class PasswordlessAuthenticationService implements AuthenticationService 
                 .findFirst();
     }
 
-    private List<String> identitiesOfRequest(AuthenticationRequest request) {
+    private List<String> identitiesOfRequest(ApiRequest request) {
         return identities.stream()
                 .filter(identity -> request.properties().containsKey(identity))
                 .collect(Collectors.toList());
-    }
-
-    private Map<String, Object> properties(Map<String, Object> request) {
-        return (Map<String, Object>) request.get("properties");
     }
 }

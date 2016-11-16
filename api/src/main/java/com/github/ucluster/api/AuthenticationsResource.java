@@ -1,8 +1,8 @@
 package com.github.ucluster.api;
 
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.request.AuthenticationRequest;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -21,7 +21,7 @@ public class AuthenticationsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User.Token authenticate(AuthenticationRequest request) {
+    public User.Token authenticate(ApiRequest request) {
         Optional<User> user = users.authenticate(request);
         return user.get().generateToken();
     }

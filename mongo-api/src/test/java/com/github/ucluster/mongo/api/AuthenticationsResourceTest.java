@@ -36,7 +36,7 @@ public class AuthenticationsResourceTest extends ApiSupport {
     public void should_authenticate_use_username_and_password() throws Exception {
         Response response = post("authentications", RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "password")
+                        .put("type", "password")
                         .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
@@ -51,26 +51,11 @@ public class AuthenticationsResourceTest extends ApiSupport {
     public void should_authenticate_fail_use_username_and_password() throws Exception {
         Response response = post("authentications", RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "password")
+                        .put("type", "password")
                         .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "wrongpassword")
-                        .build())
-                .request()
-        );
-        assertThat(response.getStatus(), is(401));
-    }
-
-    @Test
-    public void should_authenticate_fail_when_no_authenticate_provider_found() throws Exception {
-        Response response = post("authentications", RequestBuilder.of()
-                .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "not_exit")
-                        .build())
-                .properties(ImmutableMap.<String, Object>builder()
-                        .put("username", "kiwiwin")
-                        .put("password", "password")
                         .build())
                 .request()
         );

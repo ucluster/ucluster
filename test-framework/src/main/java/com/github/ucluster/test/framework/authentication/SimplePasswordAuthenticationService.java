@@ -1,11 +1,11 @@
 package com.github.ucluster.test.framework.authentication;
 
 import com.github.ucluster.common.concern.Encryption;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
-import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.mongo.MongoProperty;
 
 import javax.inject.Inject;
@@ -23,7 +23,7 @@ public class SimplePasswordAuthenticationService implements AuthenticationServic
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(ApiRequest request) {
         String username = String.valueOf(request.property("username"));
         String password = String.valueOf(request.property("password"));
 

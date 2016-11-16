@@ -4,7 +4,6 @@ import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.exception.AuthenticationException;
-import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.feature.refresh.token.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -50,7 +49,7 @@ public class RefreshTokenAuthenticationServiceTest {
     public void should_success_authenticate_user() throws Exception {
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "refresh")
+                        .put("type", "refresh")
                         .build()
                 )
                 .properties(ImmutableMap.<String, Object>builder()
@@ -59,7 +58,7 @@ public class RefreshTokenAuthenticationServiceTest {
                         .build())
                 .request();
 
-        Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
+        Optional<User> user = users.authenticate(ApiRequest.of(request));
         assertThat(user.isPresent(), is(true));
         assertThat(user.get().property("username").get().value(), is("kiwiwin"));
     }
@@ -70,7 +69,7 @@ public class RefreshTokenAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "refresh")
+                        .put("type", "refresh")
                         .build()
                 )
                 .properties(ImmutableMap.<String, Object>builder()
@@ -79,7 +78,7 @@ public class RefreshTokenAuthenticationServiceTest {
                         .build())
                 .request();
 
-        users.authenticate(AuthenticationRequest.of(request));
+        users.authenticate(ApiRequest.of(request));
     }
 
     @Test
@@ -88,7 +87,7 @@ public class RefreshTokenAuthenticationServiceTest {
 
         Map<String, Object> request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("method", "refresh")
+                        .put("type", "refresh")
                         .build()
                 )
                 .properties(ImmutableMap.<String, Object>builder()
@@ -97,6 +96,6 @@ public class RefreshTokenAuthenticationServiceTest {
                         .build())
                 .request();
 
-        users.authenticate(AuthenticationRequest.of(request));
+        users.authenticate(ApiRequest.of(request));
     }
 }
