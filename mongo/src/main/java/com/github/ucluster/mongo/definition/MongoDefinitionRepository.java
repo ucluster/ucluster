@@ -33,7 +33,7 @@ public class MongoDefinitionRepository<T extends Record> implements DefinitionRe
     protected FeatureRepository features;
 
     @Override
-    public Definition<T> find(Map<String, Object> metadata) {
+    public Definition<T> find(Map<String, String> metadata) {
         //TODO: refactor implementation
         if (target_model(metadata).equals(Constants.Record.USER)) {
             return load_user_definition(user_type(metadata));
@@ -94,15 +94,15 @@ public class MongoDefinitionRepository<T extends Record> implements DefinitionRe
         return (Definition<T>) definition.orElseThrow(() -> new RecordTypeNotSupportedException(type));
     }
 
-    private String target_model(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("model", Constants.Record.USER);
+    private String target_model(Map<String, String> metadata) {
+        return metadata.getOrDefault("model", Constants.Record.USER);
     }
 
-    private String user_type(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("user_type", "default");
+    private String user_type(Map<String, String> metadata) {
+        return metadata.getOrDefault("user_type", "default");
     }
 
-    private String type(Map<String, Object> metadata) {
-        return (String) metadata.getOrDefault("type", "default");
+    private String type(Map<String, String> metadata) {
+        return metadata.getOrDefault("type", "default");
     }
 }

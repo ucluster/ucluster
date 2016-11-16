@@ -28,7 +28,7 @@ public class MongoAuthenticationLog extends MongoRecord<User.AuthenticationLog> 
     }
 
     private void loadMetadata(Map<String, Object> request) {
-        Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", newHashMap());
+        Map<String, String> metadata = (Map<String, String>) request.getOrDefault("metadata", newHashMap());
         metadata = new HashMap<>(metadata);
         metadata.put("type", "authentication");
         metadata.put("model", "authentication");

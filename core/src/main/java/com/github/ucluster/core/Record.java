@@ -22,7 +22,7 @@ public interface Record {
 
     Definition definition();
 
-    Optional<Object> metadata(String key);
+    Optional<String> metadata(String key);
 
     default void save() {
     }

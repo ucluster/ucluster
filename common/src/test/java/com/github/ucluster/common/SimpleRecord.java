@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class SimpleRecord implements Record {
     private List<Record.Property> properties = new ArrayList<>();
-    private Map<String, Object> metadata = new HashMap<>();
+    private Map<String, String> metadata = new HashMap<>();
 
     public SimpleRecord() {
     }
@@ -66,11 +66,11 @@ public class SimpleRecord implements Record {
     }
 
     @Override
-    public Optional<Object> metadata(String key) {
+    public Optional<String> metadata(String key) {
         return Optional.ofNullable(metadata.get(key));
     }
 
-    public SimpleRecord metadata(String key, Object value) {
+    public SimpleRecord metadata(String key, String value) {
         metadata.put(key, value);
         return this;
     }

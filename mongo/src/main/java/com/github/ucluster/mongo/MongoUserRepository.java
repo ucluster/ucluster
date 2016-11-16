@@ -18,7 +18,6 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +40,7 @@ public class MongoUserRepository implements UserRepository {
     @Override
     public User create(ApiRequest request) {
         final MongoUser user = new MongoUser();
-        user.metadata = new HashMap<>(request.metadata().metadata());
+        user.metadata = request.metadata().metadata();
 
         enhance(user);
         request.properties().keySet().stream()

@@ -9,7 +9,6 @@ import org.mongodb.morphia.annotations.Transient;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,7 +28,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     public MongoRequest(User user, ApiRequest request) {
         this.user = user;
         request.model(Constants.Record.REQUEST);
-        this.metadata = new HashMap<>(request.metadata().metadata());
+        this.metadata = request.metadata().metadata();
         loadProperties(request);
     }
 
@@ -42,7 +41,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
 
     @Override
     public String type() {
-        return (String) metadata.get("type");
+        return metadata.get("type");
     }
 
     @Override

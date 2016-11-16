@@ -35,7 +35,7 @@ public class MongoRecord<T extends Record> implements Record, Model {
     protected final DateTime createdAt = new DateTime();
 
     @Embedded
-    protected Map<String, Object> metadata = new HashMap<>();
+    protected Map<String, String> metadata = new HashMap<>();
 
     @Embedded
     protected Map<String, Property> properties = new HashMap<>();
@@ -62,7 +62,7 @@ public class MongoRecord<T extends Record> implements Record, Model {
         return createdAt;
     }
 
-    public Map<String, Object> metadata() {
+    public Map<String, String> metadata() {
         return metadata;
     }
 
@@ -184,7 +184,7 @@ public class MongoRecord<T extends Record> implements Record, Model {
     }
 
     @Override
-    public Optional<Object> metadata(String key) {
+    public Optional<String> metadata(String key) {
         return Optional.ofNullable(metadata.get(key));
     }
 
