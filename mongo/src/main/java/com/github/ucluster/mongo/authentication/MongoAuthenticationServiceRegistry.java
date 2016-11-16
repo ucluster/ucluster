@@ -27,9 +27,9 @@ public class MongoAuthenticationServiceRegistry implements AuthenticationService
     }
 
     @Override
-    public Optional<AuthenticationService> find(String type) {
+    public Optional<AuthenticationService> find(Map<String, String> metadata) {
         try {
-            final AuthenticationService service = createAuthenticationService(type);
+            final AuthenticationService service = createAuthenticationService(metadata.get("type"));
             injector.injectMembers(service);
 
             return Optional.of(service);

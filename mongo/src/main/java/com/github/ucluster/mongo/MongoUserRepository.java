@@ -109,7 +109,7 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public Optional<User> authenticate(ApiRequest request) {
-        Optional<AuthenticationService> service = registry.find(request.metadata("type"));
+        Optional<AuthenticationService> service = registry.find(request.metadata());
 
         if (!service.isPresent()) {
             throw new AuthenticationException();
