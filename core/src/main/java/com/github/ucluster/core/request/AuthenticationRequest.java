@@ -1,4 +1,4 @@
-package com.github.ucluster.core.authentication;
+package com.github.ucluster.core.request;
 
 import com.github.ucluster.core.Request;
 
@@ -8,6 +8,10 @@ import java.util.Map;
 public class AuthenticationRequest extends Request {
     public static AuthenticationRequest of(Map<String, Object> request) {
         return new AuthenticationRequest(request);
+    }
+
+    AuthenticationRequest() {
+        super();
     }
 
     private AuthenticationRequest(Map<String, Object> request) {

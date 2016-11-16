@@ -1,5 +1,7 @@
 package com.github.ucluster.test.framework.request;
 
+import com.github.ucluster.core.Request;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,7 @@ public class RequestBuilder {
         return this;
     }
 
-    public Map<String, Object> get() {
+    protected Map<String, Object> get() {
         final Map<String, Object> request = new HashMap<>();
 
         if (type != null) {
@@ -33,6 +35,10 @@ public class RequestBuilder {
         request.put("properties", properties);
 
         return request;
+    }
+
+    public Request request() {
+        return Request.of(get());
     }
 
     public static RequestBuilder of(String type) {

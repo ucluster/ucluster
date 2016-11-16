@@ -1,13 +1,14 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Record;
+import com.github.ucluster.core.Request;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.core.exception.AuthenticationException;
+import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 import com.github.ucluster.mongo.authentication.MongoAuthenticationLog;
@@ -39,17 +40,15 @@ public class MongoUserRepository implements UserRepository {
     AuthenticationServiceRegistry registry;
 
     @Override
-    public User create(Map<String, Object> request) {
-        final CreateUserRequest createUserRequest = new CreateUserRequest(request);
-
+    public User create(Request request) {
         final MongoUser user = new MongoUser();
-        user.metadata = createUserRequest.metadata();
+        user.metadata = new HashMap<>(request.metadata());
 
         enhance(user);
-        createUserRequest.properties().keySet().stream()
+        request.properties().keySet().stream()
                 .forEach(propertyPath -> user.property(
                         propertyPath,
-                        createUserRequest.properties().get(propertyPath))
+                        request.properties().get(propertyPath))
                 );
 
         user.save();
@@ -139,42 +138,9 @@ public class MongoUserRepository implements UserRepository {
         return uuid((String) ((Map<String, Object>) o.get()).get("id"));
     }
 
-    private static class CreateUserRequest {
-
-        private final Map<String, Object> request;
-
-        CreateUserRequest(Map<String, Object> request) {
-            this.request = request;
-        }
-
-        Map<String, Object> metadata() {
-            Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
-            metadata = new HashMap<>(metadata);
-
-            metadata.put("model", Constants.Record.USER);
-            if (!metadata.containsKey("type")) {
-                metadata.put("type", "default");
-            }
-            if (!metadata.containsKey("user_type")) {
-                metadata.put("user_type", metadata.get("type"));
-            }
-
-            return metadata;
-        }
-
-        Map<String, Object> properties() {
-            return (Map<String, Object>) request.getOrDefault("properties", new HashMap<>());
-        }
-    }
-
     private void auditAuthenticationLog(Map<String, Object> request, AuthenticationResponse response) {
         User.AuthenticationLog authenticationLog = new MongoAuthenticationLog(request, response);
         injector.injectMembers(authenticationLog);
         authenticationLog.save();
-    }
-
-    private String methodOf(Map<String, Object> request) {
-        Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
-        return (String) metadata.getOrDefault("method", "password");
     }
 }

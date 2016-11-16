@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Repository;
+import com.github.ucluster.core.Request;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
@@ -18,7 +19,6 @@ import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.github.ucluster.test.framework.matcher.ConcernEffectExceptionMatcher.capture;
@@ -47,7 +47,7 @@ public class MongoUserRepositoryTest {
     public void setUp() throws Exception {
         session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -56,7 +56,7 @@ public class MongoUserRepositoryTest {
                         .put("password", "password")
                         .put("email", "kiwi.swhite.coder@gmail.com")
                         .build())
-                .get();
+                .request();
 
         user = users.create(request);
     }
@@ -67,12 +67,12 @@ public class MongoUserRepositoryTest {
                 (path, type) -> path.equals("username") && type.equals("format")
         );
 
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")
                         .build())
-                .get();
+                .request();
 
         users.create(request);
     }
@@ -83,11 +83,11 @@ public class MongoUserRepositoryTest {
                 (path, type) -> path.equals("username") && type.equals("required")
         );
 
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("password", "password")
                         .build())
-                .get();
+                .request();
 
         users.create(request);
     }
@@ -96,7 +96,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_when_type_not_supported() {
         thrown.expect(RecordTypeNotSupportedException.class);
 
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("type", "not_supported")
                         .build())
@@ -104,7 +104,7 @@ public class MongoUserRepositoryTest {
                         .put("username", "kiwiwin")
                         .put("password", "password")
                         .build())
-                .get();
+                .request();
 
         user = users.create(request);
     }
@@ -113,7 +113,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_when_confirmation_required_but_code_not_match() throws Exception {
         capture(thrown).errors(((path, type) -> path.equals("email") && type.equals("confirm")));
 
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "not_match_1102")
                         .build())
@@ -122,7 +122,7 @@ public class MongoUserRepositoryTest {
                         .put("password", "password")
                         .put("email", "kiwilose@qq.com")
                         .build())
-                .get();
+                .request();
 
         user = users.create(request);
     }
@@ -191,7 +191,7 @@ public class MongoUserRepositoryTest {
                             .put("password", "password" + count)
                             .put("email", "kiwi.swhite.coder@gmail.com" + count)
                             .build())
-                    .get());
+                    .request());
         }
 
         final List<? extends User> found = users.find(Criteria.empty()).page(1, 10);
@@ -211,7 +211,7 @@ public class MongoUserRepositoryTest {
                             .put("password", "password" + count)
                             .put("email", "kiwi.swhite.coder@gmail.com" + count)
                             .build())
-                    .get());
+                    .request());
         }
 
         final PaginatedList<User> page = users.find(

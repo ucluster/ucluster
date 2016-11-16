@@ -1,5 +1,6 @@
 package com.github.ucluster.api;
 
+import com.github.ucluster.core.Request;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.util.Criteria;
@@ -18,7 +19,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 @Path("users")
 public class UsersResource {
@@ -35,7 +35,7 @@ public class UsersResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(Map<String, Object> request) {
+    public Response register(Request request) {
         final User user = users.create(request);
         return Response.created(Routing.user(user)).build();
     }

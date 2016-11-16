@@ -1,6 +1,6 @@
 package com.github.ucluster.core;
 
-import com.github.ucluster.core.authentication.AuthenticationRequest;
+import com.github.ucluster.core.request.AuthenticationRequest;
 
 import java.util.Optional;
 

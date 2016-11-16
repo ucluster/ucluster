@@ -1,9 +1,10 @@
 package com.github.ucluster.feature.password.authentication;
 
+import com.github.ucluster.core.Request;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.exception.AuthenticationException;
+import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.feature.password.authentication.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.test.framework.request.RequestBuilder;
 import com.google.common.collect.ImmutableMap;
@@ -30,12 +31,12 @@ public class PasswordAuthenticationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
                         .build())
-                .get();
+                .request();
 
         users.create(request);
     }
@@ -51,7 +52,7 @@ public class PasswordAuthenticationServiceTest {
                         .put("username", "kiwiwin")
                         .put("password", "password")
                         .build())
-                .get();
+                .request();
 
 
         Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
@@ -73,7 +74,7 @@ public class PasswordAuthenticationServiceTest {
                         .put("username", "noexist")
                         .put("password", "password")
                         .build())
-                .get();
+                .request();
 
         users.authenticate(AuthenticationRequest.of(request));
     }
@@ -91,7 +92,7 @@ public class PasswordAuthenticationServiceTest {
                         .put("username", "kiwiwin")
                         .put("password", "wrongpassword")
                         .build())
-                .get();
+                .request();
 
         users.authenticate(AuthenticationRequest.of(request));
     }
@@ -109,7 +110,7 @@ public class PasswordAuthenticationServiceTest {
                         .put("username", "kiwiwin")
                         .put("password", "wrongpassword")
                         .build())
-                .get();
+                .request();
 
         users.authenticate(AuthenticationRequest.of(request));
     }

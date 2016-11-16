@@ -28,13 +28,12 @@ public class AuthenticationsResourceTest extends ApiSupport {
                                 .put("email", "kiwi.swhite.coder@gmail.com")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         );
     }
 
     @Test
     public void should_authenticate_use_username_and_password() throws Exception {
-
         Response response = post("authentications", RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("method", "password")
@@ -43,7 +42,7 @@ public class AuthenticationsResourceTest extends ApiSupport {
                         .put("username", "kiwiwin")
                         .put("password", "password")
                         .build())
-                .get());
+                .request());
 
         assertThat(response.getStatus(), is(200));
     }
@@ -58,7 +57,7 @@ public class AuthenticationsResourceTest extends ApiSupport {
                         .put("username", "kiwiwin")
                         .put("password", "wrongpassword")
                         .build())
-                .get()
+                .request()
         );
         assertThat(response.getStatus(), is(401));
     }
@@ -73,7 +72,7 @@ public class AuthenticationsResourceTest extends ApiSupport {
                         .put("username", "kiwiwin")
                         .put("password", "password")
                         .build())
-                .get()
+                .request()
         );
         assertThat(response.getStatus(), is(401));
     }

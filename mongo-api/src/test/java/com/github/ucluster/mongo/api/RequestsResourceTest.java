@@ -30,7 +30,7 @@ public class RequestsResourceTest extends ApiSupport {
                                 .put("email", "kiwi.swhite.coder@gmail.com")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         ).getLocation().getPath();
     }
 

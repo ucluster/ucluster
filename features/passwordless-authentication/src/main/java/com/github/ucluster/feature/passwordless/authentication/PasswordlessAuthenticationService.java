@@ -2,9 +2,9 @@ package com.github.ucluster.feature.passwordless.authentication;
 
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
 import com.github.ucluster.core.authentication.AuthenticationService;
+import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.mongo.Keys;
 import com.github.ucluster.session.Session;
 

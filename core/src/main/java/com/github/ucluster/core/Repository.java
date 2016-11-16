@@ -3,7 +3,6 @@ package com.github.ucluster.core;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 
-import java.util.Map;
 import java.util.Optional;
 
 public interface Repository<T extends Record> {
@@ -16,5 +15,5 @@ public interface Repository<T extends Record> {
 
     PaginatedList<T> find(Criteria criteria);
 
-    T create(Map<String, Object> request);
+    T create(Request request);
 }

@@ -1,9 +1,10 @@
 package com.github.ucluster.feature.refresh.token.authentication;
 
+import com.github.ucluster.core.Request;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
-import com.github.ucluster.core.authentication.AuthenticationRequest;
 import com.github.ucluster.core.exception.AuthenticationException;
+import com.github.ucluster.core.request.AuthenticationRequest;
 import com.github.ucluster.feature.refresh.token.junit.UClusterFeatureTestRunner;
 import com.github.ucluster.mongo.MongoProperty;
 import com.github.ucluster.test.framework.request.RequestBuilder;
@@ -33,12 +34,12 @@ public class RefreshTokenAuthenticationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("password", "password")
                         .build())
-                .get();
+                .request();
 
         users.create(request);
 
@@ -56,7 +57,7 @@ public class RefreshTokenAuthenticationServiceTest {
                         .put("access_token", token.accessToken())
                         .put("refresh_token", token.refreshToken())
                         .build())
-                .get();
+                .request();
 
         Optional<User> user = users.authenticate(AuthenticationRequest.of(request));
         assertThat(user.isPresent(), is(true));
@@ -76,7 +77,7 @@ public class RefreshTokenAuthenticationServiceTest {
                         .put("access_token", "invalid")
                         .put("refresh_token", "invalid")
                         .build())
-                .get();
+                .request();
 
         users.authenticate(AuthenticationRequest.of(request));
     }
@@ -94,7 +95,7 @@ public class RefreshTokenAuthenticationServiceTest {
                         .put("access_token", "invalid")
                         .put("refresh_token", token.refreshToken())
                         .build())
-                .get();
+                .request();
 
         users.authenticate(AuthenticationRequest.of(request));
     }

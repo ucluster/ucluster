@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.core.Request;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordException;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
@@ -16,7 +17,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -41,7 +41,7 @@ public class MongoUserTest {
     public void setUp() throws Exception {
         session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -51,7 +51,7 @@ public class MongoUserTest {
                         .put("password", "password")
                         .put("email", "kiwi.swhite.coder@gmail.com")
                         .build())
-                .get();
+                .request();
 
         user = users.create(request);
     }
@@ -112,7 +112,7 @@ public class MongoUserTest {
     public void should_not_get_requests_from_other_users() {
         session.set("confirm:kiwiwin@qq1.com", "3102");
 
-        final Map<String, Object> request = RequestBuilder.of()
+        final Request request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -121,7 +121,7 @@ public class MongoUserTest {
                         .put("password", "another")
                         .put("email", "kiwiwin@qq1.com")
                         .build())
-                .get();
+                .request();
 
         users.create(request);
 

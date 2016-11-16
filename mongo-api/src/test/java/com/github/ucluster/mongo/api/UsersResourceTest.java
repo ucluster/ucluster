@@ -26,7 +26,7 @@ public class UsersResourceTest extends ApiSupport {
                                 .put("email", "kiwi.swhite.coder@gmail.com")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         );
 
         assertThat(response.getStatus(), is(201));
@@ -40,7 +40,7 @@ public class UsersResourceTest extends ApiSupport {
                                 .put("username", "kiwiwin")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         );
 
         final Response response = post("users",
@@ -49,7 +49,7 @@ public class UsersResourceTest extends ApiSupport {
                                 .put("username", "kiwiwin")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         );
 
         assertThat(response.getStatus(), is(400));
@@ -69,7 +69,7 @@ public class UsersResourceTest extends ApiSupport {
                                 .put("username", "k")
                                 .put("password", "p")
                                 .build())
-                        .get()
+                        .request()
         );
 
         assertThat(response.getStatus(), is(400));
@@ -95,7 +95,7 @@ public class UsersResourceTest extends ApiSupport {
                                 .put("username", "kiwiwin")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         );
 
         assertThat(response.getStatus(), is(400));
@@ -117,7 +117,7 @@ public class UsersResourceTest extends ApiSupport {
                                 .put("email", "kiwi.swhite.coder@gmail.com")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         );
 
         final Response response = get(createdResponse.getLocation().getPath());
@@ -153,7 +153,7 @@ public class UsersResourceTest extends ApiSupport {
                                 .put("email", "kiwi.swhite.coder@gmail.com")
                                 .put("password", "password")
                                 .build())
-                        .get()
+                        .request()
         );
 
         final Response response = get("/users");
