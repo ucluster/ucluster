@@ -62,33 +62,32 @@ public class ApiRequest extends HashMap<String, Object> {
     public static class Metadata extends HashMap<String, String> {
         public Metadata(Map<String, String> metadata) {
             super(metadata);
-        }
-
-        public String type() {
-            return getOrDefault("type", "default");
-        }
-
-        public String model() {
-            return getOrDefault("model", "user");
-        }
-
-        public String userType() {
-            return getOrDefault("user_type", "default");
-        }
-
-        public Map<String, String> metadata() {
             if (!containsKey("type")) {
-                put("type", type());
+                put("type", "default");
             }
 
             if (!containsKey("model")) {
-                put("model", model());
+                put("model", "user");
             }
 
             if (!containsKey("user_type")) {
-                put("user_type", userType());
+                put("user_type", "default");
             }
+        }
 
+        public String type() {
+            return get("type");
+        }
+
+        public String model() {
+            return get("model");
+        }
+
+        public String userType() {
+            return get("user_type");
+        }
+
+        public Map<String, String> metadata() {
             return this;
         }
     }
