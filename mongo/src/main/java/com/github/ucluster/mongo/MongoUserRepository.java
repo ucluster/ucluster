@@ -41,7 +41,7 @@ public class MongoUserRepository implements UserRepository {
     @Override
     public User create(ApiRequest request) {
         final MongoUser user = new MongoUser();
-        user.metadata = new HashMap<>(request.metadata());
+        user.metadata = new HashMap<>(request.metadata().metadata());
 
         enhance(user);
         request.properties().keySet().stream()
@@ -109,6 +109,7 @@ public class MongoUserRepository implements UserRepository {
 
     @Override
     public Optional<User> authenticate(ApiRequest request) {
+        request.model(Constants.Record.USER);
         Optional<AuthenticationService> service = registry.find(request.metadata());
 
         if (!service.isPresent()) {

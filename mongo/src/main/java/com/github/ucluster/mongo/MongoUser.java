@@ -132,7 +132,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
         return request;
     }
 
-    private MongoRequest saveRequest(Map<String, Object> request) {
+    private MongoRequest saveRequest(ApiRequest request) {
         final MongoRequest req = (MongoRequest) requestFactory.create(this, request);
         enhance(req);
         req.save();

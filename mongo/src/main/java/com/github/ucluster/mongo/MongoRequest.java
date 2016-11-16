@@ -26,24 +26,15 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     protected MongoRequest() {
     }
 
-    public MongoRequest(User user, Map<String, Object> request) {
+    public MongoRequest(User user, ApiRequest request) {
         this.user = user;
-        loadMetadata(user, request);
+        request.model(Constants.Record.REQUEST);
+        this.metadata = new HashMap<>(request.metadata().metadata());
         loadProperties(request);
     }
 
-    private void loadMetadata(User user, Map<String, Object> request) {
-        Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
-        //for immutable map
-        metadata = new HashMap<>(metadata);
-        metadata.put("user_type", user.metadata("user_type").get());
-        metadata.put("model", Constants.Record.REQUEST);
-
-        this.metadata = metadata;
-    }
-
-    private void loadProperties(Map<String, Object> request) {
-        ((Map<String, Object>) request.get("properties")).entrySet().stream()
+    private void loadProperties(ApiRequest request) {
+        request.properties().entrySet().stream()
                 .forEach(e -> {
                     property(e.getKey(), e.getValue());
                 });

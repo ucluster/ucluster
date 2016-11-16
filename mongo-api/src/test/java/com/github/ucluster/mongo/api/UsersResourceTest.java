@@ -89,7 +89,7 @@ public class UsersResourceTest extends ApiSupport {
         final Response response = post("users",
                 RequestBuilder.of()
                         .metadata(ImmutableMap.<String, Object>builder()
-                                .put("type", "unsupported")
+                                .put("user_type", "unsupported")
                                 .build())
                         .properties(ImmutableMap.<String, Object>builder()
                                 .put("username", "kiwiwin")
@@ -128,7 +128,7 @@ public class UsersResourceTest extends ApiSupport {
 
         assertThat("/users/" + json.path("$.id"), is(createdResponse.getLocation().getPath()));
         assertThat(json.metadata("model"), is("user"));
-        assertThat(json.metadata("type"), is("default"));
+        assertThat(json.metadata("user_type"), is("default"));
 
         assertThat(json.property("username"), is("kiwiwin"));
         assertThat(json.property("nickname"), is("kiwinickname"));

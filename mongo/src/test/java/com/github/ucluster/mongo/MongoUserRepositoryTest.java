@@ -98,7 +98,7 @@ public class MongoUserRepositoryTest {
 
         final ApiRequest request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
-                        .put("type", "not_supported")
+                        .put("user_type", "not_supported")
                         .build())
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")

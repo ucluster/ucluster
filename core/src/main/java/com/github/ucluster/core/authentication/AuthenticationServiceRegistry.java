@@ -1,8 +1,9 @@
 package com.github.ucluster.core.authentication;
 
-import java.util.Map;
+import com.github.ucluster.core.ApiRequest;
+
 import java.util.Optional;
 
 public interface AuthenticationServiceRegistry {
-    Optional<AuthenticationService> find(Map<String, String> metadata);
+    Optional<AuthenticationService> find(ApiRequest.Metadata metadata);
 }

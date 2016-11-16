@@ -4,7 +4,6 @@ import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.MongoRequest;
 
-import java.util.Map;
 import java.util.Optional;
 
 public class UpdateNicknameRequest extends MongoRequest {
@@ -12,7 +11,7 @@ public class UpdateNicknameRequest extends MongoRequest {
         super();
     }
 
-    public UpdateNicknameRequest(User user, Map<String, Object> request) {
+    public UpdateNicknameRequest(User user, ApiRequest request) {
         super(user, request);
     }
 

@@ -15,18 +15,8 @@ public class ApiRequest extends HashMap<String, Object> {
         return new ApiRequest(request);
     }
 
-    public Map<String, String> metadata() {
-        final Map<String, String> metadata = new HashMap<>((Map<String, String>) getOrDefault("metadata", new HashMap<>()));
-
-        metadata.put("model", "user");
-        if (!metadata.containsKey("type")) {
-            metadata.put("type", "default");
-        }
-        if (!metadata.containsKey("user_type")) {
-            metadata.put("user_type", metadata.get("type"));
-        }
-
-        return metadata;
+    public Metadata metadata() {
+        return new Metadata(originalMetadata());
     }
 
     public Map<String, Object> properties() {
@@ -35,6 +25,26 @@ public class ApiRequest extends HashMap<String, Object> {
 
     public String metadata(String key) {
         return metadata().get(key);
+    }
+
+    public ApiRequest type(String value) {
+        final Map<String, String> metadata = new HashMap<>(originalMetadata());
+        metadata.put("type", value);
+        put("metadata", metadata);
+
+        return this;
+    }
+
+    public ApiRequest model(String value) {
+        final Map<String, String> metadata = new HashMap<>(originalMetadata());
+        metadata.put("model", value);
+        put("metadata", metadata);
+
+        return this;
+    }
+
+    private Map<String, String> originalMetadata() {
+        return (Map<String, String>) getOrDefault("metadata", new HashMap<>());
     }
 
     public Object property(String key) {
@@ -47,5 +57,39 @@ public class ApiRequest extends HashMap<String, Object> {
         request.put("properties", properties());
 
         return request;
+    }
+
+    public static class Metadata extends HashMap<String, String> {
+        public Metadata(Map<String, String> metadata) {
+            super(metadata);
+        }
+
+        public String type() {
+            return getOrDefault("type", "default");
+        }
+
+        public String model() {
+            return getOrDefault("model", "user");
+        }
+
+        public String userType() {
+            return getOrDefault("user_type", "default");
+        }
+
+        public Map<String, String> metadata() {
+            if (!containsKey("type")) {
+                put("type", type());
+            }
+
+            if (!containsKey("model")) {
+                put("model", model());
+            }
+
+            if (!containsKey("user_type")) {
+                put("user_type", userType());
+            }
+
+            return this;
+        }
     }
 }

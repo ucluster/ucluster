@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo.authentication;
 
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.authentication.AuthenticationService;
 import com.github.ucluster.core.authentication.AuthenticationServiceRegistry;
 import com.github.ucluster.core.configuration.ConfigurationRepository;
@@ -27,9 +28,9 @@ public class MongoAuthenticationServiceRegistry implements AuthenticationService
     }
 
     @Override
-    public Optional<AuthenticationService> find(Map<String, String> metadata) {
+    public Optional<AuthenticationService> find(ApiRequest.Metadata metadata) {
         try {
-            final AuthenticationService service = createAuthenticationService(metadata.get("type"));
+            final AuthenticationService service = createAuthenticationService(metadata.type());
             injector.injectMembers(service);
 
             return Optional.of(service);
