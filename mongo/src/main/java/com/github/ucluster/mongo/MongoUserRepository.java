@@ -40,7 +40,7 @@ public class MongoUserRepository implements UserRepository {
     @Override
     public User create(ApiRequest request) {
         final MongoUser user = new MongoUser();
-        user.metadata = request.metadata().metadata();
+        user.metadata = request.metadata();
 
         enhance(user);
         request.properties().keySet().stream()

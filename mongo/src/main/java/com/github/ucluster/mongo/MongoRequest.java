@@ -28,7 +28,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     public MongoRequest(User user, ApiRequest request) {
         this.user = user;
         request.model(Constants.Record.REQUEST);
-        this.metadata = request.metadata().metadata();
+        this.metadata = request.metadata();
         loadProperties(request);
     }
 

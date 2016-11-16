@@ -60,7 +60,7 @@ public class ApiRequest extends HashMap<String, Object> {
     }
 
     public static class Metadata extends HashMap<String, String> {
-        public Metadata(Map<String, String> metadata) {
+        Metadata(Map<String, String> metadata) {
             super(metadata);
             if (!containsKey("type")) {
                 put("type", "default");
@@ -85,10 +85,6 @@ public class ApiRequest extends HashMap<String, Object> {
 
         public String userType() {
             return get("user_type");
-        }
-
-        public Map<String, String> metadata() {
-            return this;
         }
     }
 }
