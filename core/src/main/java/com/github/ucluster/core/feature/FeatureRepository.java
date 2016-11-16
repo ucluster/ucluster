@@ -1,9 +1,10 @@
 package com.github.ucluster.core.feature;
 
+import com.github.ucluster.core.ApiRequest;
+
 import java.util.Collection;
-import java.util.Map;
 
 public interface FeatureRepository {
 
-    Collection<? extends Feature> features(Map<String, Object> metadata);
+    Collection<? extends Feature> features(ApiRequest.Metadata metadata);
 }

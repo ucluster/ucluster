@@ -1,8 +1,8 @@
 package com.github.ucluster.core.definition;
 
-import java.util.Map;
+import com.github.ucluster.core.ApiRequest;
 
 public interface DefinitionRepository<D extends Definition> {
 
-    D find(Map<String, String> metadata);
+    D find(ApiRequest.Metadata metadata);
 }

@@ -2,6 +2,7 @@ package com.github.ucluster.mongo.definition;
 
 import com.github.ucluster.common.definition.DSLCompiler;
 import com.github.ucluster.common.definition.DefaultRecordDefinition;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.definition.Definition;
@@ -14,9 +15,8 @@ import com.google.inject.Injector;
 import org.mongodb.morphia.Datastore;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,44 +33,40 @@ public class MongoDefinitionRepository<T extends Record> implements DefinitionRe
     protected FeatureRepository features;
 
     @Override
-    public Definition<T> find(Map<String, String> metadata) {
-        //TODO: refactor implementation
-        if (target_model(metadata).equals(Constants.Record.USER)) {
-            return load_user_definition(user_type(metadata));
-        } else if (target_model(metadata).equals(Constants.Record.AUTHENTICATION)) {
+    public Definition<T> find(ApiRequest.Metadata metadata) {
+        if (Objects.equals(metadata.model(), Constants.Record.USER)) {
+            return load_user_definition(metadata);
+        } else if (Objects.equals(metadata.model(), Constants.Record.AUTHENTICATION)) {
+            //TODO: authentication definition
             return new DefaultRecordDefinition<>(newArrayList());
         } else {
-            return load_request_definition(user_type(metadata), type(metadata));
+            return load_request_definition(metadata);
         }
-
     }
 
-    private Definition<T> load_user_definition(String userType) {
-        final Definition<T> definition = load_user_original_definition(userType);
-        for (Definition<T> def : load_user_feature_enhanced_definition(userType)) {
+    private Definition<T> load_user_definition(ApiRequest.Metadata metadata) {
+        final Definition<T> definition = load_user_original_definition(metadata);
+        for (Definition<T> def : load_user_feature_enhanced_definition(metadata)) {
             definition.merge(def);
         }
 
         return definition;
     }
 
-    private Definition<T> load_user_original_definition(String userType) {
+    private Definition<T> load_user_original_definition(ApiRequest.Metadata metadata) {
         final MongoDSLScript user_script = datastore.createQuery(MongoDSLScript.class)
-                .field("userType").equal(userType)
+                .field("userType").equal(metadata.userType())
                 .field("scriptType").equal("user")
                 .get();
 
         if (user_script == null) {
-            throw new RecordTypeNotSupportedException(userType);
+            throw new RecordTypeNotSupportedException(metadata.userType());
         }
 
         return DSLCompiler.load_user(injector, user_script.script());
     }
 
-    private List<Definition<T>> load_user_feature_enhanced_definition(String userType) {
-        final Map<String, Object> metadata = new HashMap<>();
-        metadata.put("user_type", userType);
-
+    private List<Definition<T>> load_user_feature_enhanced_definition(ApiRequest.Metadata metadata) {
         return features.features(metadata)
                 .stream()
                 .map(feature -> feature.definition(User.class))
@@ -79,30 +75,14 @@ public class MongoDefinitionRepository<T extends Record> implements DefinitionRe
                 .collect(Collectors.toList());
     }
 
-    private Definition<T> load_request_definition(String userType, String type) {
-        final Map<String, Object> metadata = new HashMap<>();
-        metadata.put("user_type", userType);
-        metadata.put("type", type);
-
+    private Definition<T> load_request_definition(ApiRequest.Metadata metadata) {
         final Optional<Definition<User.Request>> definition = features.features(metadata)
                 .stream()
-                .map(feature -> feature.definition(User.Request.class, type))
+                .map(feature -> feature.definition(User.Request.class, metadata.type()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findFirst();
 
-        return (Definition<T>) definition.orElseThrow(() -> new RecordTypeNotSupportedException(type));
-    }
-
-    private String target_model(Map<String, String> metadata) {
-        return metadata.getOrDefault("model", Constants.Record.USER);
-    }
-
-    private String user_type(Map<String, String> metadata) {
-        return metadata.getOrDefault("user_type", "default");
-    }
-
-    private String type(Map<String, String> metadata) {
-        return metadata.getOrDefault("type", "default");
+        return (Definition<T>) definition.orElseThrow(() -> new RecordTypeNotSupportedException(metadata.type()));
     }
 }

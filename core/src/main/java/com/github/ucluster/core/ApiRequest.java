@@ -61,7 +61,7 @@ public class ApiRequest extends HashMap<String, Object> {
 
     public static class Metadata extends HashMap<String, String> {
         public Metadata() {
-            super();
+            this(new HashMap<>());
         }
 
         public Metadata(Map<String, String> metadata) {

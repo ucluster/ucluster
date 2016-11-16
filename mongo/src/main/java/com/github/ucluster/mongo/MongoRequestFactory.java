@@ -9,7 +9,6 @@ import com.google.inject.Injector;
 
 import javax.inject.Inject;
 import java.lang.reflect.Constructor;
-import java.util.HashMap;
 import java.util.Optional;
 
 public class MongoRequestFactory implements RequestFactory {
@@ -34,7 +33,7 @@ public class MongoRequestFactory implements RequestFactory {
     }
 
     private Class<? extends User.Request> getRequestClass(User user, ApiRequest request) {
-        final Optional<? extends Class<? extends User.Request>> klass = features.features(new HashMap<>())
+        final Optional<? extends Class<? extends User.Request>> klass = features.features(user.metadata())
                 .stream()
                 .map(feature -> feature.bindingOf(User.Request.class, request.metadata().type()))
                 .filter(Optional::isPresent)

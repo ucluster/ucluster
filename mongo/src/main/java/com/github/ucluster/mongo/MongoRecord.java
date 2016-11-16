@@ -63,7 +63,7 @@ public class MongoRecord<T extends Record> implements Record, Model {
         return createdAt;
     }
 
-    public Map<String, String> metadata() {
+    public ApiRequest.Metadata metadata() {
         return metadata;
     }
 

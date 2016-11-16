@@ -22,6 +22,8 @@ public interface Record {
 
     Definition definition();
 
+    ApiRequest.Metadata metadata();
+
     Optional<String> metadata(String key);
 
     default void save() {

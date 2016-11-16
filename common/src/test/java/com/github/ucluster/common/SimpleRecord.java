@@ -1,19 +1,18 @@
 package com.github.ucluster.common;
 
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class SimpleRecord implements Record {
     private List<Record.Property> properties = new ArrayList<>();
-    private Map<String, String> metadata = new HashMap<>();
+    private ApiRequest.Metadata metadata = new ApiRequest.Metadata();
 
     public SimpleRecord() {
     }
@@ -63,6 +62,11 @@ public class SimpleRecord implements Record {
     @Override
     public Definition definition() {
         return null;
+    }
+
+    @Override
+    public ApiRequest.Metadata metadata() {
+        return metadata;
     }
 
     @Override
