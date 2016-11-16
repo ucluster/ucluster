@@ -172,9 +172,4 @@ public class MongoUserRepository implements UserRepository {
         injector.injectMembers(authenticationLog);
         authenticationLog.save();
     }
-
-    private String methodOf(Map<String, Object> request) {
-        Map<String, Object> metadata = (Map<String, Object>) request.getOrDefault("metadata", new HashMap<>());
-        return (String) metadata.getOrDefault("method", "password");
-    }
 }
