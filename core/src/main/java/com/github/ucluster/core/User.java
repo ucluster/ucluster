@@ -5,12 +5,11 @@ import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.PaginatedList;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 
 public interface User extends Record {
 
-    User.Request apply(Map<String, Object> request);
+    User.Request apply(ApiRequest request);
 
     Optional<Request> request(String uuid);
 
@@ -34,7 +33,7 @@ public interface User extends Record {
 
         Optional<Response> response();
 
-        void execute(Map<String, Object> detail);
+        void execute(ApiRequest request);
 
         interface Response {
 

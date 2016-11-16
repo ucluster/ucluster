@@ -1,6 +1,6 @@
 package com.github.ucluster.feature.passwordless.authentication;
 
-import com.github.ucluster.core.Request;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.request.AuthenticationRequest;
@@ -34,7 +34,7 @@ public class PasswordlessAuthenticationServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwiwin")
                         .put("phone", "13112341234")

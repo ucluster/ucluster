@@ -1,5 +1,6 @@
 package com.github.ucluster.api;
 
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.util.Criteria;
 import com.github.ucluster.core.util.Page;
@@ -16,7 +17,6 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 
 public class RequestsResource {
     private final User user;
@@ -27,7 +27,7 @@ public class RequestsResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response apply(Map<String, Object> request) {
+    public Response apply(ApiRequest request) {
         final User.Request appliedRequest = user.apply(request);
 
         final Response.ResponseBuilder created = Response.created(Routing.request(user, appliedRequest));

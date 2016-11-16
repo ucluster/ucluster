@@ -1,6 +1,6 @@
 package com.github.ucluster.mongo;
 
-import com.github.ucluster.core.Request;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordException;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
@@ -41,7 +41,7 @@ public class MongoUserTest {
     public void setUp() throws Exception {
         session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -58,14 +58,14 @@ public class MongoUserTest {
 
     @Test
     public void should_user_apply_request() {
-        user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ApiRequest.of(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "update_nickname")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
                         .build())
-                .build());
+                .build()));
 
         final Optional<User> userFound = users.uuid(user.uuid());
         assertThat(userFound.get().property("nickname").get().value(), is("newnickname"));
@@ -77,14 +77,14 @@ public class MongoUserTest {
                 (path, type) -> path.equals("nickname") && type.equals("format")
         );
 
-        user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ApiRequest.of(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "update_nickname")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "a")
                         .build())
-                .build());
+                .build()));
 
         assertThat(user.requests(Criteria.empty()).page(0, 10).isEmpty(), is(true));
     }
@@ -92,14 +92,14 @@ public class MongoUserTest {
     @Test
     public void should_get_all_requests() {
         for (int count = 0; count < 11; count++) {
-            users.uuid(user.uuid()).get().apply(ImmutableMap.<String, Object>builder()
+            users.uuid(user.uuid()).get().apply(ApiRequest.of(ImmutableMap.<String, Object>builder()
                     .put("metadata", ImmutableMap.<String, Object>builder()
                             .put("type", "update_nickname")
                             .build())
                     .put("properties", ImmutableMap.<String, Object>builder()
                             .put("nickname", "newnickname" + count)
                             .build())
-                    .build());
+                    .build()));
         }
 
         final PaginatedList<User.Request> requests = user.requests(Criteria.empty());
@@ -112,7 +112,7 @@ public class MongoUserTest {
     public void should_not_get_requests_from_other_users() {
         session.set("confirm:kiwiwin@qq1.com", "3102");
 
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -135,14 +135,14 @@ public class MongoUserTest {
     public void should_failed_to_apply_not_supported_request_type() {
         thrown.expect(RecordTypeNotSupportedException.class);
 
-        user.apply(ImmutableMap.<String, Object>builder()
+        user.apply(ApiRequest.of(ImmutableMap.<String, Object>builder()
                 .put("metadata", ImmutableMap.<String, Object>builder()
                         .put("type", "non_supported")
                         .build())
                 .put("properties", ImmutableMap.<String, Object>builder()
                         .put("nickname", "newnickname")
                         .build())
-                .build());
+                .build()));
     }
 
     @Test

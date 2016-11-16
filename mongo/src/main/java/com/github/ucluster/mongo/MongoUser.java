@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.api.Routing;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.RequestFactory;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.util.Criteria;
@@ -33,7 +34,7 @@ public class MongoUser extends MongoRecord<User> implements User, Model {
     Session session;
 
     @Override
-    public User.Request apply(Map<String, Object> request) {
+    public User.Request apply(ApiRequest request) {
         final MongoRequest req = saveRequest(request);
         req.execute(request);
         return req;

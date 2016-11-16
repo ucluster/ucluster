@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Repository;
-import com.github.ucluster.core.Request;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.exception.RecordTypeNotSupportedException;
 import com.github.ucluster.core.util.Criteria;
@@ -47,7 +47,7 @@ public class MongoUserRepositoryTest {
     public void setUp() throws Exception {
         session.set("confirm:kiwi.swhite.coder@gmail.com", "3102");
 
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "3102")
                         .build())
@@ -67,7 +67,7 @@ public class MongoUserRepositoryTest {
                 (path, type) -> path.equals("username") && type.equals("format")
         );
 
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("username", "kiwi")
                         .put("password", "password")
@@ -83,7 +83,7 @@ public class MongoUserRepositoryTest {
                 (path, type) -> path.equals("username") && type.equals("required")
         );
 
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .properties(ImmutableMap.<String, Object>builder()
                         .put("password", "password")
                         .build())
@@ -96,7 +96,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_when_type_not_supported() {
         thrown.expect(RecordTypeNotSupportedException.class);
 
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("type", "not_supported")
                         .build())
@@ -113,7 +113,7 @@ public class MongoUserRepositoryTest {
     public void should_failed_to_create_user_when_confirmation_required_but_code_not_match() throws Exception {
         capture(thrown).errors(((path, type) -> path.equals("email") && type.equals("confirm")));
 
-        final Request request = RequestBuilder.of()
+        final ApiRequest request = RequestBuilder.of()
                 .metadata(ImmutableMap.<String, Object>builder()
                         .put("token", "not_match_1102")
                         .build())

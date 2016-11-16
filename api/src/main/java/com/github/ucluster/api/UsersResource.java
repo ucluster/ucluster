@@ -1,6 +1,6 @@
 package com.github.ucluster.api;
 
-import com.github.ucluster.core.Request;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.util.Criteria;
@@ -35,7 +35,7 @@ public class UsersResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(Request request) {
+    public Response register(ApiRequest request) {
         final User user = users.create(request);
         return Response.created(Routing.user(user)).build();
     }

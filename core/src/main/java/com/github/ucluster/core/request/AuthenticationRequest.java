@@ -1,11 +1,11 @@
 package com.github.ucluster.core.request;
 
-import com.github.ucluster.core.Request;
+import com.github.ucluster.core.ApiRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuthenticationRequest extends Request {
+public class AuthenticationRequest extends ApiRequest {
     public static AuthenticationRequest of(Map<String, Object> request) {
         return new AuthenticationRequest(request);
     }

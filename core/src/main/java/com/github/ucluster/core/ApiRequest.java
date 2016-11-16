@@ -3,16 +3,16 @@ package com.github.ucluster.core;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Request extends HashMap<String, Object> {
-    protected Request() {
+public class ApiRequest extends HashMap<String, Object> {
+    protected ApiRequest() {
     }
 
-    public Request(Map<String, Object> request) {
+    public ApiRequest(Map<String, Object> request) {
         super(request);
     }
 
-    public static Request of(Map<String, Object> request) {
-        return new Request(request);
+    public static ApiRequest of(Map<String, Object> request) {
+        return new ApiRequest(request);
     }
 
     public Map<String, String> metadata() {

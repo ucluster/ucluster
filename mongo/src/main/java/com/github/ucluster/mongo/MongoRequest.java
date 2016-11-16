@@ -1,6 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.api.Routing;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Reference;
@@ -59,7 +60,7 @@ public class MongoRequest extends MongoRecord<User.Request> implements User.Requ
     }
 
     @Override
-    public void execute(Map<String, Object> detail) {
+    public void execute(ApiRequest request) {
         throw new RuntimeException("need implemented");
     }
 

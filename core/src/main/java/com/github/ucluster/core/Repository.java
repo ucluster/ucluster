@@ -15,5 +15,5 @@ public interface Repository<T extends Record> {
 
     PaginatedList<T> find(Criteria criteria);
 
-    T create(Request request);
+    T create(ApiRequest request);
 }

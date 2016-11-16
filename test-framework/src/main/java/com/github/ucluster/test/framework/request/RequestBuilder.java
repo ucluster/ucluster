@@ -1,6 +1,6 @@
 package com.github.ucluster.test.framework.request;
 
-import com.github.ucluster.core.Request;
+import com.github.ucluster.core.ApiRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +37,8 @@ public class RequestBuilder {
         return request;
     }
 
-    public Request request() {
-        return Request.of(get());
+    public ApiRequest request() {
+        return ApiRequest.of(get());
     }
 
     public static RequestBuilder of(String type) {

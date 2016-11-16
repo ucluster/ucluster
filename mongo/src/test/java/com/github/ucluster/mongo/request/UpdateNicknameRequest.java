@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo.request;
 
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.mongo.MongoRequest;
 
@@ -16,7 +17,7 @@ public class UpdateNicknameRequest extends MongoRequest {
     }
 
     @Override
-    public void execute(Map<String, Object> detail) {
+    public void execute(ApiRequest request) {
         final Optional<Property> value = property("nickname");
         update();
 

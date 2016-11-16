@@ -1,7 +1,7 @@
 package com.github.ucluster.mongo;
 
 import com.github.ucluster.core.Record;
-import com.github.ucluster.core.Request;
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.User;
 import com.github.ucluster.core.UserRepository;
 import com.github.ucluster.core.authentication.AuthenticationResponse;
@@ -40,7 +40,7 @@ public class MongoUserRepository implements UserRepository {
     AuthenticationServiceRegistry registry;
 
     @Override
-    public User create(Request request) {
+    public User create(ApiRequest request) {
         final MongoUser user = new MongoUser();
         user.metadata = new HashMap<>(request.metadata());
 
