@@ -60,7 +60,11 @@ public class ApiRequest extends HashMap<String, Object> {
     }
 
     public static class Metadata extends HashMap<String, String> {
-        Metadata(Map<String, String> metadata) {
+        public Metadata() {
+            super();
+        }
+
+        public Metadata(Map<String, String> metadata) {
             super(metadata);
             if (!containsKey("type")) {
                 put("type", "default");

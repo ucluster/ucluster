@@ -117,7 +117,7 @@ public class MongoUserRepository implements UserRepository {
 
         AuthenticationResponse response = service.get().authenticate(request);
 
-        auditAuthenticationLog(request.request(), response);
+        auditAuthenticationLog(request, response);
 
         if (response.status() == FAILED) {
             throw new AuthenticationException();
@@ -137,7 +137,7 @@ public class MongoUserRepository implements UserRepository {
         return uuid((String) ((Map<String, Object>) o.get()).get("id"));
     }
 
-    private void auditAuthenticationLog(Map<String, Object> request, AuthenticationResponse response) {
+    private void auditAuthenticationLog(ApiRequest request, AuthenticationResponse response) {
         User.AuthenticationLog authenticationLog = new MongoAuthenticationLog(request, response);
         injector.injectMembers(authenticationLog);
         authenticationLog.save();

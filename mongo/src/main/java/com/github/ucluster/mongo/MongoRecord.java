@@ -1,5 +1,6 @@
 package com.github.ucluster.mongo;
 
+import com.github.ucluster.core.ApiRequest;
 import com.github.ucluster.core.Record;
 import com.github.ucluster.core.definition.Definition;
 import com.github.ucluster.core.definition.DefinitionRepository;
@@ -35,7 +36,7 @@ public class MongoRecord<T extends Record> implements Record, Model {
     protected final DateTime createdAt = new DateTime();
 
     @Embedded
-    protected Map<String, String> metadata = new HashMap<>();
+    protected ApiRequest.Metadata metadata = new ApiRequest.Metadata();
 
     @Embedded
     protected Map<String, Property> properties = new HashMap<>();
